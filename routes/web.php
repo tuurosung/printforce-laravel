@@ -112,9 +112,9 @@ Route::controller(ServiceController::class)->group(function () {
     // index
     Route::get('/services', 'index')->name('all.services');
     // Route::get('/transfer-info/{id}', 'show')->name('transfer.info');
-    // Route::get('/transfer', 'create')->name('new.transfer');
-    // Route::post('transfer', 'store')->name('create.transfer');
-    // Route::get('/transfer-edit/{id}', 'edit')->name('edit.transfer');
+    Route::get('/service', 'create')->name('new.service');
+    Route::post('service', 'store')->name('create.service');
+    Route::get('/service-edit/{id}', 'edit')->name('edit.service');
     // Route::post('/transfer-update', 'update')->name('update.transfer');
     // Route::post('/transfer-delete/{id}', 'destroy')->name('delete.transfer');
     // Route::post('/filter-transfers', 'filterTransfers')->name('filter.transfers');

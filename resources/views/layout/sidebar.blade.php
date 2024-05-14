@@ -212,7 +212,7 @@
 
 
             <div class="menu-item">
-                <a href="services/index.php" class="menu-link" id="reports_li">
+                <a href="{{ route('all.services') }}" class="menu-link" id="reports_li">
                     <i class="fas fa-cogs menu-icon"></i>
                     <span class="menu-text">Services</span>
                 </a>
