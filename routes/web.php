@@ -115,8 +115,8 @@ Route::controller(ServiceController::class)->group(function () {
     Route::get('/service', 'create')->name('new.service');
     Route::post('service', 'store')->name('create.service');
     Route::get('/service-edit/{id}', 'edit')->name('edit.service');
-    // Route::post('/transfer-update', 'update')->name('update.transfer');
-    // Route::post('/transfer-delete/{id}', 'destroy')->name('delete.transfer');
+    Route::post('/service-update', 'update')->name('update.service');
+    Route::post('/service-delete/{id}', 'destroy')->name('delete.service');
     // Route::post('/filter-transfers', 'filterTransfers')->name('filter.transfers');
 });
 

@@ -16,7 +16,9 @@ class ServiceController extends Controller
     {
         $all_services = $this->getServices();
 
-        $serviceCategories = ServiceCategory::with('services')->get();
+        $serviceCategories = ServiceCategory::with(['services' => function ($query) {
+            $query->whereStatus('active')->whereSubscriberId($this->active_subscriber);
+        }])->get();
 
 
         $data = [
@@ -125,9 +127,21 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Service $service)
+    public function destroy(string $service_id)
     {
-        //
+        // find service
+        $service = $this->findService($service_id);
+
+        // set status to deleted
+        $service->status = 'deleted';
+
+        // update
+        try {
+            $service->save();
+            return redirect()->back()->with('success', "Bingo! Service deleted succesffully");
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+        }
     }
 
     private function serviceId()

@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-between mb-5">
     <div>
-        <h4 class="fs-30px fw-600 montserrat">Services</h4>
+        <h4 class="fs-30px fw-700 montserrat">Services</h4>
     </div>
     <div>
         <a href="{{ route('new.service') }}" type="button" class="btn btn-outline-primary">
@@ -69,8 +69,8 @@
                             </a>
 
 
-                            <a href="#" style="text-decoration: none;">
-                                <i class="fas fa-trash-alt text-danger  "></i>
+                            <a href="#" class="delete" style="text-decoration: none;" data-url="{{ route('delete.service', $services->service_id) }}">
+                                <i class=" fas fa-trash-alt text-danger "></i>
                             </a>
 
                         </td>
@@ -85,11 +85,28 @@
     </div>
 </div>
 
+@include('layout.deleteFrm')
+
 @endsection
 
 
 @section('js')
 <script type="text/javascript">
+    $('.table tbody').on('click', '.delete', function(event) {
+        const $this = $(this);
+        const url = $this.data('url')
+
+        bootbox.confirm('Are you sure you want to delete this service?', function(confirmed) {
+            if (confirmed) {
+
+                $('#deleteFrm').attr('action', url);
+                $('#deleteFrm').submit()
+
+            }
+        }); //end bootbox
+    })
+
+
     $('#new_service_frm').on('submit', function(event) {
         event.preventDefault();
         // var customer_id=$('#customer_id').val();
@@ -110,22 +127,3 @@
     });
 </script>
 @endsection
-
-<?php
-// require core files
-// require_once '../_load.php';
-// require_once $appLink . 'navigation/header.php';
-// require_once $appLink . 'navigation/admin_nav.php';
-
-// // subscription control code
-// require_once $appLink . 'app/_bounce.php';
-
-// // require menu
-// require_once '_menu.php';
-?>
-
-
-<?php
-// $service  = new Service($q->db, $q->mysqli);
-
-?>

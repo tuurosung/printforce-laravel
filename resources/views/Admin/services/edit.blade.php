@@ -7,7 +7,9 @@
 
         <h4 class="fs-30px fw-600 montserrat mb-4">Edit Service</h4>
 
-        <form id="" autocomplete="off" method="POST" action="service-controller/update-service.php">
+        @include('layout.errors')
+
+        <form id="" autocomplete="off" method="POST" action="{{ route('update.service') }}">
 
             @csrf
 
@@ -23,7 +25,7 @@
 
                     <div class="form-group">
                         <label for="">Category</label>
-                        <select class="custom-select browser-default" name="category" id="category">
+                        <select class="custom-select browser-default" name="category_id" id="category">
                             <option value="">--- Select Category ---</option>
 
                             @foreach ($all_categories as $categories)
