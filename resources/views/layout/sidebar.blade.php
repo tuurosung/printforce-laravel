@@ -1,4 +1,3 @@
-
 <!-- Sidebar -->
 <!-- <div class="position-fixed collapse dont-collapse-sm app-sidebar bg-white-100" id="sidebar"> -->
 <div class="app-sidebar bg-white-100" id="sidebar">
@@ -12,11 +11,43 @@
             </div>
 
 
-            <div class="menu-item">
-                <a class="menu-link" href="jobs/">
+            <!-- Payments Menu -->
+            <div class="menu-item has-sub">
+                <a href="#" class="menu-link" id="orders_nav">
                     <i class="fas fa-briefcase menu-icon"></i>
                     <span class="menu-text"> Jobs</span>
+                    <span class="menu-caret">
+                        <b class="caret"></b>
+                    </span>
                 </a>
+                <div class="menu-submenu">
+                    <div class="menu-item">
+                        <a href="{{ route('largeformatjobs') }}" class="menu-link" id="">
+                            <span class="menu-text">Large Format Jobs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                            <span class="menu-text">Embroidery Jobs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                            <span class="menu-text">Design Jobs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                            <span class="menu-text">Press Jobs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="{{ route('payment.list') }}" class="menu-link" id="orders_nav">
+                            <span class="menu-text">Photography Jobs</span>
+                        </a>
+                    </div>
+
+                </div>
             </div>
 
             <!-- <div class="menu-item">
@@ -27,7 +58,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a class="menu-link" href="customers/" id="customers_nav">
+                <a class="menu-link" href="{{ route('customers') }}" id="customers_nav">
                     <i class="fas fa-users menu-icon"></i>
                     <span class="menu-text"> Customers </span>
                 </a>
@@ -101,7 +132,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a href="accounts/index.php" class="menu-link" id="accounts_li">
+                <a href="{{ route('all.accounts') }}" class="menu-link" id="accounts_li">
                     <i class="fas fa-code-branch menu-icon"></i>
                     <span class="menu-text"> Chart Of Acc. </span>
                 </a>
