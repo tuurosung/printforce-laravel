@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Subscribers;
+use App\Traits\ScopedActive;
+use App\Traits\ScopedToSubscriber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -10,6 +12,8 @@ class OperatingAccount extends Model
 {
 
     use HasFactory;
+    use ScopedActive;
+    use ScopedToSubscriber;
 
     protected $table = 'all_accounts';
     protected $primaryKey = 'account_number';
@@ -21,6 +25,8 @@ class OperatingAccount extends Model
     {
         return $this->belongsTo(OperatingAccountHeader::class, 'account_header');
     }
+
+
 
     /**
      * Define the relationship between accounts and payments using account_number
@@ -121,5 +127,10 @@ class OperatingAccount extends Model
         return $balance;
     }
 
+
+    public static function filterByType($account_type)
+    {
+        return self::where('acc_type', $account_type)->get();
+    }
 
 }

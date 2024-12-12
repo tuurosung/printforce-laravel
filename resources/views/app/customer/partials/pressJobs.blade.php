@@ -22,13 +22,38 @@
             <td>{{ $jobs->service->service_name }}</td>
             <td class="text-right">{{ $jobs->total }}</td>
             <td class="text-right">
-                <a href="#" class="viewjob" style="text-decoration: none;" id="{{ $jobs->job_id }}">
-                    <i class="fas fa-eye mr-3 text-purple  "></i>
-                </a>
+                <div class="dropdown dropstart">
+                    <a
+                        class=""
+                        type="button"
+                        id="triggerId"
+                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown">
+                        Options
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="triggerId">
+                        <a
+                            href="#"
+                            class="dropdown-item viewjob me-3"
+                            style="text-decoration: none;"
+                            id="{{ $jobs->job_id }}">
 
-                <a href="#" class="job_card" style="text-decoration: none;" id="{{ $jobs->job_id }}">
-                    <i class="fas fa-print text-primary  "></i>
-                </a>
+                            <i class="fas fa-file-alt  text-primary me-3"></i>
+                            View Job Card
+
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item job_card"
+                            style="text-decoration: none;"
+                            id="{{ $jobs->job_id }}">
+
+                            <i class="fas fa-print me-3 text-primary"></i>
+                            Print Job Card
+                        </a>
+                    </div>
+                </div>
+
             </td>
         </tr>
         <?php

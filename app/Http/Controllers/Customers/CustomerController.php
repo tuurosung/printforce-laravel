@@ -14,6 +14,7 @@ use App\Models\CustomerInvoices;
 use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\OperatingAccount;
 
 class CustomerController extends Controller
 {
@@ -24,17 +25,16 @@ class CustomerController extends Controller
         $this->customer = new Customer();
     }
 
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
 
-        $customers = Customer::orderBy('name')->get();
-        $customers->load('largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'payments');
-
-        // with(['largeFormatJobs', 'embroideryJobs'])
-        // ->orderBy('name')->get();
+        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'payments'])
+            ->orderBy('name')->get();
 
         $totalCustomerDebit = Customer::totalCustomerDebit();
         $totalCustomerCredit = Customer::totalCustomerCredit();
@@ -56,6 +56,8 @@ class CustomerController extends Controller
         return view('app.customer.all-customers', $data);
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -70,6 +72,8 @@ class CustomerController extends Controller
 
         return view('customer.new-customer', $data);
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -90,6 +94,8 @@ class CustomerController extends Controller
             : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
+
+
     /**
      * Display the specified resource.
      */
@@ -100,12 +106,16 @@ class CustomerController extends Controller
             return redirect()->back()->with('error', 'Customer not found');
         }
 
+        $payment_accounts = OperatingAccount::filterByType(1);
+
         $services = Service::getAllServices();
 
-        $customer->load('largeFormatJobs.service', 'embroideryJobs.service', 'pressJobs.service', 'designJobs.service', 'payments.account');
+        $customer->load(['largeFormatJobs.service', 'embroideryJobs.service', 'pressJobs.service', 'designJobs.service', 'payments.account']);
 
-        return view('app.customer.customer-info', compact('customer', 'services'));
+        return view('app.customer.customer-info', compact('customer', 'services', 'payment_accounts'));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -128,6 +138,8 @@ class CustomerController extends Controller
 
         return view('Admin.customer.edit-customer', $data);
     }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -155,6 +167,8 @@ class CustomerController extends Controller
         }
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -162,6 +176,22 @@ class CustomerController extends Controller
     {
         //
     }
+
+
+    public function debtorsList(Customer $customer)
+    {
+        $debtors = $customer->debtorsList();
+
+        return view('app.customer.debtors-list', compact('debtors'));
+    }
+
+    public function printDebtorsList(Customer $customer)
+    {
+        $debtors = $customer->debtorsList();
+
+        return view('app.customer.print-debtors-list', compact('debtors'));
+    }
+
 
 
     private function isCustomer($customer_id)

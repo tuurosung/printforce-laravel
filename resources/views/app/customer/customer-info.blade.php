@@ -35,8 +35,20 @@
                     data-target="#new_embroidery_job_modal">
                     Embroidery
                 </a>
-                <a class="dropdown-item" href="/new-largeformatjob/ {{ $customer->customer_id }}">Design Job</a>
-                <a class="dropdown-item" href="/new-largeformatjob/ {{ $customer->customer_id }}">Press Job</a>
+                <a
+                    class="dropdown-item"
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#new_design_job_modal">
+                    Design Job
+                </a>
+                <a
+                    class="dropdown-item"
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#new_press_job_modal">
+                    Press Job
+                </a>
                 <a class="dropdown-item" href="/new-largeformatjob/ {{ $customer->customer_id }}">Photography</a>
 
             </div>
@@ -64,25 +76,19 @@
             </div>
         </div>
 
-        <div class="dropdown d-inline">
-            <a
-                class="btn btn-primary me-0"
-                type="button"
-                id="dropdownMenu2"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false">
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#new_payment_modal">
 
-                <i class="fas fa-credit-card me-3"></i>
-                Payment
-            </a>
-            <div class="dropdown-menu dropdown-primary">
+            <i class="fas fa-credit-card me-3  "></i>
+            New Payment
 
-                <a class="dropdown-item" href="new-payment/{{ $customer->customer_id }}">New Payment</a>
-                <!-- <a class="dropdown-item" href="#">Something else here</a>
-                    <a class="dropdown-item" href="#">Something else here</a> -->
-            </div>
-        </div>
+        </button>
+
+
+
 
     </div>
 </div>
@@ -275,7 +281,7 @@
 
                 <h4 class="mb-5">Payment History</h4>
 
-                <table class="table table-sm">
+                <table class="table table-sm datatables">
                     <thead class="">
                         <tr>
                             <th>#</th>
@@ -283,7 +289,7 @@
                             <th>Time</th>
                             <th>ID</th>
                             <th>Account</th>
-                            <th class="text-right">Amount</th>
+                            <th class="text-end">Amount</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -297,24 +303,38 @@
 
                         <tr>
                             <td><?php echo $i++; ?></td>
-                            <td>{{ $payment->payment_date }}</td>
+                            <td>{{ $payment->payment_date ?? $payment->created_at }}</td>
                             <td> {{ $payment->timestamp ?? $payment->created_at }} </td>
                             <td>{{ $payment->payment_id }}</td>
                             <td>{{ $payment->payment_account_name }}</td>
-                            <td class="text-right">{{ $payment->amount_paid }}</td>
-                            <td class="text-right">
+                            <td class="text-end">{{ number_format($payment->amount_paid, 2) }}</td>
+                            <td class="text-end">
 
-                                <a href="#" class="receipt me-3 text-purple" id="" style="text-decoration: none;">
-                                    <i class="fas fa-file-alt"></i>
-                                </a>
-
-                                <a href="#" class="edit me-3 text-primary" id="" style="text-decoration: none;">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-
-                                <a href="#" class="reverse_btn text-danger" id="" style="text-decoration: none;">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
+                                <div class="dropdown">
+                                    <a
+                                        class=""
+                                        type="button"
+                                        id="triggerId"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                        Options
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="triggerId">
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-receipt me-3  text-primary"></i>
+                                            Reciept
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-pen me-3  text-primary"></i>
+                                            Edit
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-trash-alt me-3  text-danger"></i>
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
 
 
                             </td>
@@ -332,7 +352,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td class="text-right Axiforma fs-18px fw-600">{{ $total }}</td>
+                            <td class="text-end Axiforma fs-18px fw-600">{{ number_format($customer->payments->sum('amount_paid'), 2) }}</td>
                             <td></td>
                         </tr>
                     </tbody>
@@ -347,7 +367,9 @@
 
 @include('app.job.largeformat.new-largeformat')
 @include('app.job.embroidery.new-embroidery')
-
+@include('app.job.design.new-design')
+@include('app.job.press.new-press')
+@include('app.payments.modals.new-payment-modal')
 
 @endsection
 
@@ -531,6 +553,126 @@
         }); //end large format submit
 
     }); //end large format modal show
+</script>
+
+<!-- Design JS -->
+
+<script type="text/javascript">
+    $('#de_service').select2({
+        dropdownParent: $('#new_design_job_modal'),
+    });
+
+    var service_cost = $('#de_service').find(":selected").data('cost');
+    $("#de_cost").val(service_cost);
+
+    $('#de_service').on('change', function(event) {
+        event.preventDefault();
+
+        var service_cost = $('#de_service').find(":selected").data('cost');
+        $("#de_cost").val(service_cost);
+
+        setTimeout(function() {
+            $('#de_copies').focus()
+        }, 300);
+
+    }); //end change event
+
+    $("#de_copies").on('keyup', function(event) {
+        event.preventDefault();
+
+        var copies = $('#de_copies').val()
+        copies = (copies === '' || isNaN(copies) || copies === 'undefined') ? 0 : parseInt(copies);
+
+        var cost = $('#de_cost').val()
+        cost = (cost === '' || isNaN(cost) || cost === 'undefined') ? 0 : parseFloat(cost);
+
+        $('#de_total').val((Math.round(copies * cost)).toFixed(2))
+    });
+</script>
+
+<!-- Press JS -->
+
+<script type="text/javascript">
+    $('#pr_service').select2({
+        dropdownParent: $('#new_press_job_modal'),
+    });
+
+    var service_cost = $('#pr_service').find(":selected").data('cost');
+    $("#pr_cost").val(service_cost);
+    $('#pr_copies').focus()
+
+    $('#pr_service').on('change', function(event) {
+        event.preventDefault();
+
+        var service_cost = $('#pr_service').find(":selected").data('cost');
+        $("#pr_cost").val(service_cost);
+        $('#pr_copies').focus()
+    }); //end change event
+
+    $("#pr_copies").on('keyup', function(event) {
+        event.preventDefault();
+
+        var copies = $('#pr_copies').val()
+        copies = (copies === '' || isNaN(copies) || copies === 'undefined') ? 0 : parseInt(copies)
+
+        var cost = $('#pr_cost').val()
+        cost = (cost === '' || isNaN(cost) || cost === 'undefined') ? 0 : parseFloat(cost)
+
+        $('#pr_total').val((copies * cost).toFixed(2))
+    });
+</script>
+
+
+<!-- Payment JS -->
+
+<script type="text/javascript">
+    $('#account_number, #customer_id').select2({
+        dropdownParent: $('#new_payment_modal'),
+    });
+    $('#date').datepicker();
+
+    $('#date').on('change', function() {
+        $(this).datepicker('hide')
+    })
+
+    setTimeout(function() {
+        $('#amount_paid').focus()
+    }, 300);
+
+
+    $('#new_payment_frm').on('submit', function(event) {
+        event.preventDefault();
+        $(this).submit(function(event) {
+            return false;
+        });
+        $.ajax({
+            url: '../serverscripts/admin/Payments/new.php',
+            type: 'GET',
+            data: $('#new_payment_frm').serialize(),
+            success: function(msg) {
+                if (msg === 'save_successful') {
+                    bootbox.alert("Payment Recorded Successfully", function() {
+                        window.location.reload()
+                    })
+                } else {
+                    bootbox.alert(msg)
+                }
+            }
+        }) //end ajax
+    }); //end large format submit
+
+    $('#new_payment_modal').on('shown.bs.modal', function(event) {
+        event.preventDefault();
+
+        $('#date').datepicker()
+
+        $('#date').on('change', function(event) {
+            event.preventDefault();
+            $(this).datepicker('hide')
+        });
+
+        $('#amount_paid').focus()
+    });
 </script>
 
 @endsection

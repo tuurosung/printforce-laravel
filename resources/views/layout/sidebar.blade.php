@@ -5,7 +5,7 @@
         <div class="menu mt-5">
 
             <div class="menu-item">
-                <a href="index.php" class="menu-link">
+                <a href="{{ route('dashboard') }}" class="menu-link">
                     <i class="fas fa-laptop menu-icon"></i>
                     <span class="menu-text"> Dashboard</span> </a>
             </div>
@@ -27,22 +27,22 @@
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                        <a href="{{ route('embroideryjobs') }}" class="menu-link" id="">
                             <span class="menu-text">Embroidery Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                        <a href="{{ route('designjobs') }}" class="menu-link" id="">
                             <span class="menu-text">Design Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('payment.list') }}" class="menu-link" id="">
+                        <a href="{{ route('pressjobs') }}" class="menu-link" id="">
                             <span class="menu-text">Press Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('payment.list') }}" class="menu-link" id="orders_nav">
+                        <a href="{{ route('payments') }}" class="menu-link" id="orders_nav">
                             <span class="menu-text">Photography Jobs</span>
                         </a>
                     </div>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="menu-item">
-                <a class="menu-link" href="debtors/index.php" id="debtors_nav">
+                <a class="menu-link" href="{{ route('debtors') }}" id="debtors_nav">
                     <i class="fas fa-hand-holding-usd menu-icon"></i>
                     <span class="menu-text">Debtors</span>
                 </a>
@@ -82,7 +82,7 @@
                 </a>
                 <div class="menu-submenu">
                     <div class="menu-item">
-                        <a href="{{ route('payment.list') }}" class="menu-link" id="orders_nav">
+                        <a href="{{ route('payments') }}" class="menu-link" id="orders_nav">
                             <span class="menu-text">- Payments History</span>
                         </a>
                     </div>
@@ -258,5 +258,5 @@
 </div>
 <!-- Sidebar -->
 
-</header>
+<!-- </header> -->
 <!--Main Navigation-->

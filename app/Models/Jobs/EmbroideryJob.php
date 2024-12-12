@@ -28,7 +28,7 @@ class EmbroideryJob extends Model
             $embroideryJob->subscriber_id = Auth::user()->subscriber_id;
         });
 
-        self::tableInspector();
+        // self::tableInspector();
     }
 
 
@@ -62,6 +62,7 @@ class EmbroideryJob extends Model
     protected $primaryKey = 'job_id';
     public $incrementing = false;
 
+
     protected $fillable = [
         'subscriber_id',
         'customer_id',
@@ -79,12 +80,14 @@ class EmbroideryJob extends Model
 
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'customer_id', 'subscriber_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function service()
+
+
+    public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(Service::class, 'service_id', 'service_id');
     }
 
 }

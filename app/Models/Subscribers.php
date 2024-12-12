@@ -12,6 +12,7 @@ class Subscribers extends Model
     protected $activeSubscriber;
 
     protected $table = 'subscriptions';
+    protected $primaryKey = 'subscriber_id';
     protected $fillable = ['user_id', 'plan_id', 'status', 'start_date', 'end_date'];
     public $incrementing = false;
 

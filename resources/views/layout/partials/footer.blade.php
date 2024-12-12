@@ -1,23 +1,23 @@
-<script src="{{ asset('assets/js/jquery.js') }}"></script>
-<script src="{{ asset('assets/js/popper.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootbox.js') }}"></script>
-<script src="{{ asset('assets/datatables/datatables.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/bootbox.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/datatables/datatables.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap-datepicker.js') }}"></script>
 
-<script src="{{ asset('assets/js/app.js') }}"></script>
-<script src="{{ asset('assets/js/app.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-modal.js') }}"></script>
-<script src="{{ asset('assets/js/modules/chart.js') }}"></script>
-<script src="{{ asset('assets/js/toastify.min.js') }}"></script>
-<script src="{{ asset('assets/js/lity.min.js') }}"></script>
-<script src="{{ asset('assets/js/printThis.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/app.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/bootstrap-modal.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/modules/chart.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/toastify.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/lity.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('assets/js/printThis.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js" type="text/javascript"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 <script type="text/javascript">
-
     $('a[data-toggle="pill"], a[data-toggle="tab"], a[data-bs-toggle="pill"], a[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
         localStorage.setItem('activeTab', $(e.target).attr('href'));
     });

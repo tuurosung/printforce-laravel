@@ -28,7 +28,7 @@ class LargeFormatJob extends Model
             $largeFormatJob->subscriber_id = Auth::user()->subscriber_id;
         });
 
-        self::tableInspector();
+        // self::tableInspector();
     }
 
     private static function tableInspector()
@@ -52,7 +52,6 @@ class LargeFormatJob extends Model
     protected $table = 'jobs_largeformat';
     protected $primaryKey = 'job_id';
     public $incrementing = false;
-
 
     protected $fillable = [
         'subscriber_id',

@@ -1,18 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Jobs;
 
-use App\Models\DesignJob;
 use Illuminate\Http\Request;
+use App\Models\Jobs\DesignJob;
+use App\Http\Controllers\Controller;
 
 class DesignJobController extends Controller
 {
+    private $designJob;
+
+    public function __construct()
+    {
+        $this->designJob = new DesignJob();
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $jobs = DesignJob::with('customer', 'service')
+            ->latest()->take(100)->get();
+
+        return view('app.job.design-jobs', compact('jobs'));
     }
 
     /**
@@ -28,15 +39,34 @@ class DesignJobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'customer_id' => 'required',
+            'service_id' => 'required',
+            'unit_cost' => 'required',
+            'copies' => 'required',
+            'total' => 'required',
+            'notes' => 'nullable',
+        ]);
+
+        $create_job = $this->designJob->create($data);
+
+        return $create_job
+            ? redirect()->back()->with('success', 'Job created successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(DesignJob $designJob)
+    public function show(string $job_id)
     {
-        //
+        $designJob = DesignJob::find($job_id);
+
+        if (is_null($designJob)) {
+            return abort(404);
+        }
+
+        return view('app.job.modals.design-jobcard', compact('designJob'));
     }
 
     /**
@@ -58,8 +88,18 @@ class DesignJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DesignJob $designJob)
+    public function destroy(string $job_id)
     {
-        //
+        $designJob = DesignJob::find($job_id);
+
+        if (is_null($designJob)) {
+            return abort(404);
+        }
+
+        $deleted = $designJob->delete();
+
+        return $deleted
+            ? redirect()->back()->with('success', 'Job deleted successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 }

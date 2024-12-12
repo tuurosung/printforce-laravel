@@ -9,11 +9,9 @@
     <!-- set favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
 
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <link href="{{ asset('assets/fontawesome/css/all.css') }}" rel="stylesheet">
 
@@ -22,14 +20,14 @@
     <link href="{{ asset('assets/css/ui.css') }}" rel="stylesheet" media="all">
     <link href="{{ asset('assets/css/uix.css') }}" rel="stylesheet" media="all">
 
-    <link href="{{ asset('assets/css/datepicker.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/datepicker.css') }}" rel="stylesheet" media="all">
     <link href="{{ asset('assets/css/toastify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 
-    <style media="screen">
+    <style media="all">
         /* Load Google Fonts Locally */
 
 
@@ -185,26 +183,10 @@
             border-radius: .25rem;
         }
 
-        .glass {
-            filter: blur(9px) !important;
-        }
-
-        .form-control-sm {
-            padding: .6rem .5rem;
-        }
-
-        #sidebar .list-group-item.active {
-            font-weight: bold;
-            color: #fff;
-            background-color: #0d47a1;
-            border: none;
-            border-left: none;
-            border-right: none;
-        }
-
         hr {
-            opacity: 1 !important;
+            opacity: 1 ;
         }
+
     </style>
 
 </head>

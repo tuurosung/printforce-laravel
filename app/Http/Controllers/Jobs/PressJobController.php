@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Jobs;
 
-use App\Models\PressJob;
 use Illuminate\Http\Request;
+use App\Models\Jobs\PressJob;
+use App\Http\Controllers\Controller;
 
 class PressJobController extends Controller
 {
@@ -28,7 +29,20 @@ class PressJobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'customer_id' => 'required',
+            'service_id' => 'required',
+            'cost' => 'required',
+            'copies' => 'required',
+            'total' => 'required',
+            'notes' => 'nullable',
+        ]);
+
+        $create_job = PressJob::create($data);
+
+        return $create_job
+            ? redirect()->back()->with('success', 'Job created successfully')
+            : redirect()->back()->with('error', 'Job creation failed');
     }
 
     /**

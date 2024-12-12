@@ -7,6 +7,13 @@
         <h4 class="h2 m-0">Large Format Jobs</h4>
     </div>
     <div>
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#jobCardModal">
+            Button
+        </button>
 
     </div>
 </div>
@@ -123,21 +130,14 @@
                                     <i class="fas fa-print me-3 text-primary"></i>
                                     Print
                                 </a>
+                                <a
+                                    href="#"
+                                    class="dropdown-item"
+                                    id="{{ $job->job_id }}">
 
-                                @can('administrator')
-                                <form method="POST" action="{{ route('delete-largeformat-job', $job->job_id) }}">
-                                    @csrf
-                                    @method('delete')
-                                    <a
-                                        href="#"
-                                        class="dropdown-item delete_job"">
-
-                                        <i class=" fas fa-trash-alt text-danger me-3"></i>
-                                        Delete
-                                    </a>
-                                </form>
-                                @endcan
-
+                                    <i class="fas fa-trash-alt text-danger me-3"></i>
+                                    Delete
+                                </a>
                             </div>
                         </div>
 
@@ -154,12 +154,13 @@
     </div>
 </div>
 
-<div id="modal_holder"></div>
+
 @endsection
 
 @section('js')
 
 <script type="text/javascript">
+
     $('.table tbody').on('click', '.viewjob', function(event) {
         event.preventDefault();
         var url = $(this).data('url');
@@ -168,41 +169,11 @@
             type: 'GET',
             url: url,
             success: function(response) {
-
                 $('#modal_holder').html(response);
-                new bootstrap.Modal(document.getElementById('jobCardModal')).show();
-
+                $('#jobCardModal').modal('show')
             }
         })
     });
-
-    $('.table tbody').on('click', '.delete_job', function(event) {
-
-        var job = $(this)
-
-        new swal("Are you sure you want to delete this job?", {
-                buttons: {
-                    cancel: "Cancel",
-                    catch: {
-                        text: "Yes! Delete it!",
-                        value: "catch",
-                    }
-                },
-            })
-            .then((value) => {
-                switch (value) {
-
-                    case "cancel":
-                        swal("Cancelled", "Your job is safe");
-                        break;
-                    case "catch":
-                        job.closest('form').submit();
-                        break;
-
-                }
-            });
-
-    })
     $(document).ready(function() {
 
         bindEvents();
@@ -238,11 +209,11 @@
             //     // View(url);
             // });
 
-            // $('.table tbody').on('click', '.delete_job', function(event) {
-            //     event.preventDefault();
-            //     var job_id = $(this).attr('ID');
-            //     Delete(job_id);
-            // });
+            $('.table tbody').on('click', '.delete_job', function(event) {
+                event.preventDefault();
+                var job_id = $(this).attr('ID');
+                Delete(job_id);
+            });
         }
 
 

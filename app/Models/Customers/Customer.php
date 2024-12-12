@@ -9,18 +9,22 @@ use App\Helpers\CustomerHelper;
 use App\Models\CustomerCategory;
 use App\Models\Jobs\EmbroideryJob;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\DB;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Invoices\CustomerInvoices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
+    use HasFactory;
     use ScopedActive;
     use ScopedToSubscriber;
 
@@ -37,6 +41,8 @@ class Customer extends Model
     protected $table = 'customers';
     protected $primaryKey = 'customer_id';
     public $incrementing = false;
+    protected $keyType = 'string';
+
 
     protected $fillable = [
         'subscriber_id',
@@ -58,10 +64,14 @@ class Customer extends Model
         return $this->hasMany(LargeFormatJob::class, 'customer_id');
     }
 
+
+
     public function getLargeFormatJobSumAttribute () //largeFormatDebit()
     {
         return $this->largeFormatJobs->sum('total');
     }
+
+
 
     public function getCountLargeFormatJobsAttribute()
     {
@@ -74,6 +84,8 @@ class Customer extends Model
     {
         return $this->hasMany(EmbroideryJob::class, 'customer_id');
     }
+
+
 
     public function getCountEmbroideryJobsAttribute()
     {
@@ -95,11 +107,18 @@ class Customer extends Model
     }
 
 
+    public function getCountPressJobsAttribute()
+    {
+        return $this->pressJobs->count();
+    }
+
+
 
     public function getPressJobSumAttribute()
     {
         return $this->pressJobs->sum('total');
     }
+
 
 
     public function designJobs(): HasMany
@@ -108,10 +127,19 @@ class Customer extends Model
     }
 
 
+
+    public function getCountDesignJobsAttribute()
+    {
+        return $this->designJobs->count();
+    }
+
+
+
     public function getDesignJobSumAttribute()
     {
         return $this->designJobs->sum('total');
     }
+
 
 
     public function photography_jobs()
@@ -120,20 +148,22 @@ class Customer extends Model
     }
 
 
+
     public function getPhotographyJobSumAttribute()
     {
         return $this->photography_jobs->sum('total');
     }
 
 
+
     public function getJobCountAttribute()
     {
         return collect([
-            $this->countLargetFormatJobs,
-            $this->countEmbroideryJobs,
-            $this->countPressJobs,
-            $this->countDesignJobs,
-            $this->countPhotographyJobs
+            $this->count_large_format_jobs,
+            $this->count_embroidery_jobs,
+            $this->count_press_jobs,
+            $this->count_design_jobs,
+            $this->count_photography_jobs
         ])->sum();
     }
 
@@ -205,6 +235,39 @@ class Customer extends Model
         return $this->belongsTo(CustomerInvoices::class, 'customer_id');
     }
 
+    /**
+     * return list of all customers with debts
+     * calculated as total customer debit - total customer credit
+     *
+     * @return mixed
+     */
+    public function debtorsList()
+    {
+        $debtors = Customer::withSum('largeFormatJobs as large_format_jobs_total', 'total')
+        ->withSum('embroideryJobs as embroidery_jobs_total', 'total')
+        ->withSum('designJobs as design_jobs_total', 'total')
+        ->withSum('pressJobs as press_jobs_total', 'total')
+        ->withSum('photography_jobs as photography_jobs_total', 'total')
+        ->withSum('payments as payments_amount_paid', 'amount_paid')
+        ->havingRaw('
+            (COALESCE(large_format_jobs_total,0) +
+            COALESCE(embroidery_jobs_total,0) +
+            COALESCE(design_jobs_total,0) +
+            COALESCE(press_jobs_total,0) +
+            COALESCE(photography_jobs_total,0)
+            ) - COALESCE(payments_amount_paid, 0) > 0
+        ')
+        ->orderBy('name')
+        ->get();
 
+        $debtors->map(function ($debtor) {
+            $debtor->debit = $debtor->large_format_jobs_total + $debtor->embroidery_jobs_total + $debtor->design_jobs_total + $debtor->press_jobs_total + $debtor->photography_jobs_total;
+            $debtor->credit = $debtor->payments_amount_paid;
+            $debtor->balance = $debtor->debit - $debtor->credit;
+        });
+
+        return $debtors;
+
+    }
 
 }

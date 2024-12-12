@@ -20,7 +20,8 @@ class LargeFormatJobController extends Controller
     public function index()
     {
 
-        $jobs = LargeFormatJob::with('customer')->take(10)->get();
+        $jobs = LargeFormatJob::with('customer', 'service')
+            ->latest()->take(100)->get();
 
         return view('app.job.largeformat-jobs', compact('jobs'));
     }
@@ -68,9 +69,16 @@ class LargeFormatJobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LargeFormatJob $largeFormatJob)
+    public function show(string $job_id)
     {
-        //
+        $largeFormatJob = LargeFormatJob::find($job_id);
+
+        if (is_null($largeFormatJob)) {
+
+            return redirect()->back()->with('error', 'Job not found');
+        }
+
+        return view('app.job.modals.largeformat-jobcard', compact('largeFormatJob'));
     }
 
 
@@ -94,8 +102,31 @@ class LargeFormatJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LargeFormatJob $largeFormatJob)
+    public function destroy(string $job_id)
     {
-        //
+        $largeFormatJob = LargeFormatJob::find($job_id);
+
+        if (is_null($largeFormatJob)) {
+
+            return redirect()->back()->with('error', 'Job not found');
+        }
+
+        $deleted = $largeFormatJob->delete();
+
+        return $deleted
+            ? redirect()->back()->with('success', 'Bingo! Job deleted successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+    }
+
+
+    public function filterJobs(Request $request)
+    {
+
+        $filtered_jobs = LargeFormatJob::with('customer', 'service')
+            ->whereBetween('date', [$request->start_date, $request->end_date])
+            ->latest()
+            ->get();
+
+        return view('app.job.largeformat.filter-largeformatjobs', compact('filtered_jobs'));
     }
 }

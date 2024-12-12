@@ -48,7 +48,7 @@
 
                                                     <option value="">--- Select Service ---</option>
 
-                                                    @foreach ($services->filter(fn ($service) => $service->category_id == '002') as $service) as $service)
+                                                    @foreach ($services->filter(fn ($service) => $service->category_id == '003') as $service) as $service)
                                                     <option
                                                         value="{{ $service->service_id }}"
                                                         data-cost="{{  $service[$customer->category] }}">{{ $service->service_name }}</option>

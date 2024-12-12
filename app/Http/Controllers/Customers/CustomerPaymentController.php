@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Customers;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\CustomerPayment;
 use App\Models\OperatingAccount;
 use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Customers\CustomerPayment;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 class CustomerPaymentController extends Controller
@@ -22,20 +22,31 @@ class CustomerPaymentController extends Controller
      */
     public function index()
     {
-        $i = 1;
 
-        $data = [
-            'i' => $i,
-            'customer_id' => 'all',
-            'all_payments' => $this->getAllPayments(),
-            'all_customers' => $this->getAllCustomers(),
+        // 'customer_id' => 'all',
+        //     'payment_accounts' => OperatingAccount::filterByType(1)
+
+        $customers = Customer::all();
+
+        $payment_accounts = OperatingAccount::filterByType(1);
+
+        $stats = [
             'todays_total_payment' => $this->getTotalPayment('today'),
             'weeks_total_payment' => $this->getTotalPayment('week'),
             'months_total_payment' => $this->getTotalPayment('month'),
-            'years_total_payment' => $this->getTotalPayment('year')
+            'years_total_payment' => $this->getTotalPayment('year'),
         ];
 
-        return view('Admin.payments.index', $data);
+        $payments = CustomerPayment::with(['customer','account'])
+            ->whereYear('payment_date', Carbon::now()->year)
+            ->get();
+
+        return view('app.payments.payments', compact([
+            'payments',
+            'customers',
+            'stats',
+            'payment_accounts'
+        ]));
     }
 
     /**
@@ -60,24 +71,28 @@ class CustomerPaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateRequest($request);
+        $data =$this->validateRequest($request);
 
         $payment = new CustomerPayment();
 
-        $payment->subscriber_id = $this->active_subscriber;
-        $payment->payment_id = $this->paymentId();
-        $payment->customer_id = $request->customer_id;
-        $payment->amount_paid = $request->amount_paid;
-        $payment->payment_date = $request->date;
-        $payment->account_number = $request->account_number;
+        $save_payment = CustomerPayment::create($data);
 
-        try {
-            // Save Payment to database
-            $payment->save();
-            return redirect()->back()->with('success', "Payment recorded successfully");
-        } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side'.$e->getMessage());
-        }
+        return $save_payment
+            ?  redirect()->back()->with('success', "Payment recorded successfully")
+            :  redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+
+        // $payment->customer_id = $request->customer_id;
+        // $payment->amount_paid = $request->amount_paid;
+        // $payment->payment_date = $request->date;
+        // $payment->account_number = $request->account_number;
+
+        // try {
+        //     // Save Payment to database
+        //     $payment->save();
+        //     return redirect()->back()->with('success', "Payment recorded successfully");
+        // } catch(\Exception $e) {
+        //     return redirect()->back()->with('error', 'Ooops! Something went wrong on our side'.$e->getMessage());
+        // }
 
     }
 

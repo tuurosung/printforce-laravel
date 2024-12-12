@@ -1,10 +1,12 @@
-<table class="table table-sm">
+<table class="table table-sm datatables">
     <thead class="">
         <tr>
             <th>#</th>
             <th>Date</th>
             <th>Service</th>
-            <th class="text-right">Cost</th>
+            <th class="text-end">Unit Cost</th>
+            <th class="text-end">Copies</th>
+            <th class="text-end">Cost</th>
             <th></th>
         </tr>
     </thead>
@@ -20,29 +22,47 @@
             <td>{{ $i++ }}</td>
             <td>{{ $jobs->date }}</td>
             <td>{{ $jobs->service->service_name }}</td>
-            <td class="text-right">{{ $jobs->total }}</td>
-            <td class="text-right">
-                <a href="#" class="viewjob" style="text-decoration: none;" id="{{ $jobs->job_id }}">
-                    <i class="fas fa-eye mr-3 text-purple  "></i>
-                </a>
+            <td class="text-end pe-20px">{{ number_format($jobs->unit_cost, 2) }}</td>
+            <td class="text-end pe-20px">{{ $jobs->copies }}</td>
+            <td class="text-end pe-20px">{{ number_format($jobs->total, 2) }}</td>
+            <td class="text-end">
+                <div class="dropdown dropstart">
+                    <a
+                        class=""
+                        type="button"
+                        id="triggerId"
+                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown">
+                        Options
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="triggerId">
+                        <a
+                            href="#"
+                            class="dropdown-item viewjob me-3"
+                            style="text-decoration: none;"
+                            id="{{ $jobs->job_id }}">
 
-                <a href="#" class="job_card" style="text-decoration: none;" id="{{ $jobs->job_id }}">
-                    <i class="fas fa-print text-primary  "></i>
-                </a>
+                            <i class="fas fa-file-alt  text-primary me-3"></i>
+                            View Job Card
+
+                        </a>
+                        <a
+                            href="#"
+                            class="dropdown-item job_card"
+                            style="text-decoration: none;"
+                            id="{{ $jobs->job_id }}">
+
+                            <i class="fas fa-print me-3 text-primary"></i>
+                            Print Job Card
+                        </a>
+                    </div>
+                </div>
+
             </td>
         </tr>
-        <?php
-        $total += $jobs->total;
-        ?>
+
 
         @endforeach
 
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="text-right Axiforma fw-600 fs-18px">{{ $total }}</td>
-            <td></td>
-        </tr>
     </tbody>
 </table>

@@ -178,3 +178,8 @@
 @include('app.customer.modals.new-customer-modal')
 
 @endsection
+
+
+@section('js')
+
+@endsection

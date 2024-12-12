@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Jobs;
 
 use Illuminate\Http\Request;
 use App\Models\Jobs\EmbroideryJob;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class EmbroideryJobController extends Controller
@@ -23,7 +24,10 @@ class EmbroideryJobController extends Controller
      */
     public function index()
     {
-        //
+        $jobs = EmbroideryJob::with('customer', 'service')
+            ->latest()->take(100)->get();
+
+        return view('app.job.embroidery-jobs', compact('jobs'));
     }
 
     /**
@@ -63,9 +67,15 @@ class EmbroideryJobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(EmbroideryJob $embroideryJob)
+    public function show(string $job_id)
     {
-        //
+        $embroideryJob = EmbroideryJob::find($job_id);
+
+        if (is_null($embroideryJob)) {
+            return abort(404);
+        }
+
+        return view('app.job.modals.embroidery-jobcard', compact('embroideryJob'));
     }
 
     /**
@@ -87,8 +97,18 @@ class EmbroideryJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EmbroideryJob $embroideryJob)
+    public function destroy(string $job_id)
     {
-        //
+        $embroideryJob = EmbroideryJob::find($job_id);
+
+        if (is_null($embroideryJob)) {
+            return abort(404);
+        }
+
+        $deleted = $embroideryJob->delete();
+
+        return $deleted
+            ? redirect()->back()->with('success', "Embroidery Job Deleted Successfully")
+            : redirect()->back()->with('error', "Embroidery Job Deletion Failed");
     }
 }

@@ -6,6 +6,7 @@ use App\Traits\ScopedActive;
 use App\Models\OperatingAccount;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,10 +18,27 @@ class CustomerPayment extends Model
     use ScopedActive;
     use ScopedToSubscriber;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($customerPayment) {
+            $customerPayment->payment_id = generateDashedRandomNumber();
+            $customerPayment->subscriber_id = Auth::user()->subscriber_id;
+        });
+    }
+
     protected $table = 'payments';
     protected $primaryKey = 'payment_id';
     public $incrementing = false;
-    protected $fillable = ['subscriber_id', 'customer_id', 'payment_id', 'amount_paid'];
+    protected $fillable = [
+        'subscriber_id',
+        'customer_id',
+        'payment_id',
+        'amount_paid',
+        'account_number',
+        'payment_date',
+    ];
 
     public function customer(): BelongsTo
     {

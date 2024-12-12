@@ -4,11 +4,9 @@
 
 <div class="d-flex justify-content-between">
     <div class="d-flex align-items-center">
-        <h4 class="h2 m-0">Large Format Jobs</h4>
+        <h4 class="h2 m-0">Emboidery Jobs</h4>
     </div>
-    <div>
-
-    </div>
+    <div></div>
 </div>
 
 <hr class="mb-5">
@@ -67,15 +65,18 @@
                     <th>Date</th>
                     <th>Customer</th>
                     <th>Service</th>
-                    <th class="text-end">Width</th>
-                    <th class="text-end">Height</th>
-                    <th class="text-end">Cost</th>
-                    <th class="text-end">Copies</th>
+                    <th class="text-end">Unit Cost</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-end">Embr. Cost</th>
+                    <th class="text-end">Mat. Supply</th>
+                    <th class="text-end">Mat. Unit Cost</th>
+                    <th class="text-end">Purchase Cost</th>
                     <th class="text-end">Total</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
+
                 @php
                 $i = 1;
                 $total = 0;
@@ -83,15 +84,18 @@
 
                 @foreach ($jobs as $job)
 
+
                 <tr>
                     <td>{{ $i++ }}</td>
                     <td>{{ $job->date }}</td>
                     <td>{{ $job->customer?->name }}</td>
                     <td>{{ $job->service->service_name }}</td>
-                    <td class="text-end pe-20px">{{ number_format($job->width, 2) }}</td>
-                    <td class="text-end pe-20px">{{ number_format($job->height, 2) }}</td>
-                    <td class="text-end pe-20px">{{ number_format($job->cost, 2) }}</td>
-                    <td class="text-end pe-20px">{{ $job->copies }}</td>
+                    <td class="text-end pe-20px">{{ number_format($job->unit_cost, 2) }}</td>
+                    <td class="text-center">{{ $job->qty }}</td>
+                    <td class="text-end pe-20px">{{ number_format($job->embroidery_cost, 2) }}</td>
+                    <td class="text-end  pe-20px">{{ ucfirst($job->mat_supply) }}</td>
+                    <td class="text-end pe-20px">{{ number_format($job->mat_unit_cost, 2) }}</td>
+                    <td class="text-end pe-20px">{{ number_format($job->purchase_cost, 2) }}</td>
                     <td class="text-end pe-20px">{{ number_format($job->total, 2) }}</td>
                     <td class="text-end pe-20px">
 
@@ -109,7 +113,7 @@
                                 <a
                                     href="#"
                                     class="viewjob dropdown-item me-3"
-                                    data-url="{{ route('view-largeformat-job', $job->job_id) }}">
+                                    data-url="{{ route('view-embroidery-job', $job->job_id) }}">
 
                                     <i class="fas fa-file-alt me-3 text-primary"></i>
                                     Job Card
@@ -125,7 +129,7 @@
                                 </a>
 
                                 @can('administrator')
-                                <form method="POST" action="{{ route('delete-largeformat-job', $job->job_id) }}">
+                                <form method="POST" action="{{ route('delete-embroidery-job', $job->job_id) }}">
                                     @csrf
                                     @method('delete')
                                     <a
@@ -143,6 +147,7 @@
 
 
                     </td>
+
                 </tr>
 
 
@@ -154,58 +159,14 @@
     </div>
 </div>
 
+
 <div id="modal_holder"></div>
 @endsection
 
 @section('js')
 
 <script type="text/javascript">
-    $('.table tbody').on('click', '.viewjob', function(event) {
-        event.preventDefault();
-        var url = $(this).data('url');
-
-        $.ajax({
-            type: 'GET',
-            url: url,
-            success: function(response) {
-
-                $('#modal_holder').html(response);
-                new bootstrap.Modal(document.getElementById('jobCardModal')).show();
-
-            }
-        })
-    });
-
-    $('.table tbody').on('click', '.delete_job', function(event) {
-
-        var job = $(this)
-
-        new swal("Are you sure you want to delete this job?", {
-                buttons: {
-                    cancel: "Cancel",
-                    catch: {
-                        text: "Yes! Delete it!",
-                        value: "catch",
-                    }
-                },
-            })
-            .then((value) => {
-                switch (value) {
-
-                    case "cancel":
-                        swal("Cancelled", "Your job is safe");
-                        break;
-                    case "catch":
-                        job.closest('form').submit();
-                        break;
-
-                }
-            });
-
-    })
     $(document).ready(function() {
-
-        bindEvents();
 
         // Filter form on submit
         $('#filter_jobs_frm').on('submit', function(event) {
@@ -225,74 +186,45 @@
                 });
         });
 
-        function bindEvents() {
-            // $('.table tbody').on('click', '.viewjob', function(event) {
-            //     event.preventDefault();
-            //     var url = $(this).data('url');
 
-            //     $.get(url, function(response) {
-            //         $('#modal_holder').html(response);
-            //         $('#jobCardModal').modal('show');
-            //     })
+        // viewjobs on click
+        $('.table tbody').on('click', '.viewjob', function(event) {
+            event.preventDefault();
 
-            //     // View(url);
-            // });
+            var url = $(this).data('url');
 
-            // $('.table tbody').on('click', '.delete_job', function(event) {
-            //     event.preventDefault();
-            //     var job_id = $(this).attr('ID');
-            //     Delete(job_id);
-            // });
-        }
+            $.get(url, function(response) {
 
+                $('#modal_holder').html(response);
+                new bootstrap.Modal(document.getElementById('jobCardModal')).show();
 
-
-        // // viewjobs on click
-        // $('.table tbody').on('click', '.viewjob', function(event) {
-        //     event.preventDefault();
-        //     var job_id = $(this).attr('ID');
-        //     View(job_id)
-        // });
-
-        // // delete job on click
-        // $('.table tbody').on('click', '.delete_job', function(event) {
-        //     event.preventDefault();
-        //     var job_id = $(this).attr('ID')
-        //     Delete(job_id)
-        // }); //end click
-
-
-        function View(url) {
-            $.get(url)
-                .done(function(response) {
-                    $('#modal_holder').html(response);
-                    $('#jobCardModal').modal('show');
-                });
-        }
-
-        // function Edit(job_id) {
-
-        // }
-
-        function Delete(job_id) {
-            bootbox.confirm("Delete this job?", function(r) {
-                if (r === true) {
-                    $.post("jobs-controller/delete-job.php", {
-                            job_id
-                        },
-                        function(msg) {
-                            if (msg === 'delete_successful') {
-                                bootbox.alert("Job deleted successfully", function() {
-                                    window.location.reload()
-                                })
-                            } else {
-                                bootbox.alert(msg)
-                            }
-                        }
-                    );
-                } //end if
             })
-        }
+        });
+
+        // delete job on click
+        $('.table tbody').on('click', '.delete_job', function(event) {
+            var job = $(this)
+
+            new swal("Are you sure you want to delete this job?", {
+                "buttons": {
+                    "cancel": "Cancel",
+                    "catch": {
+                        "text": "Yes! Delete it!",
+                        "value": "catch",
+                    }
+                }
+            })
+                .then((value) => {
+                    switch (value) {
+                        case "cancel":
+                            new swal("Your job is safe");
+                            break;
+                        case "catch":
+                            job.closest('form').submit();
+                            break;
+                    }
+                });
+        }); //end click
 
 
     });
