@@ -4,6 +4,7 @@ namespace App\Models\Jobs;
 
 use App\Models\Service;
 use App\Traits\ScopedActive;
+use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -47,5 +48,10 @@ class PressJob extends Model
     public function service()
     {
         return $this->belongsTo(Service::class, 'service_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 }

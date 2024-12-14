@@ -13,7 +13,10 @@ class PressJobController extends Controller
      */
     public function index()
     {
-        //
+        $jobs = PressJob::with('customer', 'service')
+            ->latest()->take(100)->get();
+
+        return view('app.job.press-jobs', compact('jobs'));
     }
 
     /**
@@ -48,9 +51,15 @@ class PressJobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PressJob $pressJob)
+    public function show(string $job_id)
     {
-        //
+        $pressJob = PressJob::find($job_id);
+
+        if (is_null($pressJob)) {
+            return abort(404);
+        }
+
+        return view('app.job.modals.press-jobcard', compact('pressJob'));
     }
 
     /**
@@ -72,8 +81,18 @@ class PressJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PressJob $pressJob)
+    public function destroy(string $job_id)
     {
-        //
+        $pressJob = PressJob::find($job_id);
+
+        if (is_null($pressJob)) {
+            return abort(404);
+        }
+
+        $deleted = $pressJob->delete();
+
+        return $deleted
+            ? redirect()->back()->with('success', 'Job deleted successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 }

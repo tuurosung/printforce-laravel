@@ -54,7 +54,8 @@
                                 <select
                                     class="form-select form-select-sm"
                                     name="category"
-                                    id="category">
+                                    id="category"
+                                    required>
 
                                     <option value="">--</option>
                                     @foreach (App\Helpers\CustomerHelper::$customerCategory as $key => $value)

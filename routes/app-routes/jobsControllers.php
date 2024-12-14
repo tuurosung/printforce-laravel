@@ -45,5 +45,7 @@ Route::prefix('designjobs')->controller(DesignJobController::class)->group(funct
 Route::prefix('pressjobs')->controller(PressJobController::class)->group(function () {
 
     Route::get('/', 'index')->name('pressjobs');
+    Route::get('/view-job-card/{job_id}', 'show')->name('view-press-job');
     Route::post('/store', 'store')->name('store.pressjob');
+    Route::delete('/delete/{job_id}', 'destroy')->name('delete-press-job');
 });

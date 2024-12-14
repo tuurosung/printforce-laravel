@@ -9,12 +9,11 @@
     <div>
         <button
             type="button"
-            href="{{ route('new-customer') }}"
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#newCustomerModal">
 
-            <i class="fas fa-plus mr-3  "></i>
+            <i class="fas fa-plus me-3  "></i>
             New Customer
         </button>
     </div>
@@ -75,7 +74,7 @@
 
             <div class="col-2 col-lg-2 col-md-3 col-sm-4">
 
-                <input type="text" name="search_term" id="search_term" class="form-control w-250px mr-5" value="" placeholder="customer's name or phone number">
+                <input type="text" name="search_term" id="search_term" class="form-control w-250px me-5" value="" placeholder="customer's name or phone number">
 
             </div>
 
@@ -126,7 +125,7 @@
                             <a
                                 href="/edit-customer/{{ $customer->customer_id }}"
                                 class="text-primary me-3">
-                                <i class="fas fa-pen mr-3 text-primary "></i>
+                                <i class="fas fa-pen me-3 text-primary "></i>
                                 Edit
                             </a>
 
@@ -182,4 +181,9 @@
 
 @section('js')
 
+<script>
+    $('#newCustomerModal').on('shown.bs.modal', function() {
+        $('#name').focus();
+    });
+</script>
 @endsection

@@ -19,16 +19,25 @@ Route::controller(OperatingAccountController::class)->group(function () {
 });
 
 // Expenditure Routing
-Route::controller(ExpenditureController::class)->group(function () {
-    // index
-    Route::get('/expenditure', 'index')->name('all.expenses');
-    Route::get('/supplier-info/{id}', 'show')->name('supplier.info');
-    // Route::get('/new-expenditure', 'create')->name('new.expenditure');
-    Route::post('expenditure', 'store')->name('create.expense');
-    Route::get('/expenditure-edit/{id}', 'edit')->name('edit.expenditure');
-    Route::post('/expenditure-update', 'update')->name('update.expenditure');
-    Route::post('/expenditure-delete/{id}', 'destroy')->name('delete.expenditure');
-    Route::post('/filter-expenditure', 'filterExpenditure')->name('filter.expenditure');
+Route::prefix('expenses')->controller(ExpenditureController::class)->group(function () {
+
+    // displays all expenses
+    Route::get('/', 'index')->name('expenses');
+
+    // shows a selected expense
+    Route::get('/edit-expense/{id}', 'edit')->name('edit-expense');
+
+    // updates a selected expense
+    Route::post('/update-expense', 'update')->name('update-expense');
+
+    // create a new expense
+    Route::post('/create-expense', 'store')->name('create-expense');
+
+    // deletes a selected expense
+    Route::post('/delete/{id}', 'destroy')->name('delete-expense');
+
+    // filter expenses
+    Route::post('/filter-expenses', 'filterExpenditure')->name('filter-expenses');
 });
 
 

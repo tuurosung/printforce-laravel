@@ -2,12 +2,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use DateTimeInterface;
+use App\Traits\ScopedActive;
+use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Expenditure extends Model
 {
     use HasFactory;
+    use ScopedActive;
+    use ScopedToSubscriber;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($expenditure) {
+            $expenditure->expenditure_id = generateDashedRandomNumber();
+            $expenditure->subscriber_id = Auth::user()->subscriber_id;
+        });
+    }
+
     protected $table = 'expenditure';
     protected $primaryKey = 'expenditure_id';
     public $incrementing = false;
@@ -22,7 +40,7 @@ class Expenditure extends Model
         'account_number'
     ];
 
-    public function headers()
+    public function header()
     {
         return $this->belongsTo(ExpenditureHeader::class, 'header_id');
     }
@@ -40,5 +58,33 @@ class Expenditure extends Model
         // ->where('subscriber_id', '187635294')
         // ->sum('amount');
         return Expenditure::whereSubscriberId('187635294')->sum('amount');
+    }
+
+    public static function getExpenditureByPeriod()
+    {
+        $today = Carbon::now();
+        $beginingOfWeek = $today->copy()->startOfWeek();
+        $beginingOfMonth = $today->copy()->startOfMonth();
+        $beginingOfYear = $today->copy()->startOfYear();
+
+        return [
+            'today' => self::getTotalExpenditure($today),
+            'week' => self::getTotalExpenditure($beginingOfWeek, $today),
+            'month' => self::getTotalExpenditure($beginingOfMonth, $today),
+            'year' => self::getTotalExpenditure($beginingOfYear, $today)
+        ];
+    }
+
+    private static function getTotalExpenditure(DateTimeInterface $start, DateTimeInterface $end = null)
+    {
+        $query = Expenditure::whereStatus('active');
+
+        if (isset($end)) {
+            $query->whereBetween('date', [$start, $end]);
+        } else {
+            $query->whereDate('date', $start->format('Y-m-d'));
+        }
+
+        return number_format($query->sum('amount'), 2);
     }
 }

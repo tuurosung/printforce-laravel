@@ -110,7 +110,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a href="{{ route('all.expenses') }}" class="menu-link" id="expenses_nav">
+                <a href="{{ route('expenses') }}" class="menu-link" id="expenses_nav">
                     <i class="fas fa-chart-line menu-icon"></i>
                     <span class="menu-text">Expenses</span>
                 </a>
