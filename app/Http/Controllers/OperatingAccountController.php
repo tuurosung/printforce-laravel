@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\AddFunds;
 use App\Models\Expenditure;
+use App\Models\Subscribers;
 use App\Models\FundTransfer;
 use Illuminate\Http\Request;
-use App\Models\CustomerPayment;
 use App\Models\PurchasePayment;
 use App\Models\OperatingAccount;
 use App\Models\OperatingAccountTypes;
-use App\Models\Subscribers;
+use App\Models\OperatingAccountHeader;
+use App\Models\Customers\CustomerPayment;
 
 class OperatingAccountController extends Controller
 {
@@ -22,15 +23,24 @@ class OperatingAccountController extends Controller
      */
     public function index(Subscribers $subscriber)
     {
-        $account_types = OperatingAccountTypes::with(['headers.accounts' => function($query) {
-            $query->whereStatus('active')->whereSubscriberId($this->active_subscriber);
-        }])->get();
+        $account_types = OperatingAccountTypes::with('headers.accounts')
+            ->get();
 
-        $data = [
-            'account_types' => $account_types
-        ];
+        $account_types = OperatingAccountTypes::with([
+            'headers.accounts' => function ($query) {
+                $query->with([
+                    'payments',
+                    'expenditure',
+                    'receivedFunds',
+                    'transferredFunds',
+                    'purchasePayments'
 
-        return view('Admin.accounts.index', $data);
+                ]);
+            }
+        ])->get();
+        // dd($account_headers);
+
+        return view('app.accounts.accounts', compact('account_types', 'account_types'));
     }
 
     /**
@@ -47,12 +57,28 @@ class OperatingAccountController extends Controller
         return view('Admin.accounts.create', $data);
     }
 
+
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'account_header' => 'required',
+            'account_name' => 'required',
+            'description' => 'required',
+        ]);
+
+        $accountHeader = OperatingAccountHeader::find($data['account_header']);
+
+        $data['acc_type'] = $accountHeader->type;
+
+        $create = OperatingAccount::create($data);
+
+        return $create
+            ? redirect()->back()->with('success', 'Account created successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
     /**

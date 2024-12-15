@@ -6,11 +6,16 @@ use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\OperatingAccountController;
 
 // Accounts Routing
-Route::controller(OperatingAccountController::class)->group(function () {
+Route::prefix('accounts')->controller(OperatingAccountController::class)->group(function () {
+
     // index
-    Route::get('/accounts', 'index')->name('all.accounts');
+    Route::get('/', 'index')->name('accounts');
+
     // Route::get('/transfer-info/{id}', 'show')->name('transfer.info');
-    Route::get('/account', 'create')->name('new.account');
+
+    // create new account
+    Route::post('/create', 'store')->name('create-account');
+
     // Route::post('service', 'store')->name('create.service');
     // Route::get('/service-edit/{id}', 'edit')->name('edit.service');
     // Route::post('/service-update', 'update')->name('update.service');

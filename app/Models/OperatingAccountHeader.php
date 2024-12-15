@@ -11,8 +11,6 @@ class OperatingAccountHeader extends Model
 
     protected $table = 'account_headers';
     protected $primaryKey = 'sn';
-    public $incrementing = 'false';
-
     public function accounts()
     {
         return $this->hasMany(OperatingAccount::class, 'account_header');
@@ -22,4 +20,6 @@ class OperatingAccountHeader extends Model
     {
         return $this->belongsTo(OperatingAccountTypes::class, 'type');
     }
+
+    
 }

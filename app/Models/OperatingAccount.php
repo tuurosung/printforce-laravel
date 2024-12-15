@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Models\Subscribers;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Customers\CustomerPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OperatingAccount extends Model
@@ -15,9 +17,28 @@ class OperatingAccount extends Model
     use ScopedActive;
     use ScopedToSubscriber;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($account) {
+            $account->account_number = self::generateAccountNumber();
+            $account->subscriber_id = Auth::user()->subscriber_id;
+        });
+    }
+
     protected $table = 'all_accounts';
     protected $primaryKey = 'account_number';
     public $incrementing = false;
+
+    protected $fillable = [
+        'subscriber_id',
+        'account_number',
+        'account_header',
+        'account_name',
+        'account_type',
+        'description'
+    ];
 
     protected $active_subscriber = '187635294';
 
@@ -25,8 +46,6 @@ class OperatingAccount extends Model
     {
         return $this->belongsTo(OperatingAccountHeader::class, 'account_header');
     }
-
-
 
     /**
      * Define the relationship between accounts and payments using account_number
@@ -131,6 +150,12 @@ class OperatingAccount extends Model
     public static function filterByType($account_type)
     {
         return self::where('acc_type', $account_type)->get();
+    }
+
+    private static function generateAccountNumber()
+    {
+        $count = OperatingAccount::count() + 1;
+        return 1000000 + $count;
     }
 
 }

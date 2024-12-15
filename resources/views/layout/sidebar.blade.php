@@ -132,7 +132,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a href="{{ route('all.accounts') }}" class="menu-link" id="accounts_li">
+                <a href="{{ route('accounts') }}" class="menu-link" id="accounts_li">
                     <i class="fas fa-code-branch menu-icon"></i>
                     <span class="menu-text"> Chart Of Acc. </span>
                 </a>
