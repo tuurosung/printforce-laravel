@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\Constraint\Operator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OperatingAccountTypes extends Model
 {
@@ -22,5 +23,13 @@ class OperatingAccountTypes extends Model
     public function headers()
     {
         return $this->hasMany(OperatingAccountHeader::class, 'type');
+    }
+
+    public static function getAccountTypes()
+    {
+        return Cache::remember('account_types', 60*60, function () {
+            return OperatingAccountTypes::with('headers.accounts')
+            ->get();
+        });
     }
 }

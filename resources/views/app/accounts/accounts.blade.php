@@ -4,7 +4,7 @@
 
 <div class="d-flex justify-content-between">
     <div class="">
-        <h2 class="fs-30px fw-700 montserrat">Chart Of Accounts</h2>
+        <h2 class="h2">Chart Of Accounts</h2>
     </div>
     <div>
 
@@ -20,6 +20,7 @@
         </button>
     </div>
 </div>
+
 
 <div class="card border-0 mt-5">
     <ul class="nav nav-tabs nav-tabs-v2 ps-4 pe-4">
@@ -90,15 +91,43 @@
                         </td>
                         <td class="text-end">
 
-                            <a href="#" class="me-3 text-primary">
-                                <i class="fas fa-pen me-2"></i>
-                                Edit
-                            </a>
+                            <div class="dropdown">
+                                <a
+                                    class="dropdown-toggle"
+                                    type="button"
+                                    id="triggerId"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Options
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="triggerId">
+                                    <a
+                                        href="#"
+                                        class="dropdown-item me-3 edit_account"
+                                        data-url="{{ route('edit-account', $account->account_number) }}">
 
-                            <a href="#" class="text-danger">
-                                <i class="fas fa-trash-alt text-danger me-2"></i>
-                                Delete
-                            </a>
+                                        <i class="fas fa-pen me-3 text-primary"></i>
+                                        Edit
+
+                                    </a>
+
+                                    <form class="d-inline-block dropdown-item" method="POST" action="{{ route('delete-account', $account->account_number) }}">
+                                        @csrf
+                                        <a
+                                            href="#"
+                                            class="text-danger text-decoration-none delete_account">
+
+                                            <i class="fas fa-trash-alt text-danger me-3"></i>
+                                            Delete
+
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+
+
+
 
                         </td>
                     </tr>
@@ -161,26 +190,15 @@
 
 @include('app.accounts.modals.new-account')
 
+<div id="modal_holder"></div>
 @endsection
 
 
 @section('js')
 <script type="text/javascript">
-    $('.sidebar-fixed .list-group-item').removeClass('active')
-    $('#accounting_nav').addClass('active')
-    $('#accounting_submenu').addClass('show')
-    $('#accounts_li').addClass('font-weight-bold')
-
     $('#print_trial_balance').on('click', function(event) {
         event.preventDefault();
         print_popup('print_trial_balance.php')
-    });
-
-    $('.nav-links').on('click', function(event) {
-        $('.nav-links').removeClass('active')
-        $('.nav-tabs .nav-links').removeClass('show')
-        $(this).addClass('active')
-        $(this).prop('aria-selected', 'false');
     });
 
     $('#print_pl').on('click', function(event) {
@@ -188,22 +206,41 @@
         print_popup('print_pandl.php')
     });
 
-    $('#new_account_frm').on('submit', function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: '../serverscripts/admin/Accounts/new_account_frm.php',
-            type: 'GET',
-            data: $('#new_account_frm').serialize(),
-            success: function(msg) {
-                if (msg === 'save_successful') {
-                    bootbox.alert("Account created successfully", function() {
-                        window.location.reload()
-                    })
-                } else {
-                    bootbox.alert(msg)
-                }
-            }
+    $('.table tbody').on('click', '.edit_account', function(event) {
+
+        var url = $(this).data('url');
+
+        $.get(url, function(response) {
+            // console.log(response);
+
+            $('#modal_holder').html(response);
+            new bootstrap.Modal(document.getElementById('edit_account_modal')).show()
         })
+    });
+
+    $('.table tbody').on('click', '.delete_account', function(event) {
+        event.preventDefault();
+
+        var account = $(this)
+
+        new swal("Are you sure you want to delete this account?", {
+                buttons: {
+                    cancel: "Cancel",
+                    catch: {
+                        text: "Yes! Delete it!",
+                        value: "catch",
+                    }
+                }
+            })
+            .then((value) => {
+                switch (value) {
+                    case "cancel":
+                        break;
+                    case "catch":
+                        account.closest('form').submit();
+                        break;
+                }
+            });
     });
 </script>
 @endsection

@@ -11,10 +11,17 @@ Route::prefix('accounts')->controller(OperatingAccountController::class)->group(
     // index
     Route::get('/', 'index')->name('accounts');
 
-    // Route::get('/transfer-info/{id}', 'show')->name('transfer.info');
+    // load edit form
+    Route::get('/edit/{id}', 'edit')->name('edit-account');
 
     // create new account
     Route::post('/create', 'store')->name('create-account');
+
+    // update account
+    Route::post('/update', 'update')->name('update-account');
+
+    // deletes an account
+    Route::post('/delete/{operatingAccount}', 'destroy')->name('delete-account');
 
     // Route::post('service', 'store')->name('create.service');
     // Route::get('/service-edit/{id}', 'edit')->name('edit.service');

@@ -23,8 +23,7 @@ class OperatingAccountController extends Controller
      */
     public function index(Subscribers $subscriber)
     {
-        $account_types = OperatingAccountTypes::with('headers.accounts')
-            ->get();
+        $account_types = OperatingAccountTypes::getAccountTypes();
 
         $account_types = OperatingAccountTypes::with([
             'headers.accounts' => function ($query) {
@@ -71,8 +70,14 @@ class OperatingAccountController extends Controller
         ]);
 
         $accountHeader = OperatingAccountHeader::find($data['account_header']);
-
         $data['acc_type'] = $accountHeader->type;
+
+        // check if account name already exists
+        $name_exists = OperatingAccount::where('account_name', $data['account_name'])->first();
+
+        if ($name_exists) {
+            return redirect()->back()->with('error', 'Account name already exists');
+        }
 
         $create = OperatingAccount::create($data);
 
@@ -92,17 +97,45 @@ class OperatingAccountController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(OperatingAccount $operatingAccount)
+    public function edit(string $account_number)
     {
-        //
+        $operatingAccount = OperatingAccount::find($account_number);
+
+        if (is_null($operatingAccount)) {
+            return abort(404);
+        }
+
+        $account_types = OperatingAccountTypes::getAccountTypes();
+
+        return view('app.accounts.modals.edit-account', compact('operatingAccount', 'account_types'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OperatingAccount $operatingAccount)
+    public function update(Request $request)
     {
-        //
+        $operatingAccount = OperatingAccount::find($request->account_number);
+
+        if (is_null($operatingAccount)) {
+            return redirect()->back()->with('error', 'Account not found');
+        }
+
+        $data = $request->validate([
+            'account_header' => 'required',
+            'account_name' => 'required',
+            'description' => 'required',
+        ]);
+
+        $accountHeader = OperatingAccountHeader::find($data['account_header']);
+
+        $data['acc_type'] = $accountHeader->type;
+
+        $update = $operatingAccount->update($data);
+
+        return $update
+            ? redirect()->back()->with('success', 'Account updated successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
     /**
@@ -110,7 +143,22 @@ class OperatingAccountController extends Controller
      */
     public function destroy(OperatingAccount $operatingAccount)
     {
-        //
+        if (is_null($operatingAccount)) {
+            return redirect()->back()->with('error', 'Account not found');
+        }
+
+        // check if account has any payments
+        $has_payments = $operatingAccount->payments->count() > 0;
+
+        if ($has_payments) {
+            return redirect()->back()->with('error', 'Account has payments and cannot be deleted');
+        }
+
+        $is_deleted = $operatingAccount->delete();
+
+        return $is_deleted
+            ? redirect()->back()->with('success', 'Account deleted successfully')
+            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
 
