@@ -50,7 +50,7 @@ class OperatingAccount extends Model
     /**
      * Define the relationship between accounts and payments using account_number
      *
-     * @return void
+     * @return mixed
      */
     public function payments()
     {
@@ -62,17 +62,20 @@ class OperatingAccount extends Model
      *
      * @return void
      */
-    public function totalPayments()
+    public function getTotalPaymentsAttribute()
     {
-        return $this->payments()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount_paid');
+        return $this->payments->sum('amount_paid');
+        // return $this->payments()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount_paid');
     }
+
+
 
     /**
      * Defines the relationship between account number and added funds
      *
-     * @return void
+     * @return mixed
      */
-    public function addFunds()
+    public function addedFunds()
     {
         return $this->hasMany(AddFunds::class, 'account_number');
     }
@@ -82,68 +85,108 @@ class OperatingAccount extends Model
      *
      * @return void
      */
-    public function totalFundsAdded()
+    public function getTotalFundsAddedAttribute()
     {
-        return $this->addFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
+        return $this->addedFunds->sum('amount');
+        // return $this->addFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
     }
+
+
+    /**
+     * Define the relationship between account number and received funds
+     * @return mixed
+     */
+    public function receivedFunds()
+    {
+        return $this->hasMany(FundTransfer::class, 'destination_account');
+    }
+
+
+
+    public function getTotalReceivedFundsAttribute()
+    {
+        return $this->receivedFunds->sum('amount');
+        // return $this->receivedFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
+    }
+
+
 
     public function expenditure()
     {
         return $this->hasMany(Expenditure::class, 'account_number');
     }
 
-    public function totalExpenditure()
+
+
+    public function getTotalExpenditureAttribute()
     {
-        return $this->expenditure()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
+        return $this->expenditure->sum('amount');
+        // return $this->expenditure()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
     }
 
-    public function receivedFunds()
-    {
-        return $this->hasMany(FundTransfer::class, 'destination_account');
-    }
 
-    public function totalReceivedFunds()
-    {
-        return $this->receivedFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
-    }
-
+    /**
+     * Define the relationship between account number and transferred funds
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transferredFunds()
     {
         return $this->hasMany(FundTransfer::class, 'source_account');
     }
 
-    public function totalTransferredFunds()
+    public function getTotalTransferredFundsAttribute()
     {
-        return $this->transferredFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
+        return $this->transferredFunds->sum('amount');
+        // return $this->transferredFunds()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount');
     }
 
+
+    /**
+     * Define the relationship between account number and purchase payments
+     *
+     * @return mixed
+     */
     public function purchasePayments()
     {
         return $this->hasMany(PurchasePayment::class, 'account_number');
     }
 
-    public function totalPurchasePayments()
+
+
+    public function getTotalPurchasePaymentsAttribute()
     {
-        return $this->purchasePayments()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount_paid');
+        return $this->purchasePayments->sum('amount_paid');
+        // return $this->purchasePayments()->where('subscriber_id', $this->active_subscriber)->where('status', 'active')->sum('amount_paid');
     }
 
-    public function totalCredit()
+    public function getTotalCreditAttribute()
     {
-       $credit = $this->totalFundsAdded() + $this->totalReceivedFunds();
-       return $credit;
+        return collect([
+            $this->total_funds_added,
+            $this->total_received_funds
+        ])->sum();
+
+    //    $credit = $this->totalFundsAdded() + $this->totalReceivedFunds();
+    //    return $credit;
     }
 
-    public function totalDebit()
+    public function getTotalDebitAttribute()
     {
-        $debit = $this->totalPayments() + $this->totalExpenditure() + $this->totalTransferredFunds() + $this->totalPurchasePayments();
-        return $debit;
+        return collect([
+            $this->total_payments,
+            $this->total_expenditure,
+            $this->total_transferred_funds,
+            $this->total_purchase_payments
+        ])->sum();
+
+        // $debit = $this->totalPayments() + $this->totalExpenditure() + $this->totalTransferredFunds() + $this->totalPurchasePayments();
+        // return $debit;
     }
 
 
-    public function acc_balance()
+    public function getAccountBalanceAttribute()
     {
-        $balance = $this->totalCredit() - $this->totalDebit();
-        return $balance;
+        return $this->total_credit - $this->total_debit;
     }
 
 
@@ -156,6 +199,83 @@ class OperatingAccount extends Model
     {
         $count = OperatingAccount::count() + 1;
         return 1000000 + $count;
+    }
+
+    public function getAccountHistoryAttribute()
+    {
+        $accountHistory = [];
+
+        // Get payments
+        $payments = $this->payments;
+        foreach ($payments as $payment) {
+            $accountHistory[] = [
+                'date' => $payment->created_at === null || $payment->created_at === '' ? $payment->date : $payment->created_at,
+                'transaction_id' => $payment->payment_id,
+                'type' => 'Payment',
+                'amount' => $payment->amount_paid,
+                'description' => $payment->description,
+                'transaction_type' => 'credit',
+            ];
+        }
+
+        // Get expenditures
+        $expenditures = $this->expenditure;
+        foreach ($expenditures as $expenditure) {
+            $accountHistory[] = [
+                'date' => $expenditure->created_at,
+                'transaction_id' => $expenditure->expenditure_id,
+                'type' => 'Expenditure',
+                'amount' => $expenditure->amount,
+                'description' => $expenditure->description,
+                'transaction_type' => 'debit',
+            ];
+        }
+
+        // Get purchase payments
+        $purchasePayments = $this->purchasePayments;
+        foreach ($purchasePayments as $purchasePayment) {
+            $accountHistory[] = [
+                'date' => $purchasePayment->created_at,
+                'transaction_id' => $purchasePayment->payment_id,
+                'type' => 'Purchase Payment',
+                'amount' => $purchasePayment->amount,
+                'description' => $purchasePayment->description,
+                'transaction_type' => 'debit',
+            ];
+        }
+
+        // Get inbound transfers
+        $inboundTransfers = $this->receivedFunds;
+        foreach ($inboundTransfers as $inboundTransfer) {
+            $accountHistory[] = [
+                'date' => $inboundTransfer->created_at,
+                'transaction_id' => $inboundTransfer->transfer_id,
+                'type' => 'Inbound Transfer',
+                'amount' => $inboundTransfer->amount,
+                'description' => $inboundTransfer->description,
+                'transaction_type' => 'credit',
+            ];
+        }
+
+        // Get outbound transfers
+        $outboundTransfers = $this->transferredFunds;
+        foreach ($outboundTransfers as $outboundTransfer) {
+            $accountHistory[] = [
+                'date' => $outboundTransfer->created_at,
+                'transaction_id' => $outboundTransfer->transfer_id,
+                'type' => 'Outbound Transfer',
+                'amount' => $outboundTransfer->amount,
+                'description' => $outboundTransfer->description,
+                'transaction_type' => 'debit',
+            ];
+        }
+
+        // Sort account history by date
+        usort($accountHistory, function ($a, $b) {
+            return $a['date'] <=> $b['date'];
+        });
+
+        return $accountHistory;
     }
 
 }

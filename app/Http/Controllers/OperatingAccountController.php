@@ -91,7 +91,11 @@ class OperatingAccountController extends Controller
      */
     public function show(OperatingAccount $operatingAccount)
     {
-        //
+        if (is_null($operatingAccount)) {
+            return redirect()->back()->with('error', 'Account not found');
+        }
+
+        return view('app.accounts.account-transactions', compact('operatingAccount'));
     }
 
     /**

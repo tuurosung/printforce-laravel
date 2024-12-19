@@ -18,62 +18,42 @@ class FundTransferController extends Controller
      */
     public function index()
     {
-        $i = 1;
+
         $all_transfers = $this->getTransfers();
+        $all_accounts = OperatingAccount::filterByType(1);
+        $transferSummary = $this->getTotalTransfer();
 
-        $data = [
-            'i' => $i,
-            'all_transfers' => $all_transfers,
-            'transferSummary' => $this->getTotalTransfer()
-        ];
-
-        return view('Admin.transfers.index', $data);
+        return view('app.fund-transfers.fund-transfers', compact('all_transfers', 'all_accounts', 'transferSummary'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $account = new OperatingAccountController();
-        $all_accounts = $account->allAccounts();
 
-        $data = [
-            'all_accounts' => $all_accounts
-        ];
-
-        return view('Admin.transfers.create', $data);
-    }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $this->validateRequest($request);
+        $data = $request->validate([
+            'amount' => 'required',
+            'date' => 'required',
+            'source_account' => 'required',
+            'destination_account' => 'required',
+            'notes' => 'required'
+        ]);
 
         // avoid transfer to the same account
-        if ($request->source === $request->destination) {
+        if ($data['source_account'] === $data['destination_account']) {
             return redirect()->back()->with('error',"Errrmmm, You cannot transfer funds into the same account");
         }
 
-        $createData = [
-            'subscriber_id' => $this->active_subscriber,
-            'transfer_id' => $this->transferId(),
-            'date' => $request->date,
-            'amount' => $request->amount,
-            'source_account' => $request->source,
-            'destination_account' => $request->destination,
-            'notes' => $request->notes,
-        ];
+        $is_transferred = FundTransfer::create($data);
 
-        try {
-            FundTransfer::create($createData);
-            return redirect()->back()->with('success', "Bingo! Transfer created successfully");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Ooops! Something went wrong on our side".$e->getMessage());
-        }
+        return $is_transferred
+            ? redirect()->back()->with('success', "Bingo! Transfer created successfully")
+            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
     }
+
+
 
     /**
      * Display the specified resource.
@@ -84,22 +64,22 @@ class FundTransferController extends Controller
         // $transfer = $this->findTransfer($transfer_id);
     }
 
+
+
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($transfer_id)
+    public function edit(string $transfer_id)
     {
-        $account = new OperatingAccountController();
+        $fundTransfer = FundTransfer::find($transfer_id);
 
-        $transfer = $this->findTransfer($transfer_id);
-        $all_accounts = $account->allAccounts();
+        if (is_null($fundTransfer)) {
+            return abort(404);
+        }
 
-        $data = [
-            'transfer' => $transfer,
-            'all_accounts' => $all_accounts
-        ];
+        $all_accounts = OperatingAccount::filterByType(1);
 
-        return view('Admin.transfers.edit', $data);
+        return view('app.fund-transfers.modals.edit-fundtransfer', compact('fundTransfer', 'all_accounts'));
     }
 
     /**
@@ -107,29 +87,28 @@ class FundTransferController extends Controller
      */
     public function update(Request $request)
     {
-        $this->validateRequest($request);
+        $data = $request->validate([
+            'transfer_id' => 'required',
+            'amount' => 'required',
+            'date' => 'required',
+            'source_account' => 'required',
+            'destination_account' => 'required',
+            'notes' => 'required'
+        ]);
 
-        $transfer = $this->findTransfer($request->transfer_id);
+        $fundTransfer = FundTransfer::find($data['transfer_id']);
 
         // avoid transfer to the same account
-        if ($request->source === $request->destination) {
+        if ($data['source_account'] === $data['destination_account']) {
             return redirect()->back()->with('error', "Errrmmm, You cannot transfer funds into the same account");
         }
 
-        $updateData = [
-            "amount" => $request->amount,
-            "date" => $request->date,
-            "source_account" => $request->source,
-            "destination_account" => $request->destination,
-            "notes" => $request->notes,
-        ];
+        $is_updated = $fundTransfer->update($data);
 
-        try {
-            $transfer->update($updateData);
-            return redirect()->back()->with('success', "Bingo! Transfer has been updated successfully");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Ooops! Something went wrong on our side". $e->getMessage());
-        }
+        return $is_updated
+            ? redirect()->back()->with('success', "Bingo! Transfer updated successfully")
+            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+
     }
 
     /**
@@ -138,63 +117,34 @@ class FundTransferController extends Controller
     public function destroy(string $transfer_id)
     {
         // find the given transfer
-        $transfer = $this->findTransfer($transfer_id);
+        $transfer = FundTransfer::find($transfer_id);
 
-        $transfer->status = 'deleted';
+        $is_deleted = $transfer->status = 'deleted';
 
-        try {
-            $transfer->save();
-            return redirect()->back()->with('success', "Bingo! Transfer deleted successfully");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Ooops! Something went wrong on our side");
-        }
+        return $is_deleted
+            ? redirect()->back()->with('success', "Bingo! Transfer deleted successfully")
+            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+
     }
 
     public function filterTransfers(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'start_date' => 'required',
             'end_date' => 'required'
-            // 'account_number' => 'required'
         ]);
 
-        $start = $request->start_date;
-        $end = $request->end_date;
+        $start_date = $data['start_date'];
+        $end_date = $data['end_date'];
 
-        $filteredList = FundTransfer::whereBetween('date', [$start, $end])
-            ->whereStatus('active')
-            ->whereSubscriberId($this->active_subscriber)
+        $filteredTransfers = FundTransfer::whereBetween('date', [$start_date, $end_date])
             ->get();
 
-        $i = 1;
 
-        $data = [
-            'i' => $i,
-            'all_transfers' => $filteredList
-        ];
-
-        return view('Admin.transfers._filter', $data);
+        return view('app.fund-transfers.filter-transfers', compact('filteredTransfers'));
     }
 
-    private function transferId()
-    {
-        $count = FundTransfer::whereSubscriberId($this->active_subscriber)
-            ->whereStatus('active')
-            ->orderBy('sn', 'desc')
-            ->count() + 1;
 
-        return str_pad($count, 6, "0", STR_PAD_LEFT);
-    }
-
-    private function validateRequest($request) {
-        return $request->validate([
-            'date' => 'required|date',
-            'amount' => 'required|numeric',
-            'source' => 'required',
-            'destination' => 'required',
-            'notes' => 'required'
-        ]);
-    }
 
     public function findTransfer($transfer_id)
     {

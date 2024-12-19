@@ -139,7 +139,7 @@
             </div>
 
             <div class="menu-item">
-                <a href="{{ route('all.transfers') }}" class="menu-link" id="accounts_li">
+                <a href="{{ route('transfers') }}" class="menu-link" id="accounts_li">
                     <i class="fas fa-long-arrow-alt-right menu-icon"></i>
                     <span class="menu-text">Fund Transfers </span>
                 </a>

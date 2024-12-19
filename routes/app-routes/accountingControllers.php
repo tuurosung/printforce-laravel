@@ -11,6 +11,9 @@ Route::prefix('accounts')->controller(OperatingAccountController::class)->group(
     // index
     Route::get('/', 'index')->name('accounts');
 
+    // show account details
+    Route::get('/transactions/{operatingAccount}', 'show')->name('account-transactions');
+
     // load edit form
     Route::get('/edit/{id}', 'edit')->name('edit-account');
 
@@ -54,14 +57,26 @@ Route::prefix('expenses')->controller(ExpenditureController::class)->group(funct
 
 
 // Transfers Routing
-Route::controller(FundTransferController::class)->group(function () {
+Route::prefix('fund-transfers')->controller(FundTransferController::class)->group(function () {
+
     // index
-    Route::get('/transfers', 'index')->name('all.transfers');
+    Route::get('/', 'index')->name('transfers');
+
     // Route::get('/transfer-info/{id}', 'show')->name('transfer.info');
     Route::get('/transfer', 'create')->name('new.transfer');
-    Route::post('transfer', 'store')->name('create.transfer');
-    Route::get('/transfer-edit/{id}', 'edit')->name('edit.transfer');
-    Route::post('/transfer-update', 'update')->name('update.transfer');
+
+    // create new transfer
+    Route::post('/create-transfer', 'store')->name('create-transfer');
+
+    // edit transfer
+    Route::get('/edit/{transfer_id}', 'edit')->name('edit-transfer');
+
+    // update transfer
+    Route::post('/update', 'update')->name('update-transfer');
+
+    // delete transfer
     Route::post('/transfer-delete/{id}', 'destroy')->name('delete.transfer');
+
+    // filter transfers
     Route::post('/filter-transfers', 'filterTransfers')->name('filter.transfers');
 });

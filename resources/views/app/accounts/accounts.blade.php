@@ -72,7 +72,7 @@
                     @foreach ($header->accounts as $account)
                     <tr>
                         <td scope="row">
-                            <a href="account_transactions.php?account_number={{ $account->account_number }}">
+                            <a href="{{ route('account-transactions', $account) }}">
                                 {{ $account->account_number }}
                             </a>
                         </td>
@@ -84,10 +84,10 @@
                             </a>
 
                         </td>
-                        <td class="text-end">{{ number_format($account->totalDebit(),2) }}</td>
-                        <td class="text-end">{{ number_format($account->totalCredit(),2) }}</td>
+                        <td class="text-end">{{ number_format($account->total_debit,2) }}</td>
+                        <td class="text-end">{{ number_format($account->total_credit,2) }}</td>
                         <td class="text-end">
-                            {{ number_format($account->acc_balance(),2) }}
+                            {{ number_format($account->account_balance,2) }}
                         </td>
                         <td class="text-end">
 

@@ -205,6 +205,10 @@
         hr {
             opacity: 1 !important;
         }
+
+        .nav-pills .nav-link {
+            border-radius: 35px !important;
+        }
     </style>
 
 </head>

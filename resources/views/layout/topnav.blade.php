@@ -46,7 +46,7 @@
                         <i class="fa fa-receipt fa-lg fa-fw text-success"></i>
                     </div>
                     <div class="dropdown-notification-info">
-                        <div class="title">Your hospital is ready</div>
+                        <div class="title">Your account is ready</div>
                         <div class="time">just now</div>
                     </div>
                     <div class="dropdown-notification-arrow">
