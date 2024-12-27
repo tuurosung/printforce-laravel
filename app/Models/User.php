@@ -3,13 +3,24 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // $model->user_id = generateRandomString();
+            $model->subscriber_id = Auth::user()->subscriber_id;
+        });
+    }
 
     protected $primaryKey = 'user_id';
 
@@ -21,7 +32,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone_number',
         'password',
+        'access_level'
     ];
 
     /**
@@ -50,5 +63,11 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Subscribers::class, 'subscriber_id');
+    }
+
+    public static function getRegisteredUsers()
+    {
+        return User::where('subscriber_id', Auth::user()->subscriber_id)
+            ->get();
     }
 }

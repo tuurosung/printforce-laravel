@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ExpenditureController;
-use App\Http\Controllers\FundTransferController;
-use App\Http\Controllers\OperatingAccountController;
+use App\Http\Controllers\Accounting\ExpenditureController;
+use App\Http\Controllers\Accounting\FundTransferController;
+use App\Http\Controllers\Accounting\OperatingAccountController;
 
 // Accounts Routing
 Route::prefix('accounts')->controller(OperatingAccountController::class)->group(function () {
@@ -32,6 +32,7 @@ Route::prefix('accounts')->controller(OperatingAccountController::class)->group(
     // Route::post('/service-delete/{id}', 'destroy')->name('delete.service');
     // Route::post('/filter-transfers', 'filterTransfers')->name('filter.transfers');
 });
+
 
 // Expenditure Routing
 Route::prefix('expenses')->controller(ExpenditureController::class)->group(function () {

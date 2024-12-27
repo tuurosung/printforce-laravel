@@ -96,7 +96,7 @@
 
             <!-- Purchases -->
             <div class="menu-item">
-                <a href="{{ route('all.suppliers') }}" class="menu-link">
+                <a href="{{ route('suppliers') }}" class="menu-link">
                     <i class="fas fa-people-carry menu-icon"></i>
                     <span class="menu-text">Suppliers</span>
                 </a>
@@ -235,7 +235,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a href="staff/index.php" class="menu-link" id="registered_users_li">
+                <a href="{{ route('users') }}" class="menu-link" id="registered_users_li">
                     <i class="fas fa-users menu-icon"></i>
                     <span class="menu-text">Registered Users</span>
                 </a>
@@ -243,7 +243,7 @@
 
 
             <div class="menu-item">
-                <a href="{{ route('all.services') }}" class="menu-link" id="reports_li">
+                <a href="{{ route('services') }}" class="menu-link" id="reports_li">
                     <i class="fas fa-cogs menu-icon"></i>
                     <span class="menu-text">Services</span>
                 </a>

@@ -8,7 +8,7 @@ trait ScopedActive
 {
     public static function bootScopedActive()
     {
-        static::addGlobalScope('active', function (Builder $builder){
+        static::addGlobalScope('status', function (Builder $builder){
             $builder->where('status', 'active');
         });
     }

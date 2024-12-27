@@ -1,10 +1,14 @@
 <script type="text/javascript" src="{{ asset('assets/js/jquery.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootbox.js') }}"></script>
+
+
+<script type="text/javascript" src={{ asset('assets/js/vendor.min.js') }}></script>
+<script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
+
 <script type="text/javascript" src="{{ asset('assets/datatables/datatables.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap-datepicker.js') }}"></script>
 
-<script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/app.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/bootstrap-modal.js') }}"></script>

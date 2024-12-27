@@ -3,7 +3,7 @@
 namespace App\Models\Customers;
 
 use App\Traits\ScopedActive;
-use App\Models\OperatingAccount;
+use App\Models\Accounting\OperatingAccount;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;

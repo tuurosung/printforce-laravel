@@ -2,8 +2,9 @@
 
 namespace App\Models\Jobs;
 
-use App\Models\Service;
+
 use App\Traits\ScopedActive;
+use App\Models\Services\Service;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +77,10 @@ class LargeFormatJob extends Model
 
     public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(Service::class, 'service_id')
+            ->withDefault([
+                'service_name' => 'Undefined'
+            ]);
     }
 
 

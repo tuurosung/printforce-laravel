@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Customers;
 
-use App\Models\Service;
+
 use App\Models\PressJob;
 use App\Models\DesignJob;
 use Illuminate\Http\Request;
-use App\Models\EmbroideryJob;
 use App\Models\LargeFormatJob;
 use App\Models\CustomerPayment;
 use App\Models\CustomerCategory;
 use App\Models\CustomerInvoices;
+use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Models\Jobs\EmbroideryJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\OperatingAccount;
+use App\Models\Accounting\OperatingAccount;
 
 class CustomerController extends Controller
 {
