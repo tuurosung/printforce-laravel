@@ -5,16 +5,14 @@ namespace App\Http\Controllers\Accounting;
 
 use Carbon\Carbon;
 use DateTimeInterface;
-use App\Models\Expenditure;
 use Illuminate\Http\Request;
-use App\Models\OperatingAccount;
-use App\Models\ExpenditureHeader;
 use App\Http\Controllers\Controller;
+use App\Models\Accounting\Expenditure;
+use App\Models\Accounting\OperatingAccount;
+use App\Models\Accounting\ExpenditureHeader;
 
 class ExpenditureController extends Controller
 {
-
-    private $active_subscriber = '187635294';
 
     /**
      * Display a listing of the resource.

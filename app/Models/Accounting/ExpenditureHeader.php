@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounting;
 
 use Carbon\Carbon;
 use DateTimeInterface;

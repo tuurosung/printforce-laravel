@@ -138,6 +138,7 @@
                     user.closest('form').submit();
                     break;
             }
+        });
     }
 </script>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounting;
 
 use Carbon\Carbon;
 use DateTimeInterface;
@@ -8,6 +8,7 @@ use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Accounting\ExpenditureHeader;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Expenditure extends Model

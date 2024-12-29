@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Customers;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\OperatingAccount;
 use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Customers\CustomerPayment;
+use App\Models\Accounting\OperatingAccount;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 class CustomerPaymentController extends Controller

@@ -6,6 +6,7 @@ use App\Models\Subscribers;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;
+use App\Models\OperatingAccountHeader;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
