@@ -56,7 +56,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">Email Address</label>
                                     <input
-                                        type="email"
+                                        type="text"
                                         name="email"
                                         class="form-control form-control-sm"
                                         placeholder="username@address.com">

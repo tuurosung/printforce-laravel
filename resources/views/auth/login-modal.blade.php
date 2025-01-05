@@ -64,7 +64,7 @@
                     <div class="mb-3">
                         <label for="email_address" class="form-label">Email</label>
                         <input
-                            type="email"
+                            type="text"
                             class="form-control border-r-0 py-3"
                             name="email"
                             id="email_address"

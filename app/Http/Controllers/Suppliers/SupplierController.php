@@ -11,7 +11,6 @@ use App\Http\Controllers\Controller;
 
 class SupplierController extends Controller
 {
-    private $active_subscriber = '187635294';
 
     /**
      * Display a listing of the resource.

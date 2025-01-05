@@ -26,7 +26,7 @@
     <link href="{{ asset('assets/css/toastify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
 
-
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 
     <style media="screen">

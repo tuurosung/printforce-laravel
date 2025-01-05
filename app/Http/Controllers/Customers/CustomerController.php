@@ -7,7 +7,6 @@ use App\Models\PressJob;
 use App\Models\DesignJob;
 use Illuminate\Http\Request;
 use App\Models\LargeFormatJob;
-use App\Models\CustomerPayment;
 use App\Models\CustomerCategory;
 use App\Models\CustomerInvoices;
 use App\Models\Services\Service;
@@ -15,7 +14,9 @@ use App\Models\Customers\Customer;
 use App\Models\Jobs\EmbroideryJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Customers\CustomerPayment;
 use App\Models\Accounting\OperatingAccount;
+use App\Http\Controllers\Jobs\JobController;
 
 class CustomerController extends Controller
 {
@@ -33,13 +34,17 @@ class CustomerController extends Controller
      */
     public function index()
     {
+        $customer = new Customer();
 
-        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'payments'])
-            ->orderBy('name')->get();
+        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'photography_jobs',  'payments'])
+            ->latest()
+            ->limit(50)
+            ->get();
 
-        $totalCustomerDebit = Customer::totalCustomerDebit();
-        $totalCustomerCredit = Customer::totalCustomerCredit();
-        $totalCustomerBalance = Customer::totalCustomerBalance();
+
+        $totalCustomerDebit = JobController::sumOfAllJobs();
+        $totalCustomerCredit = CustomerPayment::sumOfCustomerPayments();
+        $totalCustomerBalance = $totalCustomerDebit - $totalCustomerCredit;
 
         if ($totalCustomerBalance < 0) {
             $totalCustomerBalance = '('. number_format(abs($totalCustomerBalance),2) .')';
@@ -198,5 +203,23 @@ class CustomerController extends Controller
     private function isCustomer($customer_id)
     {
         return (bool) Customer::find($customer_id);
+    }
+
+
+    public function filterCustomers(Request $request)
+    {
+        $data = $request->validate([
+            'search_term' => 'required'
+        ]);
+
+        $searchTerm = $data['search_term'];
+
+        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'photography_jobs',  'payments'])
+            ->where('name', 'like', '%' . $searchTerm . '%')
+            ->orWhere('phone', 'like', '%' . $searchTerm . '%')
+            ->limit(100)
+            ->get();
+
+        return view('app.customer.filter-customers', compact('customers'));
     }
 }

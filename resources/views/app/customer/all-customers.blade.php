@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between mb-4">
     <div class="d-flex align-items-center">
         <h4 class="h2 m-0">Customers</h4>
     </div>
@@ -13,24 +13,23 @@
             data-toggle="modal"
             data-target="#newCustomerModal">
 
-            <i class="fas fa-plus me-3  "></i>
+            <i class="fas fa-plus me-3"></i>
             New Customer
         </button>
     </div>
 </div>
 
-<hr>
 
 <div class="row mb-5">
 
     <div class="col-md-2">
 
-        <div class="card border-0">
+        <div class="card border-0 bg-primary">
             <div class="card-body">
 
-                Total Jobs
+                <p class="mb-0 text-white">Total Jobs</p>
                 <p
-                    class=" h5 m-0">
+                    class=" h5 m-0 text-white">
 
                     GHS {{ $total_customer_debit }}
                 </p>
@@ -39,12 +38,12 @@
         </div>
     </div>
     <div class="col-md-2">
-        <div class="card border-0">
+        <div class="card border-0 bg-warning">
             <div class="card-body">
 
-                Total Payment
+                <p class="text-white m-0"> Total Payment</p>
                 <p
-                    class="h5 m-0">
+                    class="h5 m-0 text-white">
 
                     GHS {{ $total_customer_credit }}
                 </p>
@@ -53,11 +52,11 @@
         </div>
     </div>
     <div class="col-2">
-        <div class="card border-0">
+        <div class="card border-0 bg-danger">
             <div class="card-body">
 
-                Total Debt
-                <p class="m-0 h5">
+                <p class="text-white m-0">Total Debt</p>
+                <p class="m-0 h5 text-white">
                     GHS {{ $total_customer_balance }}
                 </p>
 
@@ -74,17 +73,29 @@
 
             <div class="col-2 col-lg-2 col-md-3 col-sm-4">
 
-                <input type="text" name="search_term" id="search_term" class="form-control w-250px me-5" value="" placeholder="customer's name or phone number">
+                <form action="" id="searchCustomersFrm">
+                    @csrf
+                    <input
+                        type="text"
+                        name="search_term"
+                        id="searchCustomer"
+                        class="form-control w-250px me-5"
+                        value=""
+                        placeholder="customer's name or phone number">
+                </form>
+
+
 
             </div>
 
         </div>
 
         <div id="data_holder">
-            <table class="table table-sm datatables">
+            <table class="table table-sm datatable">
                 <thead class="">
                     <tr>
                         <th>#</th>
+                        <th>Date Created</th>
                         <th>Customer Name</th>
                         <th>Type</th>
                         <th>Phone Number</th>
@@ -107,6 +118,7 @@
 
                     <tr>
                         <td><?php echo $i++; ?></td>
+                        <td>{{ $customer->created_at }}</td>
                         <td class="text-capitalize" style="text-decoration: underline;">
                             <a href="{{ route('customer-info', $customer) }}">
 
@@ -146,27 +158,9 @@
                         </td>
                     </tr>
 
-                    <?php
-                    $total_jobs += $customer->customer_debit;
-                    $total_payments += $customer->customer_credit;
-                    $total_balance += $customer->customer_balance;
-
-                    ?>
                     @endforeach
 
 
-
-
-                    <tr>
-                        <td>--------</td>
-                        <td>--------</td>
-                        <td>--------</td>
-                        <td>--------</td>
-                        <td class="text-end montserrat font-weight-bold" style="font-size:20px !important;">GHS <?php echo number_format($total_jobs, 2); ?></td>
-                        <td class="text-end montserrat font-weight-bold" style="font-size:20px !important;">GHS <?php echo number_format($total_payments, 2); ?></td>
-                        <td class="text-end montserrat font-weight-bold" style="font-size:20px !important;">GHS <?php echo number_format($total_balance, 2); ?></td>
-                        <td></td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -185,5 +179,13 @@
     $('#newCustomerModal').on('shown.bs.modal', function() {
         $('#name').focus();
     });
+
+    $('#searchCustomer').on('keyup', function() {
+
+        const url = "{{ route('filter-customers') }}";
+        $.post(url, $('#searchCustomersFrm').serialize(), function(data) {
+            $('#data_holder').html(data);
+        })
+    })
 </script>
 @endsection

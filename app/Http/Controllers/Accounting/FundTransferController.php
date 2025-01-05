@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Accounting;
 
 use Carbon\Carbon;
 use DateTimeInterface;
-use App\Models\FundTransfer;
 use Illuminate\Http\Request;
-use App\Models\OperatingAccount;
 use Illuminate\Routing\Controller;
+use App\Models\Accounting\FundTransfer;
+use App\Models\Accounting\OperatingAccount;
 use App\Http\Controllers\OperatingAccountController;
 
 class FundTransferController extends Controller
 {
-    private $active_subscriber = '187635294';
 
     /**
      * Display a listing of the resource.
@@ -145,19 +144,9 @@ class FundTransferController extends Controller
         return view('app.fund-transfers.filter-transfers', compact('filteredTransfers'));
     }
 
-
-
-    public function findTransfer($transfer_id)
-    {
-        return FundTransfer::whereTransferId($transfer_id)
-        ->whereSubscriberId($this->active_subscriber)->whereStatus('active')->first();
-    }
-
     public function getTransfers()
     {
-        return FundTransfer::whereSubscriberId($this->active_subscriber)
-            ->whereStatus('active')
-            ->orderBy('sn', 'desc')
+        return FundTransfer::orderBy('sn', 'desc')
             ->get();
     }
 
@@ -178,7 +167,7 @@ class FundTransferController extends Controller
 
     private function totalTransferPeriod(DateTimeInterface $start, DateTimeInterface $end=null)
     {
-        $query = FundTransfer::whereSubscriberId($this->active_subscriber)->whereStatus('active');
+        $query = FundTransfer::whereStatus('active');
 
         if (isset($end)) {
             $query->whereBetween('date', [$start, $end]);

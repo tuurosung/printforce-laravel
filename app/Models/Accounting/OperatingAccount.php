@@ -5,10 +5,12 @@ namespace App\Models\Accounting;
 use App\Models\Subscribers;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use App\Models\Accounting\AddFunds;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OperatingAccountHeader;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
+use App\Models\Purchases\PurchasePayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OperatingAccount extends Model
@@ -41,7 +43,7 @@ class OperatingAccount extends Model
         'description'
     ];
 
-    protected $active_subscriber = '187635294';
+    
 
     public function accountHeader()
     {

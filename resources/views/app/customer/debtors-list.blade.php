@@ -68,7 +68,7 @@
                     <td>{{ $debtor->name }}</td>
                     <td class="text-end pe-20px">{{ number_format($debtor->debit, 2) }}</td>
                     <td class="text-end  pe-20px">{{ number_format($debtor->credit, 2) }}</td>
-                    <td class="text-end  pe-20px">{{ number_format($debtor->balance, 2) }}</td>
+                    <td class="text-end  pe-20px">{{ number_format($debtor->debit - $debtor->credit, 2) }}</td>
                 </tr>
                 @endforeach
 

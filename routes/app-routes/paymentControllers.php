@@ -16,4 +16,6 @@ Route::prefix('payments')->controller(CustomerPaymentController::class)->group(f
     Route::post('/update', 'update')->name('update.payment');
     Route::delete('/delete/{payment}', 'destroy')->name('delete.payment');
     Route::post('/filter-payments', 'filterPayments')->name('filter.payments');
+
+    Route::get('/payment-graph', 'paymentGraph')->name('payment-graph');
 });

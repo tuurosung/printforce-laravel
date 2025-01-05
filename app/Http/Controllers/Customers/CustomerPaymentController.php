@@ -15,7 +15,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 class CustomerPaymentController extends Controller
 {
 
-    private $active_subscriber = '187635294';
 
     /**
      * Display a listing of the resource.
@@ -38,7 +37,7 @@ class CustomerPaymentController extends Controller
         ];
 
         $payments = CustomerPayment::with(['customer','account'])
-            ->whereYear('payment_date', Carbon::now()->year)
+            ->where('payment_date', Carbon::now()->format('Y-m-d'))
             ->get();
 
         return view('app.payments.payments', compact([
@@ -81,19 +80,6 @@ class CustomerPaymentController extends Controller
             ?  redirect()->back()->with('success', "Payment recorded successfully")
             :  redirect()->back()->with('error', "Ooops! Something went wrong on our side");
 
-        // $payment->customer_id = $request->customer_id;
-        // $payment->amount_paid = $request->amount_paid;
-        // $payment->payment_date = $request->date;
-        // $payment->account_number = $request->account_number;
-
-        // try {
-        //     // Save Payment to database
-        //     $payment->save();
-        //     return redirect()->back()->with('success', "Payment recorded successfully");
-        // } catch(\Exception $e) {
-        //     return redirect()->back()->with('error', 'Ooops! Something went wrong on our side'.$e->getMessage());
-        // }
-
     }
 
     /**
@@ -126,6 +112,8 @@ class CustomerPaymentController extends Controller
         return view('Admin.payments.edit', $data);
     }
 
+
+
     /**
      * Update the specified resource in storage.
      */
@@ -153,6 +141,8 @@ class CustomerPaymentController extends Controller
         }
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      */
@@ -175,6 +165,9 @@ class CustomerPaymentController extends Controller
 
     }
 
+
+
+
     private function isPayment($payment_id)
     {
         return (bool) CustomerPayment::find($payment_id);
@@ -186,8 +179,8 @@ class CustomerPaymentController extends Controller
 
             'amount_paid' => 'required|numeric',
             'customer_id' => 'required',
-            'date' => 'required',
-            'account_number' => 'required'
+            'account_number' => 'required',
+            'payment_date' => 'required'
 
         ]);
 
@@ -199,13 +192,15 @@ class CustomerPaymentController extends Controller
         return str_pad($count, 6, "0", STR_PAD_LEFT);
     }
 
+
+
     private function getAllPayments()
     {
         return CustomerPayment::all()
-            ->where('status', 'active')
-            ->where('subscriber_id', $this->active_subscriber)
             ->sort();
     }
+
+
 
     public function filterPayments(Request $request)
     {
@@ -222,36 +217,18 @@ class CustomerPaymentController extends Controller
         if ($request->customer_id == 'all') {
 
             $filteredList =  CustomerPayment::whereBetween('payment_date', [$start_date, $end_date])
-                ->where('subscriber_id', $this->active_subscriber)
-                ->where('status', 'active')->get();
+                ->get();
         } else {
 
             $filteredList =  CustomerPayment::whereBetween('payment_date', [$start_date, $end_date])
                 ->where('customer_id', $request->customer_id)
-                ->where('subscriber_id', $this->active_subscriber)
-                ->where('status', 'active')->get();
+                ->get();
         }
 
-        $i = 1;
-        $data = [
-            'i' => $i,
-            'all_payments' => $filteredList
-        ];
-
-        return view('Admin.payments._filtered-list', $data);
+        return view('app.payments.filtered-payments', compact('filteredList'));
     }
 
-    /**
-     * Return all active customers
-     *
-     * @return void
-     */
-    private function getAllCustomers()
-    {
-        return Customer::all()
-            ->where('status', 'active')
-            ->where('subscriber_id', $this->active_subscriber);
-    }
+
 
     /**
      * Return the total payment made for a given period
@@ -286,5 +263,10 @@ class CustomerPaymentController extends Controller
         return $totalPayment;
     }
 
+
+    public function paymentGraph() {
+
+        return CustomerPayment::paymentGraph();
+    }
 
 }

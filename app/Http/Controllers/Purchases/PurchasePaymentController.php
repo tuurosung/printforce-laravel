@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Purchases;
 
 use Illuminate\Http\Request;
-use App\Models\PurchasePayment;
 use App\Http\Controllers\Controller;
+use App\Models\Purchases\PurchasePayment;
 
 class PurchasePaymentController extends Controller
 {
-    private $active_subscriber = '187635294';
-
 
     /**
      * Display a listing of the resource.

@@ -8,16 +8,15 @@ use App\Models\Subscribers;
 use App\Models\FundTransfer;
 use Illuminate\Http\Request;
 use App\Models\PurchasePayment;
-use App\Models\OperatingAccount;
+use App\Models\Accounting\OperatingAccount;
 use App\Http\Controllers\Controller;
-use App\Models\OperatingAccountTypes;
+use App\Models\Accounting\OperatingAccountTypes;
 use App\Models\OperatingAccountHeader;
 use App\Models\Customers\CustomerPayment;
 
 class OperatingAccountController extends Controller
 {
 
-    private $active_subscriber = '187635294';
 
     /**
      * Display a listing of the resource.

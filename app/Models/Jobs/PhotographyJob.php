@@ -2,8 +2,8 @@
 
 namespace App\Models\Jobs;
 
-use App\Models\Service;
 use App\Traits\ScopedActive;
+use App\Models\Services\Service;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Database\Eloquent\Model;
 

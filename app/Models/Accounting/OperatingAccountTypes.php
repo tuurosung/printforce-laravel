@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounting;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;

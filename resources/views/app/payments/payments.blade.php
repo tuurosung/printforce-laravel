@@ -259,7 +259,7 @@
 
         var start_date = $('#start_date').val();
         var end_date = $('#end_date').val();
-        var customer_id = $('#customer_id').val();
+        var customer_id = $('#filterCustomerId').val();
         $('#filter_cash_payment_frm').serialize();
         // var _token = ;
         const url = "{{ route('filter.payments') }}";

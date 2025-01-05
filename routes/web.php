@@ -19,9 +19,9 @@ Route::get('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->
 Route::post('/user-login', [App\Http\Controllers\LoginController::class, 'authenticate'])->name('user-login');
 
 
-Route::get('/dashbaord', function(){
-    return view('app.dashboard');
-})->name('dashboard');
+// Route::get('/dashbaord', function(){
+//     return view('app.dashboard');
+// })->name('dashboard');
 
 
 Route::middleware(['auth'])->group(function () {

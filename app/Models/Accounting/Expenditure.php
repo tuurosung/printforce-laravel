@@ -54,11 +54,8 @@ class Expenditure extends Model
 
     static function totalExpenditurePeriod($start, $end)
     {
-        // return Expenditure::whereBetween('date', [$start, $end])
-        // ->where('status', 'active')
-        // ->where('subscriber_id', '187635294')
-        // ->sum('amount');
-        return Expenditure::whereSubscriberId('187635294')->sum('amount');
+        return Expenditure::whereBetween('date', [$start, $end])
+        ->sum('amount');
     }
 
     public static function getExpenditureByPeriod()

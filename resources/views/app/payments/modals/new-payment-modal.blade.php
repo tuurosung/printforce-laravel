@@ -88,7 +88,7 @@
                                 <input
                                     type="text"
                                     class="form-control form-control-sm"
-                                    name="date"
+                                    name="payment_date"
                                     id="date"
                                     value="{{ now()->format('Y-m-d') }}"
                                     required />

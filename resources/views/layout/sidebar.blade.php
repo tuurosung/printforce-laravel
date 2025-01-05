@@ -4,11 +4,14 @@
     <div class="app-sidebar-content ps" data-scrollbar="true" data-height="100%">
         <div class="menu mt-5">
 
+            @can('administrator')
             <div class="menu-item">
                 <a href="{{ route('dashboard') }}" class="menu-link">
                     <i class="fas fa-laptop menu-icon"></i>
                     <span class="menu-text"> Dashboard</span> </a>
             </div>
+            @endcan
+
 
 
             <!-- Payments Menu -->
@@ -64,12 +67,15 @@
                 </a>
             </div>
 
+            @can('administrator')
             <div class="menu-item">
                 <a class="menu-link" href="{{ route('debtors') }}" id="debtors_nav">
                     <i class="fas fa-hand-holding-usd menu-icon"></i>
                     <span class="menu-text">Debtors</span>
                 </a>
             </div>
+            @endcan
+
 
             <!-- Payments Menu -->
             <div class="menu-item has-sub">
@@ -94,6 +100,8 @@
                 </div>
             </div>
 
+            @can('administrator')
+
             <!-- Purchases -->
             <div class="menu-item">
                 <a href="{{ route('suppliers') }}" class="menu-link">
@@ -109,6 +117,11 @@
             </a>
         </div> -->
 
+            @endcan
+
+
+            @can('administrator')
+
             <div class="menu-item">
                 <a href="{{ route('expenses') }}" class="menu-link" id="expenses_nav">
                     <i class="fas fa-chart-line menu-icon"></i>
@@ -123,6 +136,12 @@
                 </a>
             </div>
 
+            @endcan
+
+
+
+
+
 
             <!-- <div class="menu-item">
             <a href="invoices.php" class="menu-link" id="invoices_li">
@@ -130,6 +149,7 @@
                 <span class="menu-text"> Generate Invoices </span>
             </a>
         </div> -->
+            @can('administrator')
 
             <div class="menu-item">
                 <a href="{{ route('accounts') }}" class="menu-link" id="accounts_li">
@@ -173,6 +193,14 @@
             </a>
         </div> -->
 
+            @endcan
+
+
+
+
+
+            @can('administrator')
+
             <div class="menu-item has-sub">
                 <a href="#" class="menu-link" id="">
                     <i class="fas fa-users menu-icon"></i>
@@ -196,7 +224,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="menu-item has-sub">
                 <a href="#" class="menu-link" id="">
@@ -234,6 +261,7 @@
             </a>
         </div> -->
 
+
             <div class="menu-item">
                 <a href="{{ route('users') }}" class="menu-link" id="registered_users_li">
                     <i class="fas fa-users menu-icon"></i>
@@ -241,7 +269,10 @@
                 </a>
             </div>
 
+            @endcan
 
+
+            @can('administrator')
             <div class="menu-item">
                 <a href="{{ route('services') }}" class="menu-link" id="reports_li">
                     <i class="fas fa-cogs menu-icon"></i>
@@ -249,7 +280,7 @@
                 </a>
             </div>
 
-
+            @endcan
 
         </div>
 

@@ -2,12 +2,14 @@
 
 namespace App\Models\Customers;
 
+use Carbon\Carbon;
 use App\Traits\ScopedActive;
-use App\Models\Accounting\OperatingAccount;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Accounting\OperatingAccount;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,7 +28,10 @@ class CustomerPayment extends Model
             $customerPayment->payment_id = generateDashedRandomNumber();
             $customerPayment->subscriber_id = Auth::user()->subscriber_id;
         });
+
     }
+
+
 
     protected $table = 'payments';
     protected $primaryKey = 'payment_id';
@@ -56,13 +61,35 @@ class CustomerPayment extends Model
     }
 
 
+    // BEGIN STATIC FUNCTIONS
+
+
     static function totalPaymentPeriod($start_date, $end_date)
     {
         $total_payment = CustomerPayment::whereBetween('payment_date', [$start_date, $end_date])
-            ->where('status', 'active')
-            ->where('subscriber_id', '187635294')
             ->sum('amount_paid');
 
         return $total_payment;
     }
+
+    public static function paymentGraph()
+    {
+        $total_payment = CustomerPayment::select('payment_date', \DB::raw('SUM(amount_paid) as total_payment'))
+            ->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])
+            ->groupBy('payment_date')
+            ->get();
+
+        return $total_payment->toJson();
+    }
+
+
+    public static function sumOfCustomerPayments()
+    {
+        return CustomerPayment::sum('amount_paid');
+    }
+
+
+    // END STATIC FUNCTIONS
+
+
 }

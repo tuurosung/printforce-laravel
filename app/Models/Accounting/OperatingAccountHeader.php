@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Accounting;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,5 +21,5 @@ class OperatingAccountHeader extends Model
         return $this->belongsTo(OperatingAccountTypes::class, 'type');
     }
 
-    
+
 }

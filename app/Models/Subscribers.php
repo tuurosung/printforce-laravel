@@ -19,9 +19,6 @@ class Subscribers extends Model
 
     static function activeSubscriber()
     {
-        $thiss = new Subscribers();
-        $thiss->activeSubscriber = '187635294';
-        return $thiss->activeSubscriber;
     }
 
 

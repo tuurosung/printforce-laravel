@@ -29,12 +29,14 @@ class Service extends Model
     protected $primaryKey = 'service_id';
     public $incrementing = false;
 
+    protected $keyType = 'string';
+
     protected $fillable = ['subscriber_id', 'service_id', 'service_name', 'category_id', 'individual', 'artist', 'institution'];
 
 
     public static function getAllServices()
     {
-        return Cache::remember('all_services', 60 * 60, function () {
+        return Cache::remember('all_services', 60 * 60 * 24, function () {
             return Service::all();
         });
     }

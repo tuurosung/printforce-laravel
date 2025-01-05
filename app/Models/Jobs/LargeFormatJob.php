@@ -83,5 +83,10 @@ class LargeFormatJob extends Model
             ]);
     }
 
+    public static function countLargeFormatJobs()
+    {
+        return LargeFormatJob::count();
+    }
+
 
 }

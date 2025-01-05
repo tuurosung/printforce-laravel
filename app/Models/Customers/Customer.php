@@ -2,6 +2,7 @@
 
 namespace App\Models\Customers;
 
+use Carbon\Carbon;
 use App\Traits\ScopedActive;
 use App\Models\Jobs\PressJob;
 use App\Models\Jobs\DesignJob;
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\JoinClause;
 
 class Customer extends Model
 {
@@ -51,6 +53,14 @@ class Customer extends Model
         'phone',
         'category'
     ];
+
+
+    // BEGIN RELATIONSHIPS
+
+
+    // END RELATIONSHIPS
+
+
 
 
     public function getCustomerCategoryDescriptionAttribute ()
@@ -107,6 +117,7 @@ class Customer extends Model
     }
 
 
+
     public function getCountPressJobsAttribute()
     {
         return $this->pressJobs->count();
@@ -155,7 +166,6 @@ class Customer extends Model
     }
 
 
-
     public function getJobCountAttribute()
     {
         return collect([
@@ -166,6 +176,8 @@ class Customer extends Model
             $this->count_photography_jobs
         ])->sum();
     }
+
+
 
     public function getCustomerDebitAttribute()
     {
@@ -182,6 +194,8 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerPayment::class, 'customer_id');
     }
+
+
 
     public function getCustomerCreditAttribute()
     {
@@ -202,27 +216,30 @@ class Customer extends Model
 
     }
 
-    static function totalCustomerDebit()
-    {
-        return collect(
-            [
-                LargeFormatJob::sum('total'),
-                EmbroideryJob::sum('total'),
-                DesignJob::sum('total'),
-                PressJob::sum('total'),
-                PhotographyJob::sum('total')
-            ]
-        )->sum();
-    }
+    // static function totalCustomerDebit()
+    // {
 
-    static function totalCustomerCredit()
-    {
-        return collect(
-            [
-                CustomerPayment::sum('amount_paid')
-            ]
-        )->sum();
-    }
+    //     return collect(
+    //         [
+    //             LargeFormatJob::sum('total'),
+    //             EmbroideryJob::sum('total'),
+    //             DesignJob::sum('total'),
+    //             PressJob::sum('total'),
+    //             PhotographyJob::sum('total')
+    //         ]
+    //     )->sum();
+    // }
+
+
+
+    // static function totalCustomerCredit()
+    // {
+    //     return collect(
+    //         [
+    //             CustomerPayment::sum('amount_paid')
+    //         ]
+    //     )->sum();
+    // }
 
     static function totalCustomerBalance()
     {
@@ -235,6 +252,8 @@ class Customer extends Model
         return $this->belongsTo(CustomerInvoices::class, 'customer_id');
     }
 
+
+
     /**
      * return list of all customers with debts
      * calculated as total customer debit - total customer credit
@@ -243,31 +262,145 @@ class Customer extends Model
      */
     public function debtorsList()
     {
-        $debtors = Customer::withSum('largeFormatJobs as large_format_jobs_total', 'total')
-        ->withSum('embroideryJobs as embroidery_jobs_total', 'total')
-        ->withSum('designJobs as design_jobs_total', 'total')
-        ->withSum('pressJobs as press_jobs_total', 'total')
-        ->withSum('photography_jobs as photography_jobs_total', 'total')
-        ->withSum('payments as payments_amount_paid', 'amount_paid')
-        ->havingRaw('
-            (COALESCE(large_format_jobs_total,0) +
-            COALESCE(embroidery_jobs_total,0) +
-            COALESCE(design_jobs_total,0) +
-            COALESCE(press_jobs_total,0) +
-            COALESCE(photography_jobs_total,0)
-            ) - COALESCE(payments_amount_paid, 0) > 0
+      
+
+        $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('SUM(total) as largeformat_jobs_total')])
+            ->groupBy('customer_id');
+
+        $embroideryJobs = EmbroideryJob::select(['customer_id', DB::raw('SUM(total) as embroidery_jobs_total')])
+            ->groupBy('customer_id');
+
+        $designJobs = DesignJob::select(['customer_id', DB::raw('SUM(total) as design_jobs_total')])
+            ->groupBy('customer_id');
+
+        $pressJobs = PressJob::select(['customer_id', DB::raw('SUM(total) as press_jobs_total')])
+            ->groupBy('customer_id');
+
+        $photographyJobs = PhotographyJob::select(['customer_id', DB::raw('SUM(total) as photography_jobs_total')])
+            ->groupBy('customer_id');
+
+        $customerPayments = CustomerPayment::select(['customer_id', DB::raw('SUM(amount_paid) as payments_amount_paid')])
+            ->groupBy('customer_id');
+
+
+        $debtors = Customer::select('customers.customer_id')->select('customers.name')
+        ->selectRaw('
+
+            COALESCE(large_format_jobs.largeformat_jobs_total,0) +
+            COALESCE(embroidery_jobs.embroidery_jobs_total,0) +
+            COALESCE(design_jobs.design_jobs_total,0)  +
+            COALESCE(press_jobs.press_jobs_total,0) +
+            COALESCE(photography_jobs.photography_jobs_total,0)
+
+            as debit
         ')
-        ->orderBy('name')
+        ->selectRaw('COALESCE(customer_payments.payments_amount_paid,0) as credit')
+        ->leftJoinSub($largeFormatJobs, 'large_format_jobs', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'large_format_jobs.customer_id');
+        })
+        ->leftJoinSub($embroideryJobs, 'embroidery_jobs', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'embroidery_jobs.customer_id');
+        })
+        ->leftJoinSub($designJobs, 'design_jobs', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'design_jobs.customer_id');
+        })
+        ->leftJoinSub($pressJobs, 'press_jobs', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'press_jobs.customer_id');
+        })
+        ->leftJoinSub($photographyJobs, 'photography_jobs', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'photography_jobs.customer_id');
+        })
+        ->leftJoinSub($customerPayments, 'customer_payments', function (JoinClause $joinClause){
+                $joinClause->on('customers.customer_id', '=', 'customer_payments.customer_id');
+        })
+        ->where('customers.status', 'active')
+        ->havingRaw('debit > credit')
         ->get();
 
-        $debtors->map(function ($debtor) {
-            $debtor->debit = $debtor->large_format_jobs_total + $debtor->embroidery_jobs_total + $debtor->design_jobs_total + $debtor->press_jobs_total + $debtor->photography_jobs_total;
-            $debtor->credit = $debtor->payments_amount_paid;
-            $debtor->balance = $debtor->debit - $debtor->credit;
-        });
 
-        return $debtors;
+            // dd($debtors);
+
+            return $debtors;
 
     }
+
+
+    // BEGIN STATIC FUNCTIONS
+
+    public static function countNewCustomers()
+    {
+        return Customer::whereMonth('created_at', Carbon::now()->month)->count();
+    }
+
+
+    public static function customerRankingAnalytics()
+    {
+
+        $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('COUNT(job_id) as count_largeformat_jobs')])
+            ->groupBy('customer_id');
+
+        $embroideryJobs = EmbroideryJob::select(['customer_id', DB::raw('COUNT(job_id) as count_embroidery_jobs')])
+            ->groupBy('customer_id');
+
+        $designJobs = DesignJob::select(['customer_id', DB::raw('COUNT(job_id) as count_design_jobs')])
+            ->groupBy('customer_id');
+
+        $pressJobs = PressJob::select(['customer_id', DB::raw('COUNT(job_id) as count_press_jobs')])
+            ->groupBy('customer_id');
+
+        $photographyJobs = PhotographyJob::select(['customer_id', DB::raw('COUNT(job_id) as count_photography_jobs')])
+            ->groupBy('customer_id');
+
+
+        $customerRanking = Customer::select('customers.customer_id')->select('customers.name')
+        ->selectRaw('
+            COALESCE(large_format_jobs.count_largeformat_jobs,0) +
+            COALESCE(embroidery_jobs.count_embroidery_jobs,0) +
+            COALESCE(design_jobs.count_design_jobs,0)  +
+            COALESCE(press_jobs.count_press_jobs,0) +
+            COALESCE(photography_jobs.count_photography_jobs,0)
+
+            as total_jobs
+        ')
+        ->leftJoinSub($largeFormatJobs, 'large_format_jobs', function(JoinClause $joinClause){
+            $joinClause->on('customers.customer_id', '=', 'large_format_jobs.customer_id');
+        })
+        ->leftJoinSub($embroideryJobs, 'embroidery_jobs', function(JoinClause $joinClause){
+            $joinClause->on('customers.customer_id', '=', 'embroidery_jobs.customer_id');
+        })
+        ->leftJoinSub($designJobs, 'design_jobs', function(JoinClause $joinClause){
+            $joinClause->on('customers.customer_id', '=', 'design_jobs.customer_id');
+        })
+        ->leftJoinSub($pressJobs, 'press_jobs', function(JoinClause $joinClause){
+            $joinClause->on('customers.customer_id', '=', 'press_jobs.customer_id');
+        })
+        ->leftJoinSub($photographyJobs, 'photography_jobs', function(JoinClause $joinClause){
+            $joinClause->on('customers.customer_id', '=', 'photography_jobs.customer_id');
+        })
+        ->where('customers.status', 'active')
+        ->orderByRaw('total_jobs DESC')
+        ->limit(10)
+        ->get();
+
+
+
+
+        // $customers = Customer::withCount('largeFormatJobs')
+        // ->withCount('embroideryJobs')
+        // ->withCount('designJobs')
+        // ->withCount('pressJobs')
+        // ->withCount('photography_jobs')
+        // ->orderByRaw('large_format_jobs_count + embroidery_jobs_count + design_jobs_count + press_jobs_count + photography_jobs_count DESC')
+        // ->limit(10)
+        // ->get();
+
+        // $customers->map(function ($customers) {
+        //     $customers->total_jobs = $customers->large_format_jobs_count + $customers->embroidery_jobs_count + $customers->design_jobs_count + $customers->press_jobs_count + $customers->photography_jobs_count;
+        // });
+
+        return $customerRanking;
+    }
+
+    // END STATIC FUNCTIONS
 
 }

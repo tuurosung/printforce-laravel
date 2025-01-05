@@ -15,4 +15,6 @@ Route::prefix('customers')->controller(CustomerController::class)->group(functio
     Route::post('/store.customer', 'store')->name('store.customer');
     Route::get('/edit-customer/{id}', 'edit')->name('customer.edit');
     Route::post('/customer-update', 'update')->name('customer.update');
+
+    Route::post('/filter-customers', 'filterCustomers')->name('filter-customers');
 });
