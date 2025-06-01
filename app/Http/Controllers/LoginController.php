@@ -23,7 +23,22 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // set subscriber session
-            Session::put('active_subscriber', Auth::user()->user_id);
+            Session::put('active_subscriber', Auth::user()->subscriber_id);
+
+            // send SMS Notification
+            $company_name = Auth::user()->company->company_name;
+            $phone_number = Auth::user()->phone_number;
+
+            $operating_system = $request->server('HTTP_USER_AGENT');
+            $ip_address = $request->server('REMOTE_ADDR');
+
+            $message = "Someone logged into your account on Printforce from a " . $operating_system . " at " . $ip_address;
+
+            $messaging = new MessagingController();
+            $messaging->receipient = $phone_number;
+            $messaging->message = $message;
+
+            $messaging->send();
 
             return redirect()->intended('dashboard');
         }
