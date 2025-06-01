@@ -2,31 +2,23 @@
 
 namespace App\Http\Controllers\Customers;
 
-
-use App\Models\PressJob;
-use App\Models\DesignJob;
-use Illuminate\Http\Request;
-use App\Models\LargeFormatJob;
 use App\Models\CustomerCategory;
-use App\Models\CustomerInvoices;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
-use App\Models\Jobs\EmbroideryJob;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Customers\CustomerPayment;
 use App\Models\Accounting\OperatingAccount;
-use App\Http\Controllers\Jobs\JobController;
+use App\Http\Requests\Customers\StoreCustomerRequest;
+use App\Http\Requests\Customers\UpdateCustomerRequest;
 
 class CustomerController extends Controller
 {
-    private $customer;
 
-    public function __construct()
+    public function __construct(
+        private $customer = new Customer()
+    )
     {
-        $this->customer = new Customer();
     }
-
 
 
     /**
@@ -36,32 +28,38 @@ class CustomerController extends Controller
     {
         $customer = new Customer();
 
-        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'photography_jobs',  'payments'])
+        $customers = Customer::with([
+                'largeFormatJobs',
+                'embroideryJobs',
+                'pressJobs',
+                'designJobs',
+                'photography_jobs',
+                'payments'
+            ])
             ->latest()
-            ->limit(50)
+            ->limit(10)
             ->get();
 
 
-        $totalCustomerDebit = JobController::sumOfAllJobs();
-        $totalCustomerCredit = CustomerPayment::sumOfCustomerPayments();
-        $totalCustomerBalance = $totalCustomerDebit - $totalCustomerCredit;
+        $newCustomers = Customer::countNewCustomers();
+        $countAllCustomers = Customer::countAllCustomers();
 
-        if ($totalCustomerBalance < 0) {
-            $totalCustomerBalance = '('. number_format(abs($totalCustomerBalance),2) .')';
-        } else {
-            $totalCustomerBalance = number_format($totalCustomerBalance,2);
-        }
+        // initialize variables
+        $total_jobs = 0;
+        $total_payments = 0;
+        $total_balance = 0;
 
         $data = [
             'customers' =>  $customers,
-            'total_customer_debit' => number_format($totalCustomerDebit,2),
-            'total_customer_credit' => number_format($totalCustomerCredit,2),
-            'total_customer_balance' => $totalCustomerBalance
+            'new_customers' => $newCustomers,
+            'count_all_customers' => $countAllCustomers,
+            'total_jobs' => $total_jobs,
+            'total_payments' => $total_payments,
+            'total_balance' => $total_balance,
         ];
 
-        return view('app.customer.all-customers', $data);
+        return view('app.customer.customers', $data);
     }
-
 
 
     /**
@@ -69,37 +67,25 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        $i = 1;
-        $categories = CustomerCategory::all();
-
-        $data = [
-            'categories' => $categories
-        ];
-
-        return view('customer.new-customer', $data);
+        return view('customer.new-customer', [
+            'categories' => CustomerCategory::all(),
+        ]);
     }
-
 
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
+        $data = $request->validated();
 
-        $data = $request->validate([
-            'name' => 'required',
-            'phone' => 'required',
-            'category' => 'required'
-        ]);
+        if (!$this->customer->create($data)) {
+            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        }
 
-        $save_successful = $this->customer->create($data);
-
-        return $save_successful
-            ? redirect()->back()->with('success', 'Customer created successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return redirect()->back()->with('success', 'Customer created successfully');
     }
-
 
 
     /**
@@ -107,72 +93,43 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-
-        if (is_null($customer)) {
-            return redirect()->back()->with('error', 'Customer not found');
-        }
-
-        $payment_accounts = OperatingAccount::filterByType(1);
-
-        $services = Service::getAllServices();
-
-        $customer->load(['largeFormatJobs.service', 'embroideryJobs.service', 'pressJobs.service', 'designJobs.service', 'payments.account']);
-
-        return view('app.customer.customer-info', compact('customer', 'services', 'payment_accounts'));
+        return view('app.customer.customer-info', [
+            'customer' => $customer->loadRelations(),
+            'payment_accounts' => OperatingAccount::filterByType(1),
+            'services' => Service::getAllServices(),
+        ]);
     }
-
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($customer_id)
+    public function edit(Customer $customer)
     {
-        // check if customer id is belongs to a valid customer
-        if (!$this->isCustomer($customer_id))
-        {
-            return redirect()->back()->with('ErrMsg', "Ooops! Not a valid customer id");
-        }
-
-        $customer = Customer::find($customer_id);
-        $categories = CustomerCategory::all();
-
-        $data = [
-            'customer' => $customer,
-            'categories' => $categories
-        ];
-
-        return view('Admin.customer.edit-customer', $data);
+        return view('app.customer.modals.edit-customer', compact('customer'));
     }
-
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $request->validate([
-            'customer_id' => 'required',
-            'name' => 'required',
-            'phone' => 'required',
-            'category' => 'required'
-        ]);
+        $data = $request->validated();
 
-        $customer = Customer::find($request->customer_id);
+        try {
 
-        $customer->name = $request->name;
-        $customer->phone = $request->phone;
-        $customer->category = $request->category;
+            $customer->update($data);
+            return redirect()->back()->with('success', 'Customer updated successfully');
 
-        if ($customer->save()) {
-            return redirect()->back()->with('success', "Customer information updated successfully");
-        } else {
-            Log::error("Something went wrong");
-            return redirect()->back()->with('error', "We could not update customer information at this time");
+        } catch (\Exception $e) {
+
+            Log::error('Error updating customer: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side'.$e->getMessage());
+
         }
-    }
 
+    }
 
 
     /**
@@ -180,46 +137,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
-    }
-
-
-    public function debtorsList(Customer $customer)
-    {
-        $debtors = $customer->debtorsList();
-
-        return view('app.customer.debtors-list', compact('debtors'));
-    }
-
-    public function printDebtorsList(Customer $customer)
-    {
-        $debtors = $customer->debtorsList();
-
-        return view('app.customer.print-debtors-list', compact('debtors'));
-    }
-
-
-
-    private function isCustomer($customer_id)
-    {
-        return (bool) Customer::find($customer_id);
-    }
-
-
-    public function filterCustomers(Request $request)
-    {
-        $data = $request->validate([
-            'search_term' => 'required'
-        ]);
-
-        $searchTerm = $data['search_term'];
-
-        $customers = Customer::with(['largeFormatJobs', 'embroideryJobs', 'pressJobs', 'designJobs', 'photography_jobs',  'payments'])
-            ->where('name', 'like', '%' . $searchTerm . '%')
-            ->orWhere('phone', 'like', '%' . $searchTerm . '%')
-            ->limit(100)
-            ->get();
-
-        return view('app.customer.filter-customers', compact('customers'));
+        if (!$customer->delete()) {
+            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        }
+        return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 }
