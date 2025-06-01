@@ -68,25 +68,10 @@ class Customer extends Model
     ];
 
 
-    // BEGIN RELATIONSHIPS
 
-
-    // END RELATIONSHIPS
-
-
-
-
-    public function getCustomerCategoryDescriptionAttribute()
-    {
-        return CustomerHelper::$customerCategory[$this->category];
-    }
-
-
-    public function largeFormatJobs(): HasMany
-    {
-        return $this->hasMany(LargeFormatJob::class, 'customer_id');
-    }
-
+    /**
+     * Attributes -------------------------------------------------------------------
+     */
 
 
     public function getLargeFormatJobSumAttribute() //largeFormatDebit()
@@ -94,20 +79,10 @@ class Customer extends Model
         return $this->largeFormatJobs->sum('total');
     }
 
-
-
     public function getCountLargeFormatJobsAttribute()
     {
         return $this->largeFormatJobs->count();
     }
-
-
-
-    public function embroideryJobs(): HasMany
-    {
-        return $this->hasMany(EmbroideryJob::class, 'customer_id');
-    }
-
 
 
     public function getCountEmbroideryJobsAttribute()
@@ -116,19 +91,10 @@ class Customer extends Model
     }
 
 
-
     public function getEmbroideryJobSumAttribute()
     {
         return $this->embroideryJobs->sum('total');
     }
-
-
-
-    public function pressJobs(): HasMany
-    {
-        return $this->hasMany(PressJob::class, 'customer_id');
-    }
-
 
 
     public function getCountPressJobsAttribute()
@@ -137,19 +103,10 @@ class Customer extends Model
     }
 
 
-
     public function getPressJobSumAttribute()
     {
         return $this->pressJobs->sum('total');
     }
-
-
-
-    public function designJobs(): HasMany
-    {
-        return $this->hasMany(DesignJob::class, 'customer_id');
-    }
-
 
 
     public function getCountDesignJobsAttribute()
@@ -158,26 +115,15 @@ class Customer extends Model
     }
 
 
-
     public function getDesignJobSumAttribute()
     {
         return $this->designJobs->sum('total');
     }
 
-
-
-    public function photography_jobs()
-    {
-        return $this->hasMany(PhotographyJob::class, 'customer_id');
-    }
-
-
-
     public function getPhotographyJobSumAttribute()
     {
         return $this->photography_jobs->sum('total');
     }
-
 
     public function getJobCountAttribute()
     {
@@ -191,7 +137,6 @@ class Customer extends Model
     }
 
 
-
     public function getCustomerDebitAttribute()
     {
         return collect([
@@ -202,12 +147,6 @@ class Customer extends Model
             $this->photographyJobSum,
         ])->sum();
     }
-
-    public function payments(): HasMany
-    {
-        return $this->hasMany(CustomerPayment::class, 'customer_id');
-    }
-
 
 
     public function getCustomerCreditAttribute()
@@ -229,13 +168,94 @@ class Customer extends Model
     }
 
 
-
     static function totalCustomerBalance()
     {
         return Customer::totalCustomerDebit() - Customer::totalCustomerCredit();
     }
 
 
+    public function getCustomerCategoryDescriptionAttribute()
+    {
+        return CustomerHelper::$customerCategory[$this->category];
+    }
+
+
+    /**
+     * Relationships -------------------------------------------------------------------
+     */
+
+
+
+    /**
+     * Defines a one-to-one relationship with the LargeFormat model.
+     *
+     * @return HasMany<LargeFormatJob, Customer>
+     */
+    public function largeFormatJobs(): HasMany
+    {
+        return $this->hasMany(LargeFormatJob::class, 'customer_id');
+    }
+
+
+    /**
+     * Defines a has-many relationship with the EmbroideryJob model.
+     *
+     * @return HasMany<EmbroideryJob, Customer>
+     */
+    public function embroideryJobs(): HasMany
+    {
+        return $this->hasMany(EmbroideryJob::class, 'customer_id');
+    }
+
+
+    /**
+     * Defines a has-many relationship with the PressJob model.
+     *
+     * @return HasMany<PressJob, Customer>
+     */
+    public function pressJobs(): HasMany
+    {
+        return $this->hasMany(PressJob::class, 'customer_id');
+    }
+
+
+    /**
+     * Defines a has-many relationship with the DesignJob model.
+     *
+     * @return HasMany<DesignJob, Customer>
+     */
+    public function designJobs(): HasMany
+    {
+        return $this->hasMany(DesignJob::class, 'customer_id');
+    }
+
+
+    /**
+     * Defines a has-many relationship with the PhotographyJob model.
+     *
+     * @return HasMany<PhotographyJob, Customer>
+     */
+    public function photography_jobs()
+    {
+        return $this->hasMany(PhotographyJob::class, 'customer_id');
+    }
+
+    /**
+     * Defines a has-many relationship with the CustomerPayment model.
+     *
+     * @return HasMany<CustomerPayment, Customer>
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(CustomerPayment::class, 'customer_id');
+    }
+
+
+    /**
+     * Defines a belongs-to relationship with the CustomerInvoices model.
+     *
+     * @return BelongsTo<CustomerInvoices, Customer>
+     */
     public function invoices()
     {
         return $this->belongsTo(CustomerInvoices::class, 'customer_id');
@@ -245,22 +265,6 @@ class Customer extends Model
 
     // BEGIN STATIC FUNCTIONS
 
-    public static function countNewCustomers()
-    {
-        return Customer::whereMonth('created_at', Carbon::now()->month)->count();
-    }
-
-    public static function countAllCustomers()
-    {
-        return Customer::count();
-    }
-
-
-    public static function customerRankingAnalytics()
-    {
-
-        return CustomersHelper::customerRanking();
-    }
 
     // END STATIC FUNCTIONS
 
@@ -278,6 +282,24 @@ class Customer extends Model
             'photography_jobs.service',
             'payments.account'
         ]);
+    }
+
+
+    public static function countNewCustomers()
+    {
+        return Customer::whereMonth('created_at', Carbon::now()->month)->count();
+    }
+
+    public static function countAllCustomers()
+    {
+        return Customer::count();
+    }
+
+
+    public static function customerRankingAnalytics()
+    {
+
+        return CustomersHelper::customerRanking();
     }
 
 }
