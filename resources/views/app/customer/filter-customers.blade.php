@@ -2,6 +2,7 @@
                 <thead class="">
                     <tr>
                         <th>#</th>
+                        <th>Date Created</th>
                         <th>Customer Name</th>
                         <th>Type</th>
                         <th>Phone Number</th>
@@ -24,8 +25,9 @@
 
                     <tr>
                         <td><?php echo $i++; ?></td>
+                        <td>{{ $customer->created_at->format('M d, Y') }}</td>
                         <td class="text-capitalize" style="text-decoration: underline;">
-                            <a href="{{ route('customer-info', $customer) }}">
+                            <a href="{{ route('customers.customer.info', $customer) }}">
 
                                 {{ strtolower($customer->name) }}
 
