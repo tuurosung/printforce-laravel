@@ -22,7 +22,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="" autocomplete="off" method="POST" action="{{ route('create-service') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('configuration.print-services.store') }}">
                 @csrf
                 <div class="modal-body">
 
@@ -46,7 +46,7 @@
 
                             <option value="">--- Select Category ---</option>
 
-                            @foreach ($serviceCategories as $serviceCategory)
+                            @foreach ($printServiceCategories as $serviceCategory)
                             <option value="{{ $serviceCategory->category_id }}">{{ $serviceCategory->category_name }}</option>
                             @endforeach
 

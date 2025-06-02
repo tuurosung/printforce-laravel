@@ -22,7 +22,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="" autocomplete="off" method="POST" action="{{ route('update-service') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('configuration.print-services.update', $printService) }}">
                 @csrf
                 <div class="modal-body">
 
@@ -30,7 +30,7 @@
                         type="hidden"
                         class="form-control d-none"
                         name="service_id"
-                        value="{{ $service->service_id }}"
+                        value="{{ $printService->service_id }}"
                         required
                         readonly />
 
@@ -42,7 +42,7 @@
                             class="form-control form-control-sm"
                             name="service_name"
                             id="edit_service_name"
-                            value="{{ $service->service_name }}"
+                            value="{{ $printService->service_name }}"
                             required />
                     </div>
 
@@ -55,10 +55,10 @@
 
                             <option value="">--- Select Category ---</option>
 
-                            @foreach ($serviceCategories as $serviceCategory)
-                            <option value="{{ $serviceCategory->category_id }}" {{ $serviceCategory->category_id === $service->category_id ? 'selected' : '' }}>
-                                {{ $serviceCategory->category_name }}
-                            </option>
+                            @foreach ($printServiceCategories as $serviceCategory)
+                                <option value="{{ $serviceCategory->category_id }}" {{ $serviceCategory->category_id === $printService->category_id ? 'selected' : '' }}>
+                                    {{ $serviceCategory->category_name }}
+                                </option>
                             @endforeach
 
 
@@ -75,7 +75,7 @@
                                     class="form-control form-control-sm"
                                     name="artist"
                                     id="artist"
-                                    value="{{ $service->artist }}"
+                                    value="{{ $printService->artist }}"
                                     required />
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                                     class="form-control form-control-sm"
                                     name="individual"
                                     id="individual"
-                                    value="{{ $service->individual }}"
+                                    value="{{ $printService->individual }}"
                                     required />
                             </div>
                         </div>
@@ -101,7 +101,7 @@
                                     class="form-control form-control-sm"
                                     name="institution"
                                     id="institution"
-                                    value="{{ $service->institution }}"
+                                    value="{{ $printService->institution }}"
                                     required />
                             </div>
                         </div>
