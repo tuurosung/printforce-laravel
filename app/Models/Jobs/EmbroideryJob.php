@@ -2,11 +2,13 @@
 
 namespace App\Models\Jobs;
 
-use App\Models\Services\Service;
 use App\Traits\ScopedActive;
+use App\Models\Services\Service;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Services\PrintService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -29,6 +31,19 @@ class EmbroideryJob extends Model
         });
 
         // self::tableInspector();
+        // self::updateCreatedAt();
+    }
+
+
+    private static function updateCreatedAt()
+    {
+        DB::table('jobs_embroidery')
+        ->whereYear('date', '2024')
+            ->whereRaw('date <> created_at')
+            ->limit(5000)
+            ->update([
+                'created_at' => DB::raw('date')
+            ]);
     }
 
 
@@ -78,16 +93,52 @@ class EmbroideryJob extends Model
         'notes'
     ];
 
+    /**
+     * Attributes ----------------------------------------------------------------------
+     */
+
+
+
+
+
+
+     /**
+      * Relationships ----------------------------------------------------------------------
+      */
+
+
+    /**
+     * Defines the relationship between EmbroideryJob and Customer.
+     *
+     * @return BelongsTo<Customer, EmbroideryJob>
+     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
 
-
+    /**
+     * Defines the relationship between EmbroideryJob and Service.
+     *
+     * @return BelongsTo<Service, EmbroideryJob>
+     */
     public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class, 'service_id', 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id', 'service_id');
+    }
+
+
+    /**
+     * Get the total cost of the embroidery job.
+     *
+     * @return float
+     */
+    public static function sumEmbroideryJobsThisMonth()
+    {
+        return EmbroideryJob::whereMonth('created_at', now()->format('m'))
+            ->whereYear('created_at', now()->format('Y'))
+            ->sum('total');
     }
 
 }

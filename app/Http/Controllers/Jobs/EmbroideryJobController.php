@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Jobs;
 
+use App\Helpers\JobHelpers\EmbroideryJobHelpers;
 use Illuminate\Http\Request;
 use App\Models\Jobs\EmbroideryJob;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Jobs\CreateEmbroideryJobRequest;
 
 class EmbroideryJobController extends Controller
 {
 
-    private $embroideryJob;
-
-
-    public function __construct()
+    public function __construct(
+        private $embroiderJob = new EmbroideryJob()
+    )
     {
-        $this->embroideryJob = new EmbroideryJob();
     }
 
 
@@ -24,38 +24,23 @@ class EmbroideryJobController extends Controller
      */
     public function index()
     {
-        $jobs = EmbroideryJob::with('customer', 'service')
-            ->latest()->take(100)->get();
+        $data = [
+            'jobs' => EmbroideryJobHelpers::getTodaysJobs(),
+            'thisMonthsRevenue' => EmbroideryJob::sumEmbroideryJobsThisMonth(),
+            'thisMonthsRevenueContribution' => EmbroideryJobHelpers::monthyRevenueContribution(),
+            'performanceSummary' => EmbroideryJobHelpers::performanceSummary()
+        ];
 
-        return view('app.job.embroidery-jobs', compact('jobs'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('app.job.embroidery-jobs', $data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateEmbroideryJobRequest $request)
     {
 
-        $data = $request->validate([
-            'customer_id' => 'required',
-            'service_id' => 'required',
-            'unit_cost' => 'required',
-            'qty' => 'required',
-            'embroidery_cost' => 'required',
-            'mat_supply' => 'required',
-            'mat_unit_cost' => 'required',
-            'purchase_cost' => 'required',
-            'total' => 'required',
-            'notes' => 'nullable',
-        ]);
+        $data = $request->validated();
 
         $create_job = $this->embroideryJob->create($data);
 
