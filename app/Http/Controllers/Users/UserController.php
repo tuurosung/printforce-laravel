@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Users;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\StoreUserRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -30,16 +32,9 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'phone_number' => 'required',
-            'access_level' => 'required',
-            'password' => 'required',
-            'confirm_password' => 'required',
-        ]);
+        $data = $request->validated();
 
         $data['password'] = Hash::make($data['password']);
 
@@ -63,24 +58,38 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if (is_null($user)) {
-            return abort(404);
-        }
+        return view('app.users.modals.edit-user-modal', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $data = $request->validated();
+
+        if (!$user->update($data)) {
+            return redirect()->back()->with('error', "Something went wrong");
+        }
+
+        return redirect()->back()->with('success', "Bingo! User updated successfully");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        // Check if the user is the last admin
+        if ($user->access_level === 'administrator' && User::where('subscriber_id', $user->subscriber_id)->where('access_level', 'administrator')->count() <= 1) {
+            return redirect()->back()->with('error', "You cannot delete the last administrator");
+        }
+
+        if (!$user->delete()) {
+            return redirect()->back()->with('error', "Something went wrong");
+        }
+        return redirect()->back()->with('success', "Bingo! User deleted successfully");
     }
 }

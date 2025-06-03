@@ -21,7 +21,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('create-user') }}" autocomplete="off">
+            <form method="POST" action="{{ route('human-resources.users.store') }}" autocomplete="off">
                 @csrf
                 <div class="modal-body">
 

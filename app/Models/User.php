@@ -3,8 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -60,14 +62,47 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Attributes ------------------------------------------------------------------------
+     */
+
+
+     public function accessLevelName(): Attribute
+     {
+        return Attribute::make(
+            get: fn () => $this->getAccessLevelName()
+        );
+     }
+
+
+    /**
+     * Relationships ---------------------------------------------------------------------
+     */
+
     public function company()
     {
         return $this->belongsTo(Subscribers::class, 'subscriber_id');
     }
 
+
+    /**
+     * Methods ---------------------------------------------------------------------------
+     */
+
     public static function getRegisteredUsers()
     {
         return User::where('subscriber_id', Auth::user()->subscriber_id)
             ->get();
+    }
+
+
+    public function getAccessLevelName()
+    {
+        return match ($this->access_level) {
+            'administrator' => 'Administrator',
+            'reception' => 'Receptionist',
+            'super_admin' => 'Super Admin',
+            default => 'Undefined Access',
+        };
     }
 }
