@@ -22,7 +22,7 @@
                     aria-label="Close"></button>
             </div>
 
-            <form id="" autocomplete="off" method="POST" action="{{ route('update-expense') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('accounting.expenditure.update', $expenditure) }}">
                 @csrf
 
                 <div class="modal-body">
@@ -47,16 +47,8 @@
                         </div>
 
                         <div class="col">
-                            <div class="form-group">
-                                <label for="" class="form-label">Date</label>
-                                <input
-                                    type="text"
-                                    class="form-control form-control-sm"
-                                    name="date"
-                                    id="date"
-                                    value="{{ $expenditure->date }}"
-                                    required />
-                            </div>
+                            <x-printforce.inputs.date-input name="date" id="edit_date" label="Expenditure Date" value="{{ $expenditure->date }}" required />
+
                         </div>
 
                     </div>
@@ -76,32 +68,12 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="" class="form-label">Expenditure Header</label>
-                                <select
-                                    class="form-select form-select-sm select2"
-                                    name="header_id"
-                                    id="header_id" required>
-                                    <option value="">--- Select Header ---</option>
+                            <x-printforce.inputs.select-input name="header_id" id="edit_header_id" label="Expenditure Header" :options="$expenditure_headers" :selected="$expenditure->header_id" required />
 
-                                    @foreach ($expenditure_headers as $header)
-                                    <option value="{{ $header->header_id }}" {{ $expenditure->header_id == $header->header_id ? 'selected' : '' }}>{{ $header->header_name }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="" class="form-label">Account</label>
-                                <select class="form-select form-select-sm" name="account_number" required>
-                                    <option value="">--- Select Account ---</option>
+                            <x-printforce.inputs.select-input name="account_number" id="edit_account_number" label="Account" :options="$all_accounts" :selected="$expenditure->account_number" required />
 
-                                    @foreach ($all_accounts as $account)
-                                    <option value="{{ $account->account_number }}" {{ $expenditure->account_number == $account->account_number ? 'selected' : '' }}>{{ $account->account_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </div>
                     </div>
 

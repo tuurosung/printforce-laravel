@@ -32,15 +32,4 @@ class ExpenditureHeader extends Model
 
     public $incrementing = false;
 
-
-    public static function getExpenditureHeaders()
-    {
-
-        return Cache::remember('expenditure_headers', 60*60, function () {
-            return ExpenditureHeader::all();
-        });
-    }
-
-
-
 }

@@ -22,7 +22,7 @@
                     aria-label="Close"></button>
             </div>
 
-            <form id="" autocomplete="off" method="POST" action="{{ route('create-expense') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('accounting.expenditure.store') }}">
                 @csrf
 
                 <div class="modal-body">
@@ -45,61 +45,24 @@
                         </div>
 
                         <div class="col">
-                            <div class="form-group">
-                                <label for="" class="form-label">Date</label>
-                                <input
-                                    type="text"
-                                    class="form-control form-control-sm"
-                                    name="date"
-                                    id="date"
-                                    value="{{ now()->format('Y-m-d') }}"
-                                    required />
-                            </div>
+                            <x-printforce.inputs.date-input name="date" id="expenditure_date" label="Expenditure Date" value="{{ now()->format('Y-m-d') }}" required />
+
                         </div>
 
                     </div>
 
 
+                    <x-printforce.inputs.text-input name="description" id="description" label="Description" value="" required />
 
-                    <div class="form-group">
-                        <label for="" class="form-label">Description</label>
-                        <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            name="description"
-                            id="description"
-                            value=""
-                            required />
-                    </div>
 
                     <div class="row">
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="" class="form-label">Expenditure Header</label>
-                                <select
-                                    class="form-select form-select-sm select2"
-                                    name="header_id"
-                                    id="header_id" required>
-                                    <option value="">--- Select Header ---</option>
+                            <x-printforce.inputs.select-input name="header_id" id="header_id" label="Expenditure Header" :options="$expenditure_headers" required />
 
-                                    @foreach ($expenditure_headers as $header)
-                                    <option value="{{ $header->header_id }}">{{ $header->header_name }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="" class="form-label">Account</label>
-                                <select class="form-select form-select-sm" name="account_number" required>
-                                    <option value="">--- Select Account ---</option>
+                            <x-printforce.inputs.select-input name="account_number" id="account_number" label="Account" :options="$all_accounts" required />
 
-                                    @foreach ($all_accounts as $account)
-                                    <option value="{{ $account->account_number }}">{{ $account->account_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                         </div>
                     </div>
 

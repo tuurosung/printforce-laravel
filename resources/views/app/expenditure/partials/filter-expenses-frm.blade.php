@@ -1,28 +1,14 @@
 <form class="mb-5" id="filterExpenditureFrm">
 
-    <div class="d-flex">
+    <div class="d-flex gap-3">
+
+        <x-printforce.inputs.date-input name="start_date" id="start_date" label="Start Date" value="" />
+
+        <x-printforce.inputs.date-input name="end_date" id="end_date" label="End Date" value="{{ now()->format('Y-m-d') }}" />
 
         <div class="mb-3 w-200px me-3">
-            <label for="" class="form-label">Start Date</label>
-            <input type="text" class="form-control form-control-sm" name="start_date" id="start_date" value="{{ now()->format('Y-m-d') }}">
-        </div>
+            <x-printforce.inputs.select-input name="account_number" id="filterAccountNumber" label="Account" :options="$all_accounts" />
 
-        <div class="mb-3 w-200px me-3">
-            <label for="" class="form-label">End Date</label>
-            <input type="text" class="form-control form-control-sm" name="end_date" id="end_date" value="{{ now()->format('Y-m-d') }}">
-        </div>
-
-        <div class="mb-3 w-200px me-3">
-            <label for="" class="form-label">Header</label>
-            <select class="form-select form-select-sm" name="" id="filterHeader">
-
-                <option value="">-- Select Header --</option>
-
-                @foreach ($all_accounts as $account)
-                <option value="{{ $account->account_number }}">{{ $account->account_name }}</option>
-                @endforeach
-
-            </select>
         </div>
 
         <div class="" style="padding-top:27px">

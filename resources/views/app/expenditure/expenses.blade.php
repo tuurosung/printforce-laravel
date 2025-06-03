@@ -2,12 +2,8 @@
 
 @section('content')
 
-<div class="d-flex justify-content-between mb-5">
-    <div>
-        <h2 class="h2 fw-600">Expenses</h2>
-    </div>
-    <div>
-        <button
+<x-printforce.headers.page-header title="Expenses">
+<button
             type="button"
             class="btn btn-primary"
             data-toggle="modal"
@@ -17,56 +13,37 @@
             New Expense
 
         </button>
-    </div>
-</div>
+</x-printforce.headers.page-header>
+
+
 
 <!-- Only show to admins -->
 <div class="row mb-5">
 
     <div class="col-md-2">
-
-        <div class="card border-0">
-            <div class="card-body">
-
-                <p class="mb-2">Today's Expenses</p>
-                <h4 class="h4 mb-0">GHS {{ $expenditure_by_period['today'] }}</h4>
-
-            </div>
-        </div>
+        <x-printforce.cards.colour-card
+            title="Total Expenses"
+            value="{{ number_format($total_expenditure, 2) }}"
+            bgColour="primary"
+            />
     </div>
 
     <div class="col-md-2">
-
-        <div class="card border-0">
-            <div class="card-body">
-
-                <p class="mb-2">This Week's Expenses</p>
-                <h4 class="mb-0">GHS {{ $expenditure_by_period['week'] }}</h4>
-
-            </div>
-        </div>
+        <x-printforce.cards.colour-card
+            title="Monthly Expenses"
+            value="{{ number_format($monthly_expenditure, 2) }}"
+            bgColour="danger"
+            />
+    </div>
+    <div class="col-md-2">
+        <x-printforce.cards.colour-card
+            title="Yearly Expenses"
+            value="{{ number_format($yearly_expenditure, 2) }}"
+            bgColour="success"
+            />
     </div>
     <div class="col-md-2">
 
-        <div class="card border-0">
-            <div class="card-body">
-
-                <p class="mb-2">This Month's Expenses</p>
-                <h4 class="mb-0">GHS {{ $expenditure_by_period['month'] }}</h4>
-
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-
-        <div class="card border-0">
-            <div class="card-body">
-
-                <p class="mb-2">This Year's Expenses</p>
-                <h4 class="mb-0">GHS {{ $expenditure_by_period['year'] }}</h4>
-
-            </div>
-        </div>
     </div>
 
 </div>
@@ -95,14 +72,14 @@
                 </thead>
                 <tbody>
                     @php
-                    $i = 1;
-                    $total = 0;
+$i = 1;
+$total = 0;
                     @endphp
 
                     @foreach ($all_expenses as $expenditure)
 
                     @php
-                    $expenditure_id = $expenditure->expenditure_id
+    $expenditure_id = $expenditure->expenditure_id
                     @endphp
 
                     <tr class="">
@@ -113,7 +90,7 @@
                             {{ $expenditure->description }}
                         </td>
                         <td>{{ $expenditure->account->account_name }}</td>
-                        <td class="text-end pe-20px">{{ number_format($expenditure->amount,2) }}</td>
+                        <td class="text-end pe-20px">{{ number_format($expenditure->amount, 2) }}</td>
                         <td class="text-end col-2">
 
                             <div class="dropdown">
@@ -128,7 +105,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="triggerId">
                                     <a
-                                        data-url="{{ route('edit-expense', $expenditure_id) }}"
+                                        data-url="{{ route('accounting.expenditure.edit', $expenditure) }}"
                                         class="me-3 dropdown-item edit_expense">
 
                                         <i class="fas fa-pen text-primary me-3"></i>
@@ -136,7 +113,7 @@
 
                                     </a>
 
-                                    <form id="deleteFrm" method="POST" action="{{ route('delete-expense', $expenditure->expenditure_id) }}">
+                                    <form id="deleteFrm" method="POST" action="{{ route('accounting.expenditure.delete', $expenditure) }}">
                                         @csrf
                                         <a
                                             href="#"
@@ -157,7 +134,7 @@
                     </tr>
 
                     @php
-                    $total += $expenditure->amount; //increment total by amount
+    $total += $expenditure->amount; //increment total by amount
                     @endphp
 
                     @endforeach
@@ -169,7 +146,7 @@
                         <td>-----------</td>
                         <td>-----------</td>
                         <td class="text-end Axiforma fs-20px fw-600 pe-20px">
-                            {{ number_format($total,2) }}
+                            {{ number_format($total, 2) }}
                         </td>
                         <td></td>
                     </tr>
@@ -189,211 +166,212 @@
 @endsection
 
 @section('js')
-<script type="text/javascript">
-    $('#filterExpenditureFrm').on('submit', function(event) {
-        event.preventDefault();
-
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-        var customer_id = $('#customer_id').val();
-
-        $('#filterExpenditureFrm').serialize();
-        // var _token = ;
-        const url = "{{ route('filter-expenses') }}";
-
-        $.post(url, {
-                _token: "{{ csrf_token() }}",
-                start_date,
-                end_date,
-                customer_id
-            },
-            function(data) {
-                $('#data_holder').html(data);
-            }
-        );
-
-    });
-
-    $('.table tbody').on('click', '.edit_expense', function(event) {
-        const url = $(this).data('url')
-
-        $.get(url, function(data) {
-            $('#modal_holder').html(data);
-            new bootstrap.Modal(document.getElementById('editExpenditureModal')).show()
-            $('#editExpenditureModal').modal('show');
-        })
-    })
-
-    $('.table tbody').on('click', '.delete_expense', function(event) {
-
-        const $this = $(this);
-
-        new swal("Are you sure you want to delete this expenditure?", {
-                buttons: {
-                    cancel: "No",
-                    catch: {
-                        text: "Yes",
-                        value: "catch"
-                    }
-                }
-            })
-            .then((value) => {
-                switch (value) {
-                    case "cancel":
-                        break;
-                    case "catch":
-                        $this.closest('form').submit();
-                        break;
-                }
-            });
-
-
-    })
-
-    $(document).ready(function() {
-
-        $('.list-group-item').removeClass('active')
-        $('#expenditure_nav').addClass('active')
-        $('#expenditure_submenu').addClass('show')
-        $('#expenses_li').addClass('active-submenu')
-
-        $('#filterHeader').select2()
-
-        // $('.select2').select2({
-        //     dropdownParent: $('#newExpenditureModal')
-        // })
-
-        $('#date').datepicker()
-
-        $('#newExpenditureModal').on('shown.bs.modal', function() {
-            $('#amount').focus()
-        })
-
-        $('#new_expenditure_frm').on('submit', function(event) {
+    <script type="text/javascript">
+        $('#filterExpenditureFrm').on('submit', function(event) {
             event.preventDefault();
 
-            $(this).submit(function(event) {
-                return false;
-            })
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            var customer_id = $('#customer_id').val();
 
-            $.ajax({
-                url: 'expenditure-controoler/new-expense.php',
-                type: 'POST',
-                data: $('#new_expenditure_frm').serialize(),
-                success: function(msg) {
-                    if (msg === 'save_successful') {
-                        bootbox.alert("Expenditure recorded successful", function() {
-                            window.location.reload()
-                        })
-                    } else {
-                        bootbox.alert(msg)
-                    }
+            $('#filterExpenditureFrm').serialize();
+            // var _token = ;
+            const url = "{{ route('accounting.expenditure.filter') }}";
+
+            $.post(url, {
+                    _token: "{{ csrf_token() }}",
+                    start_date,
+                    end_date,
+                    customer_id
+                },
+                function(data) {
+                    $('#data_holder').html(data);
                 }
-            })
+            );
+
         });
 
+        $('.table tbody').on('click', '.edit_expense', function(event) {
+            const url = $(this).data('url')
 
-        $('#new_expenditure_header_frm').on('submit', function(event) {
-            event.preventDefault();
-            $.ajax({
-                url: '../serverscripts/admin/Expenditure/new_expenditure_header_frm.php',
-                type: 'GET',
-                data: $(this).serialize(),
-                success: function(msg) {
-                    if (msg === 'save_successful') {
-                        bootbox.alert('Header Added Successfully', function() {
-                            window.location.reload()
-                        })
-                    } else {
-                        bootbox.alert(msg)
-                    }
-                }
+            $.get(url, function(response) {
+                $('#modal_holder').html(response);
+                initializeDatepickers();
+                initializeSelect2();
+                $('#editExpenditureModal').modal('show');
             })
-        });
+        })
+
+        $('.table tbody').on('click', '.delete_expense', function(event) {
+
+            const $this = $(this);
+
+            new swal("Are you sure you want to delete this expenditure?", {
+                    buttons: {
+                        cancel: "No",
+                        catch: {
+                            text: "Yes",
+                            value: "catch"
+                        }
+                    }
+                })
+                .then((value) => {
+                    switch (value) {
+                        case "cancel":
+                            break;
+                        case "catch":
+                            $this.closest('form').submit();
+                            break;
+                    }
+                });
 
 
-        $('.table tbody').on('click', '.delete_header', function(event) {
-            event.preventDefault();
-            var header_id = $(this).attr('ID')
-            bootbox.confirm("Do you want to delete this header?", function(r) {
-                if (r === true) {
-                    $.get('../serverscripts/admin/Expenditure/delete_header.php?header_id=' + header_id, function(msg) {
-                        if (msg === 'delete_successful') {
-                            bootbox.alert("Header deleted successfully", function() {
+        })
+
+        $(document).ready(function() {
+
+            $('.list-group-item').removeClass('active')
+            $('#expenditure_nav').addClass('active')
+            $('#expenditure_submenu').addClass('show')
+            $('#expenses_li').addClass('active-submenu')
+
+            $('#filterHeader').select2()
+
+            // $('.select2').select2({
+            //     dropdownParent: $('#newExpenditureModal')
+            // })
+
+            $('#date').datepicker()
+
+            $('#newExpenditureModal').on('shown.bs.modal', function() {
+                $('#amount').focus()
+            })
+
+            $('#new_expenditure_frm').on('submit', function(event) {
+                event.preventDefault();
+
+                $(this).submit(function(event) {
+                    return false;
+                })
+
+                $.ajax({
+                    url: 'expenditure-controoler/new-expense.php',
+                    type: 'POST',
+                    data: $('#new_expenditure_frm').serialize(),
+                    success: function(msg) {
+                        if (msg === 'save_successful') {
+                            bootbox.alert("Expenditure recorded successful", function() {
                                 window.location.reload()
                             })
                         } else {
                             bootbox.alert(msg)
                         }
-                    })
-                }
-            }) //end confirm
-
-        });
-
-
-        $('.table tbody').on('click', '.edit', function() {
-            let expenditureID = $(this).attr('ID');
-            EditExpenditure(expenditureID)
-        })
-
-
-
-
-        // edit expenditure function
-        function EditExpenditure(expenditureID) {
-            if (expenditureID != "") {
-
-                $.post("../includes/modals/Expenditure/edit.php", 'expenditureID=' + expenditureID,
-                    function(response) {
-                        $('#modal_holder').html(response)
-                        $('#editExpenditure').modal('show');
-
-                        $('#editExpenditure').on('shown.bs.modal', function() {
-                            $('#edit_date').datepicker()
-                        })
-
-                        $('#edit_account_number, #edit_header_id').select2();;
-
-                        // Form submission
-                        $('#editExpenditureFrm').on('submit', function(event) {
-                            event.preventDefault();
-                            $(this).submit(function(event) {
-                                return false;
-                            })
-
-                            $.ajax({
-                                url: '../serverscripts/admin/Expenditure/edit.php',
-                                type: 'POST',
-                                data: $('#editExpenditureFrm').serialize(),
-                                success: function(msg) {
-
-                                    if (msg === 'update_successful') {
-                                        bootbox.alert("Expenditure Updated Successfully", function() {
-                                            window.location.reload();
-                                        })
-                                    } else {
-                                        bootbox.alert(msg)
-                                    }
-
-                                }
-                            })
-                        }); //end form submission
-
                     }
-                );
+                })
+            });
+
+
+            $('#new_expenditure_header_frm').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '../serverscripts/admin/Expenditure/new_expenditure_header_frm.php',
+                    type: 'GET',
+                    data: $(this).serialize(),
+                    success: function(msg) {
+                        if (msg === 'save_successful') {
+                            bootbox.alert('Header Added Successfully', function() {
+                                window.location.reload()
+                            })
+                        } else {
+                            bootbox.alert(msg)
+                        }
+                    }
+                })
+            });
+
+
+            $('.table tbody').on('click', '.delete_header', function(event) {
+                event.preventDefault();
+                var header_id = $(this).attr('ID')
+                bootbox.confirm("Do you want to delete this header?", function(r) {
+                    if (r === true) {
+                        $.get('../serverscripts/admin/Expenditure/delete_header.php?header_id=' + header_id, function(msg) {
+                            if (msg === 'delete_successful') {
+                                bootbox.alert("Header deleted successfully", function() {
+                                    window.location.reload()
+                                })
+                            } else {
+                                bootbox.alert(msg)
+                            }
+                        })
+                    }
+                }) //end confirm
+
+            });
+
+
+            $('.table tbody').on('click', '.edit', function() {
+                let expenditureID = $(this).attr('ID');
+                EditExpenditure(expenditureID)
+            })
+
+
+
+
+            // edit expenditure function
+            function EditExpenditure(expenditureID) {
+                if (expenditureID != "") {
+
+                    $.post("../includes/modals/Expenditure/edit.php", 'expenditureID=' + expenditureID,
+                        function(response) {
+                            $('#modal_holder').html(response)
+                            $('#editExpenditure').modal('show');
+
+                            $('#editExpenditure').on('shown.bs.modal', function() {
+                                $('#edit_date').datepicker()
+                            })
+
+                            $('#edit_account_number, #edit_header_id').select2();;
+
+                            // Form submission
+                            $('#editExpenditureFrm').on('submit', function(event) {
+                                event.preventDefault();
+                                $(this).submit(function(event) {
+                                    return false;
+                                })
+
+                                $.ajax({
+                                    url: '../serverscripts/admin/Expenditure/edit.php',
+                                    type: 'POST',
+                                    data: $('#editExpenditureFrm').serialize(),
+                                    success: function(msg) {
+
+                                        if (msg === 'update_successful') {
+                                            bootbox.alert("Expenditure Updated Successfully", function() {
+                                                window.location.reload();
+                                            })
+                                        } else {
+                                            bootbox.alert(msg)
+                                        }
+
+                                    }
+                                })
+                            }); //end form submission
+
+                        }
+                    );
+                }
             }
-        }
 
 
-        function DeleteExpenditure() {
-            if (expenditureID != "") {
+            function DeleteExpenditure() {
+                if (expenditureID != "") {
 
+                }
             }
-        }
 
-    }); // end ready
-</script>
+        }); // end ready
+    </script>
 @endsection
 
 

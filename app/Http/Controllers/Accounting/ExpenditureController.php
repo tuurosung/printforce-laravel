@@ -3,30 +3,60 @@
 namespace App\Http\Controllers\Accounting;
 
 
+use App\Services\Accounting\AccountService;
+use App\Traits\HandleResourceActions;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Expenditure\StoreNewExpenditureRequest;
+use App\Services\ExpenditureService;
 use App\Models\Accounting\Expenditure;
 use App\Models\Accounting\OperatingAccount;
 use App\Models\Accounting\ExpenditureHeader;
 
 class ExpenditureController extends Controller
 {
+    use HandleResourceActions;
+
+    /**
+     * Create a new class instance.
+     */
+    public function __construct(
+        protected $modelName = "Expenditure",
+        private $model = new Expenditure(),
+        private $expenditureService = new ExpenditureService(),
+        private $operatingAccountService = new AccountService()
+    )
+    {
+    }
+
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $all_accounts = OperatingAccount::filterByType(1);
-        $expenditure_by_period = Expenditure::getExpenditureByPeriod();
-        $expenditure_headers = ExpenditureHeader::getExpenditureHeaders();
-        $total_expenditure = Expenditure::sum('amount');
+        $all_accounts = $this->operatingAccountService->getAssetAccounts();
+        $expenditure_headers = $this->expenditureService->getHeadersArray();
+
+        $expenditure_statistics = $this->expenditureService->statistics;
+
+
+        $total_expenditure = $expenditure_statistics['total_expenditure'];
+        $monthly_expenditure = $expenditure_statistics['monthly_expenditure'];
+        $yearly_expenditure = $expenditure_statistics['yearly_expenditure'];
 
         $all_expenses = Expenditure::with(['header', 'account'])->orderBy('sn', 'desc')->get();
 
-        return view('app.expenditure.expenses', compact(['all_expenses', 'all_accounts', 'total_expenditure', 'expenditure_headers', 'expenditure_by_period']));
+        return view('app.expenditure.expenses', [
+            'all_accounts' => $all_accounts,
+            'expenditure_headers' => $expenditure_headers,
+            'total_expenditure' => $total_expenditure,
+            'monthly_expenditure' => $monthly_expenditure,
+            'yearly_expenditure' => $yearly_expenditure,
+            'all_expenses' => $all_expenses
+        ]);
     }
 
     /**
@@ -40,16 +70,9 @@ class ExpenditureController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNewExpenditureRequest $request)
     {
-        // validate request
-        $data = $this->validateRequest($request);
-
-        $save_expenditure = Expenditure::create($data);
-
-        return $save_expenditure
-            ? redirect()->back()->with('success', 'Expenditure created successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return $this->handleStore($request->validated());
     }
 
     /**
@@ -63,60 +86,32 @@ class ExpenditureController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $expenditure_id)
+    public function edit(Expenditure $expenditure)
     {
-        $expenditure = Expenditure::find($expenditure_id);
+        $all_accounts = $this->operatingAccountService->getAssetAccounts();
+        $expenditure_headers = $this->expenditureService->getHeadersArray();
 
-        if (is_null($expenditure)) {
-            return abort(404);
-        }
-
-        $expenditure_headers = ExpenditureHeader::getExpenditureHeaders();
-        $all_accounts = OperatingAccount::filterByType(1);
-
-        return view('app.expenditure.modals.edit-expense-modal', compact(['expenditure', 'all_accounts', 'expenditure_headers']));
+        return view('app.expenditure.modals.edit-expense-modal', [
+            'expenditure' => $expenditure,
+            'expenditure_headers' => $expenditure_headers,
+            'all_accounts' => $all_accounts
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Expenditure $expenditure)
+    public function update(StoreNewExpenditureRequest $request, Expenditure $expenditure)
     {
-        // validate request
-        $data = $this->validateRequest($request);
-
-
-        $expenditure = Expenditure::find($request->expenditure_id);
-
-        if (is_null($expenditure)) {
-            return redirect()->back()->with('error', 'Expenditure Not Found');
-        }
-
-        $updated = $expenditure->update($data);
-
-        return $updated
-            ? redirect()->back()->with('success', 'Expenditure updated successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
-
+        return $this->handleUpdate($request, $expenditure);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $expenditure_id)
+    public function destroy(Expenditure $expenditure)
     {
-        $expenditure = Expenditure::find($expenditure_id);
-
-        if (is_null($expenditure)) {
-            return redirect()->back()->with('error', 'Expenditure Not Found');
-        }
-
-        $deleted = $expenditure->delete();
-
-        return $deleted
-            ? redirect()->back()->with('success', 'Expenditure deleted successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
-
+       return $this->handleDelete($expenditure);
     }
 
     public function filterExpenditure(Request $request)
@@ -141,19 +136,6 @@ class ExpenditureController extends Controller
         ];
 
         return view('Admin.expenditure._filter', $data);
-    }
-
-
-
-    private function validateRequest($request)
-    {
-        return $request->validate([
-            'amount' => 'required',
-            'date' => 'required',
-            'description' => 'required',
-            'header_id' => 'required',
-            'account_number' => 'required'
-        ]);
     }
 
 }
