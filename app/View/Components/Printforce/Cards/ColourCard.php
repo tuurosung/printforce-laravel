@@ -13,12 +13,15 @@ class ColourCard extends Component
      */
     public function __construct(
         public string $title = 'Card Title',
-        public float|int $value = 0,
+        public $value = 0,
         public string $bgColour = 'primary',
         public $link = '#'
     )
     {
-        //
+        // if the provided value is neither a float nor an int, default to 0
+        // if (!is_float($value) && !is_int($value)) {
+        //     $this->value = 0;
+        // }
     }
 
     /**
