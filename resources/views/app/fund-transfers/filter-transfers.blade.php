@@ -38,14 +38,14 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="triggerId">
                         <a
-                            data-url="{{ route('edit-transfer', $transfer->transfer_id) }}"
+                            data-url="{{ route('accounting.transfers.edit', $transfer) }}"
                             class="dropdown-item edit_transfer">
 
                             <i class="fas fa-pen text-primary me-3"></i>
                             Edit
                         </a>
 
-                        <form method="POST" action="{{ route('delete.transfer', $transfer->transfer_id) }}">
+                        <form method="POST" action="{{ route('accounting.transfers.delete', $transfer) }}">
                             @csrf
                             <a
                                 href="#"
@@ -60,20 +60,7 @@
 
             </td>
         </tr>
-        @php
-        $total += $transfer->amount;
-        @endphp
-
         @endforeach
 
-        <tr>
-            <td>-------</td>
-            <td>-------</td>
-            <td>-------</td>
-            <td>-------</td>
-            <td>-------</td>
-            <td class="fs-18px fw-600 Axiforma text-right">{{ number_format($total,2) }}</td>
-            <td></td>
-        </tr>
     </tbody>
 </table>

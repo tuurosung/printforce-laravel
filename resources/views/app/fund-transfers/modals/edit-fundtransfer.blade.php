@@ -21,7 +21,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="newTransferFrm" autocomplete="off" method="POST" action="{{ route('update-transfer') }}">
+            <form id="newTransferFrm" autocomplete="off" method="POST" action="{{ route('accounting.transfers.update', $fundTransfer) }}">
 
                 @csrf
                 <div class="modal-body">
@@ -77,10 +77,10 @@
                                     id="source_account"
                                     required>
 
-                                    @foreach ($all_accounts as $account)
+                                    @foreach ($all_accounts as $key => $value)
 
-                                    <option value="{{ $account->account_number }}" {{ $account->account_number === $fundTransfer->source_account ? 'selected' : '' }}>
-                                        {{ $account->account_name . ' GHS '.$account->account_balance }}
+                                    <option value="{{ $key }}" {{ $key === $fundTransfer->source_account ? 'selected' : '' }}>
+                                        {{ $value }}
                                     </option>
 
                                     @endforeach
@@ -91,39 +91,20 @@
                         </div>
 
                         <div class="col">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Transfer To</label>
-                                <select
-                                    class="form-select form-select-sm"
-                                    name="destination_account"
-                                    id="destination_account"
-                                    required>
-
-                                    @foreach ($all_accounts as $account)
-
-                                    <option value="{{ $account->account_number }}" {{ $fundTransfer->destination_account === $account->account_number ? 'selected' : '' }}>
-                                        {{ $account->account_name . ' - GHS '. number_format($account->account_balance,2) }}
-                                    </option>
-
-                                    @endforeach
-
-                                </select>
-                            </div>
+                            <x-printforce.inputs.select-input
+                                label="Transfer To"
+                                name="destination_account"
+                                id="destination_account"
+                                :options="$all_accounts"
+                                :selected="$fundTransfer->destination_account"
+                                required="true"
+                                />
                         </div>
 
                     </div>
 
-                    <div class="mb-3">
-                        <label for="" class="form-label">Narration</label>
-                        <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            name="notes"
-                            id="notes"
-                            value="{{ $fundTransfer->notes }}"
-                            required />
-                    </div>
-
+                    <x-printforce.inputs.text-input label="Notes" name="notes" id="notes" :value="$fundTransfer->notes" required="true" />
+                   
                 </div>
                 <div class="modal-footer">
                     <button

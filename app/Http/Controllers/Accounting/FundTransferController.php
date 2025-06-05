@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Accounting;
 
+use App\Traits\HandleResourceActions;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Http\Request;
@@ -9,9 +10,26 @@ use Illuminate\Routing\Controller;
 use App\Models\Accounting\FundTransfer;
 use App\Models\Accounting\OperatingAccount;
 use App\Http\Controllers\OperatingAccountController;
+use App\Http\Requests\Transfers\StoreNewTransferRequest;
+use App\Services\Accounting\AccountService;
+use App\Services\Accounting\FundTransferService;
 
 class FundTransferController extends Controller
 {
+    use HandleResourceActions;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected $model = new FundTransfer(),
+        private $modelName = 'Fund Transfer',
+        private $accountService = new AccountService(),
+        private $fundTransferService = new FundTransferService()
+    )
+    {
+
+    }
 
     /**
      * Display a listing of the resource.
@@ -19,11 +37,15 @@ class FundTransferController extends Controller
     public function index()
     {
 
-        $all_transfers = $this->getTransfers();
-        $all_accounts = OperatingAccount::filterByType(1);
-        $transferSummary = $this->getTotalTransfer();
+        $all_transfers = $this->fundTransferService->getTransfers();
+        $all_accounts = $this->accountService->getAssetAccounts();
+        $transferStatistics = $this->fundTransferService->getTransferStatistics();
 
-        return view('app.fund-transfers.fund-transfers', compact('all_transfers', 'all_accounts', 'transferSummary'));
+        return view('app.fund-transfers.fund-transfers', [
+            'all_transfers' => $all_transfers,
+            'all_accounts' => $all_accounts,
+            'transferStatistics' => $transferStatistics
+        ]);
     }
 
 
@@ -31,26 +53,10 @@ class FundTransferController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNewTransferRequest $request)
     {
-        $data = $request->validate([
-            'amount' => 'required',
-            'date' => 'required',
-            'source_account' => 'required',
-            'destination_account' => 'required',
-            'notes' => 'required'
-        ]);
-
-        // avoid transfer to the same account
-        if ($data['source_account'] === $data['destination_account']) {
-            return redirect()->back()->with('error',"Errrmmm, You cannot transfer funds into the same account");
-        }
-
-        $is_transferred = FundTransfer::create($data);
-
-        return $is_transferred
-            ? redirect()->back()->with('success', "Bingo! Transfer created successfully")
-            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+        $data = $request->validated();
+        return $this->handleStore($data);
     }
 
 
@@ -60,8 +66,6 @@ class FundTransferController extends Controller
      */
     public function show($transfer_id)
     {
-        //get transfer id
-        // $transfer = $this->findTransfer($transfer_id);
     }
 
 
@@ -69,86 +73,37 @@ class FundTransferController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $transfer_id)
+    public function edit(FundTransfer $fundTransfer)
     {
-        $fundTransfer = FundTransfer::find($transfer_id);
+        $all_accounts = $this->accountService->getAssetAccounts();
 
-        if (is_null($fundTransfer)) {
-            return abort(404);
-        }
-
-        $all_accounts = OperatingAccount::filterByType(1);
-
-        return view('app.fund-transfers.modals.edit-fundtransfer', compact('fundTransfer', 'all_accounts'));
+        return view('app.fund-transfers.modals.edit-fundtransfer', [
+            'fundTransfer' => $fundTransfer,
+            'all_accounts' => $all_accounts
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(StoreNewTransferRequest $request, FundTransfer $fundTransfer)
     {
-        $data = $request->validate([
-            'transfer_id' => 'required',
-            'amount' => 'required',
-            'date' => 'required',
-            'source_account' => 'required',
-            'destination_account' => 'required',
-            'notes' => 'required'
-        ]);
-
-        $fundTransfer = FundTransfer::find($data['transfer_id']);
-
-        // avoid transfer to the same account
-        if ($data['source_account'] === $data['destination_account']) {
-            return redirect()->back()->with('error', "Errrmmm, You cannot transfer funds into the same account");
-        }
-
-        $is_updated = $fundTransfer->update($data);
-
-        return $is_updated
-            ? redirect()->back()->with('success', "Bingo! Transfer updated successfully")
-            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
-
+        return $this->handleUpdate($request, $fundTransfer);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $transfer_id)
+    public function destroy(FundTransfer $fundTransfer)
     {
-        // find the given transfer
-        $transfer = FundTransfer::find($transfer_id);
-
-        $is_deleted = $transfer->status = 'deleted';
-
-        return $is_deleted
-            ? redirect()->back()->with('success', "Bingo! Transfer deleted successfully")
-            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
-
+       return $this->handleDelete($fundTransfer);
     }
 
     public function filterTransfers(Request $request)
     {
-        $data = $request->validate([
-            'start_date' => 'required',
-            'end_date' => 'required'
-        ]);
-
-        $start_date = $data['start_date'];
-        $end_date = $data['end_date'];
-
-        $filteredTransfers = FundTransfer::whereBetween('date', [$start_date, $end_date])
-            ->get();
-
-
-        return view('app.fund-transfers.filter-transfers', compact('filteredTransfers'));
+        
     }
 
-    public function getTransfers()
-    {
-        return FundTransfer::orderBy('sn', 'desc')
-            ->get();
-    }
 
     private function getTotalTransfer()
     {

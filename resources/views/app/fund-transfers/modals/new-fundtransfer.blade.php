@@ -21,7 +21,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="newTransferFrm" autocomplete="off" method="POST" action="{{ route('create-transfer') }}">
+            <form id="newTransferFrm" autocomplete="off" method="POST" action="{{ route('accounting.transfers.store') }}">
 
                 @csrf
                 <div class="modal-body">
@@ -44,16 +44,13 @@
                         </div>
 
                         <div class="col">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Date</label>
-                                <input
-                                    type="text"
-                                    class="form-control form-control-sm"
-                                    name="date"
-                                    id="date"
-                                    value="{{ date('Y-m-d') }}"
-                                    required />
-                            </div>
+                            <x-printforce.inputs.date-input
+                                name="date"
+                                id="date"
+                                label="Date"
+                                value="{{ date('Y-m-d') }}"
+                                required="true"
+                                />
                         </div>
 
                     </div>
@@ -62,60 +59,36 @@
                     <div class="row">
 
                         <div class="col">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Transfer From</label>
-                                <select
-                                    class="form-select form-select-sm"
-                                    name="source_account"
-                                    id="source_account"
-                                    required>
+                            <x-printforce.inputs.select-input
+                                name="source_account"
+                                id="source_account"
+                                label="Transfer From"
+                                :options="$all_accounts"
+                                required="true"
+                                />
 
-                                    @foreach ($all_accounts as $account)
-
-                                    <option value="{{ $account->account_number }}">
-                                        {{ $account->account_name . ' GHS '.$account->account_balance }}
-                                    </option>
-
-                                    @endforeach
-
-
-                                </select>
-                            </div>
                         </div>
 
                         <div class="col">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Transfer To</label>
-                                <select
-                                    class="form-select form-select-sm"
-                                    name="destination_account"
-                                    id="destination_account"
-                                    required>
+                            <x-printforce.inputs.select-input
+                                name="destination_account"
+                                id="destination_account"
+                                label="Transfer To"
+                                :options="$all_accounts"
+                                required="true"
+                                />
 
-                                    @foreach ($all_accounts as $account)
-
-                                    <option value="{{ $account->account_number }}">
-                                        {{ $account->account_name . ' - GHS '. number_format($account->account_balance,2) }}
-                                    </option>
-
-                                    @endforeach
-
-                                </select>
-                            </div>
                         </div>
 
                     </div>
 
-                    <div class="mb-3">
-                        <label for="" class="form-label">Narration</label>
-                        <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            name="notes"
-                            id="notes"
-                            value=""
-                            required />
-                    </div>
+                    <x-printforce.inputs.text-input
+                        name="notes"
+                        id="notes"
+                        label="Narration"
+                        value=""
+                        required="true"
+                        />
 
                 </div>
                 <div class="modal-footer">
