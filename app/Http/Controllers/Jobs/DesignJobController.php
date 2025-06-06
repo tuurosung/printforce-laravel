@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\Jobs;
 
+use App\Facades\PrintServices;
 use Illuminate\Http\Request;
 use App\Models\Jobs\DesignJob;
+use App\Models\Customers\Customer;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Jobs\StoreNewDesignRequest;
+use App\Traits\HandleResourceActions;
+use App\Services\Jobs\DesignJobService;
 
 class DesignJobController extends Controller
 {
+
+    use HandleResourceActions;
+
     private $designJob;
 
-    public function __construct()
+    public function __construct(
+        protected $modelName = "Design Job",
+        private $model = new DesignJob(),
+        private $designJobService = new DesignJobService(),
+    )
     {
-        $this->designJob = new DesignJob();
     }
 
     /**
@@ -20,10 +31,9 @@ class DesignJobController extends Controller
      */
     public function index()
     {
-        $jobs = DesignJob::with('customer', 'service')
-            ->latest()->take(100)->get();
-
-        return view('app.job.design-jobs', compact('jobs'));
+        return view('app.job.design.design-jobs', [
+            'jobs' => $this->designJobService->getLatestDesignJobs(),
+        ]);
     }
 
     /**
@@ -37,22 +47,13 @@ class DesignJobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNewDesignRequest $request, Customer $customer)
     {
-        $data = $request->validate([
-            'customer_id' => 'required',
-            'service_id' => 'required',
-            'unit_cost' => 'required',
-            'copies' => 'required',
-            'total' => 'required',
-            'notes' => 'nullable',
-        ]);
+        $data = $request->validated() + [
+            'customer_id' => $customer->customer_id
+        ];
 
-        $create_job = $this->designJob->create($data);
-
-        return $create_job
-            ? redirect()->back()->with('success', 'Job created successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return $this->handleStore($data);
     }
 
     /**
@@ -74,32 +75,27 @@ class DesignJobController extends Controller
      */
     public function edit(DesignJob $designJob)
     {
-        //
+        return view('app.job.design.edit-design-job', [
+            'designJob' => $designJob,
+            'design_services' => PrintServices::getDesignServices()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DesignJob $designJob)
+    public function update(StoreNewDesignRequest $request, DesignJob $designJob)
     {
-        //
+        return $this->handleUpdate(
+            $request, $designJob
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $job_id)
+    public function destroy(DesignJob $designJob)
     {
-        $designJob = DesignJob::find($job_id);
-
-        if (is_null($designJob)) {
-            return abort(404);
-        }
-
-        $deleted = $designJob->delete();
-
-        return $deleted
-            ? redirect()->back()->with('success', 'Job deleted successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return $this->handleDelete($designJob);
     }
 }

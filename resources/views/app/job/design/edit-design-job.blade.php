@@ -1,6 +1,6 @@
 <div
     class="modal fade"
-    id="new_design_job_modal"
+    id="edit_design_job_modal"
     tabindex="-1"
 
     role="dialog"
@@ -12,7 +12,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitleId">
-                    New Design Job
+                    Edit Design Job
                 </h5>
                 <button
                     type="button"
@@ -20,19 +20,25 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('jobs.design.store', $customer) }}" autocomplete="off">
+            <form method="POST" action="{{ route('jobs.design.update', $designJob) }}" autocomplete="off">
                 @csrf
                 <div class="modal-body">
+
+                    <p class="mb-0">Customer's Name</p>
+                    <h4 class="mb-4">{{ $designJob->customer->name }}</h4>
 
 
                     <div class="row">
                         <div class="col">
+
                             <x-printforce.inputs.select-input
                                 name="service_id"
-                                id="design_service_id"
+                                id="edit_design_service_id"
                                 label="Service Name"
                                 :options="$design_services"
+                                :selected="$designJob->service_id"
                                 />
+
                         </div>
                         <div class="col">
                             <div class="mb-3">
@@ -41,7 +47,8 @@
                                     type="text"
                                     class="form-control"
                                     name="unit_cost"
-                                    id="design_cost"
+                                    id="edit_design_cost"
+                                    value="{{ $designJob->unit_cost }}"
                                     readonly required>
                             </div>
                         </div>
@@ -58,7 +65,8 @@
                                     type="text"
                                     class="form-control"
                                     name="copies"
-                                    id="design_copies"
+                                    id="edit_design_copies"
+                                    value="{{ $designJob->copies }}"
                                     required>
                             </div>
 
@@ -72,7 +80,8 @@
                                     type="text"
                                     class="form-control"
                                     name="total"
-                                    id="design_total"
+                                    id="edit_design_total"
+                                    value="{{ $designJob->total }}"
                                     readonly required>
                             </div>
 
@@ -87,7 +96,7 @@
                             class="form-control"
                             name="notes"
                             id="de_notes"
-                            value="">
+                            value="{{ $designJob->notes }}">
                     </div>
 
                 </div>
@@ -99,7 +108,8 @@
                         Close
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        Create Design Job
+                        <i class="fas fa-check me-3  "></i>
+                        Update Design Job
                     </button>
                 </div>
             </form>

@@ -6,7 +6,9 @@ namespace App\Models\Jobs;
 use App\Traits\ScopedActive;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Models\Services\PrintService;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -28,33 +30,13 @@ class DesignJob extends Model
             $designJob->subscriber_id = Auth::user()->subscriber_id;
         });
 
-        // self::tableInspector();
     }
 
-
-    private static function tableInspector()
-    {
-        Schema::table('jobs_design', function (Blueprint $table) {
-
-            // check for timestamps
-            if (!Schema::hasColumn('jobs_design', 'created_at')) {
-                $table->timestamps();
-            }
-
-            // make notes nullable
-            if (!Schema::hasColumn('jobs_design', 'notes')) {
-                $table->string('notes')->nullable();
-            } else {
-                $table->string('notes')->nullable()->change();
-            }
-
-        });
-    }
 
 
     protected $table = 'jobs_design';
-
     protected $primaryKey = 'job_id';
+    protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
@@ -75,6 +57,6 @@ class DesignJob extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id');
     }
 }
