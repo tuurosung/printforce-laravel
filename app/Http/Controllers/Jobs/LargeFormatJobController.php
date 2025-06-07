@@ -3,15 +3,29 @@
 namespace App\Http\Controllers\Jobs;
 
 use Illuminate\Http\Request;
+use App\Facades\PrintServices;
+use App\Models\Customers\Customer;
 use App\Models\Jobs\LargeFormatJob;
 use App\Http\Controllers\Controller;
+use App\Traits\HandleResourceActions;
+use PHPUnit\Framework\Attributes\Large;
+use App\Services\Jobs\LargeFormatJobService;
+use App\Helpers\JobHelpers\LargeFormatJobHelpers;
+use App\Http\Requests\Jobs\StoreLargeFormatJobRequest;
+use App\Http\Requests\Jobs\CreateLargeFormatJobRequest;
 
 class LargeFormatJobController extends Controller
 {
-    private $largeFormatJob;
 
-    public function  __construct() {
-        $this->largeFormatJob = new LargeFormatJob();
+    use HandleResourceActions;
+
+    public function  __construct(
+        protected $model = new LargeFormatJob(),
+        private $modelName = "Large Format Job",
+        private $largeFormatJob = new LargeFormatJob(),
+        private $largeFormatService = new LargeFormatJobService()
+    )
+    {
     }
 
     /**
@@ -20,10 +34,20 @@ class LargeFormatJobController extends Controller
     public function index()
     {
 
-        $jobs = LargeFormatJob::with('customer', 'service')
-            ->latest()->take(100)->get();
+        $jobs = $this->largeFormatService->getLatestLargeFormatJobs();
+        $statistics = $this->largeFormatService->getLargeFormatJobStatistics();
 
-        return view('app.job.largeformat-jobs', compact('jobs'));
+        // $thisMonthsRevenue = LargeFormatJob::sumLargeFormatJobsThisMonth();
+
+        // $thisMonthsRevenueContribution = LargeFormatJobHelpers::monthlyRevenueContribution();
+
+        $performanceSummary = $this->largeFormatService->performanceSummary();
+
+        return view('app.job.largeformat.largeformat-jobs', [
+            'jobs' => $jobs,
+            'statistics' => $statistics,
+            'performanceSummary' => $performanceSummary,
+        ]);
     }
 
     /**
@@ -39,29 +63,14 @@ class LargeFormatJobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreLargeFormatJobRequest $request, Customer $customer)
     {
 
-        $data = $request->validate([
-           'customer_id' => 'required',
-           'service_id' => 'required',
-           'cost' => 'required',
-           'measuring_unit' => 'required',
-           'discount' => 'required',
-           'premium' => 'required',
-           'width' => 'required',
-           'height' => 'required',
-           'copies' => 'required|numeric',
-           'total' => 'required|numeric',
-           'notes' => 'nullable',
-        ]);
+        $data = $request->validated() + [
+            'customer_id' => $customer->customer_id
+        ];
 
-        $create_job = $this->largeFormatJob->create($data);
-
-        return $create_job
-            ? redirect()->back()->with('success', 'Job created successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
-
+        return $this->handleStore($data);
     }
 
 
@@ -69,16 +78,9 @@ class LargeFormatJobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $job_id)
+    public function show(LargeFormatJob $largeFormatJob)
     {
-        $largeFormatJob = LargeFormatJob::find($job_id);
 
-        if (is_null($largeFormatJob)) {
-
-            return redirect()->back()->with('error', 'Job not found');
-        }
-
-        return view('app.job.modals.largeformat-jobcard', compact('largeFormatJob'));
     }
 
 
@@ -88,34 +90,27 @@ class LargeFormatJobController extends Controller
      */
     public function edit(LargeFormatJob $largeFormatJob)
     {
-        //
+
+        return view('app.job.largeformat.edit-largeformat', [
+            'largeFormatJob' => $largeFormatJob,
+            'largeformat_services' => PrintServices::getLargeFormatServices()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LargeFormatJob $largeFormatJob)
+    public function update(StoreLargeFormatJobRequest $request, LargeFormatJob $largeFormatJob)
     {
-        //
+        return $this->handleUpdate($request, $largeFormatJob);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $job_id)
+    public function destroy(LargeFormatJob $largeFormatJob)
     {
-        $largeFormatJob = LargeFormatJob::find($job_id);
-
-        if (is_null($largeFormatJob)) {
-
-            return redirect()->back()->with('error', 'Job not found');
-        }
-
-        $deleted = $largeFormatJob->delete();
-
-        return $deleted
-            ? redirect()->back()->with('success', 'Bingo! Job deleted successfully')
-            : redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return $this->handleDelete($largeFormatJob);
     }
 
 

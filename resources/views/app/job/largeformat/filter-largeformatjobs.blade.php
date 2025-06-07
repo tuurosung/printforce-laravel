@@ -1,52 +1,70 @@
-@php
-$i = 1;
-$total = 0;
-@endphp
+<table class="table table-sm datatables">
+    <thead class="">
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Service</th>
+            <th class="text-end">Width</th>
+            <th class="text-end">Height</th>
+            <th class="text-end">Cost</th>
+            <th class="text-end">Copies</th>
+            <th class="text-end">Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $i = 1;
+            $total = 0;
+        @endphp
 
-@foreach ($filtered_jobs as $job)
+        @foreach ($jobs as $job)
 
-<tr>
-    <td>{{ $i++ }}</td>
-    <td>{{ $job->date }}</td>
-    <td>{{ $job->customer?->name }}</td>
-    <td>{{ $job->service->service_name }}</td>
-    <td class="text-end pe-20px">{{ number_format($job->width, 2) }}</td>
-    <td class="text-end pe-20px">{{ number_format($job->height, 2) }}</td>
-    <td class="text-end pe-20px">{{ number_format($job->cost, 2) }}</td>
-    <td class="text-end pe-20px">{{ $job->copies }}</td>
-    <td class="text-end pe-20px">{{ number_format($job->total, 2) }}</td>
-    <td class="text-end pe-20px">
-        <a
-            href="#"
-            class="viewjob text-primary me-3"
-            style="text-decoration: none;"
-            id="{{ $job->job_id }}">
+            <tr>
+                <td>{{ $i++ }}</td>
+                <td>{{ $job->date }}</td>
+                <td>{{ $job->customer?->name }}</td>
+                <td>{{ $job->service->service_name }}</td>
+                <td class="text-end pe-20px">{{ number_format($job->width, 2) }}</td>
+                <td class="text-end pe-20px">{{ number_format($job->height, 2) }}</td>
+                <td class="text-end pe-20px">{{ number_format($job->cost, 2) }}</td>
+                <td class="text-end pe-20px">{{ $job->copies }}</td>
+                <td class="text-end pe-20px">{{ number_format($job->total, 2) }}</td>
+                <td class="text-end pe-20px">
 
-            <i class="fas fa-file-alt"></i>
-            Job Card
+                    <!-- <a href="#" class="viewjob me-3 text-primary"
+                                    data-url="">
 
-        </a>
+                                    <i class="fas fa-file-alt"></i>
+                                    JC
 
-        <a
-            href="#"
-            class="job_card text-primary me-3"
-            style="text-decoration: none;"
-            id="{{ $job->job_id }}">
+                                </a> -->
+                    <a href="javascript:void(0)" class="edit text-primary me-3"
+                        data-url="{{ route('jobs.large-format.edit', $job) }}">
+                        <i class="fas fa-pen"></i>
+                        Edit
+                    </a>
 
-            <i class="fas fa-print"></i>
-            Print
-        </a>
+                    @can('administrator')
+                        <form method="POST" action="{{ route('jobs.large-format.delete', $job) }}" class="d-inline-block">
+                            @csrf
+                            @method('delete')
+                            <a href="#" class="text-danger delete">
 
-        <a
-            href="#"
-            class="text-danger"
-            id="{{ $job->job_id }}">
-
-            <i class="fas fa-trash-alt"></i>
-            Delete
-        </a>
-    </td>
-</tr>
+                                <i class="fas fa-trash-alt"></i>
+                                Delete
+                            </a>
+                        </form>
+                    @endcan
 
 
-@endforeach
+
+                </td>
+            </tr>
+
+
+        @endforeach
+
+    </tbody>
+</table>

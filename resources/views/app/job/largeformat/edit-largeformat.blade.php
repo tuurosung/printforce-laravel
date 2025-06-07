@@ -1,6 +1,6 @@
 <div
     class="modal fade"
-    id="new_largeformat_modal"
+    id="edit_largeformat_modal"
     tabindex="-1"
 
     role="dialog"
@@ -12,28 +12,32 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitleId">
-                    New Large Format Job
+                    Update Large Format Job
                 </h5>
                 <button
                     type="button"
                     class="btn-close"
-                    data-bs-dismiss="modal"
+                    data-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('jobs.large-format.store', $customer) }}">
+            <form method="POST" action="{{ route('jobs.large-format.update', $largeFormatJob) }}">
                 @csrf
 
                 <div class="modal-body">
 
+                <p class="mb-0">Customer's Name</p>
+                <h4 class="mb-4">{{ $largeFormatJob->customer->name }}</h4>
 
                     <div class="row">
 
                         <div class="col">
+
                             <x-printforce.inputs.select-input
                                 name="service_id"
-                                id="largeformat_service_id"
+                                id="edit_largeformat_service_id"
                                 label="Service Name"
                                 :options="$largeformat_services"
+                                :selected="$largeFormatJob->service_id"
                                 />
 
                         </div>
@@ -45,7 +49,8 @@
                                     type="text"
                                     class="form-control form-control-sm"
                                     name="cost"
-                                    id="largeformat_cost"
+                                    id="edit_largeformat_cost"
+                                    value="{{ $largeFormatJob->cost }}"
                                     readonly
                                     required />
                             </div>
@@ -63,11 +68,11 @@
                                 <select
                                     class="form-select form-select-sm"
                                     name="measuring_unit"
-                                    id="measuring_unit"
+                                    id="edit_measuring_unit"
                                     required>
 
-                                    <option value="ft">Feet</option>
-                                    <option value="inch">Inch</option>
+                                    <option value="ft" {{ $largeFormatJob->measuring_unit == "ft" ? 'selected' : '' }}>Feet</option>
+                                    <option value="inch" {{ $largeFormatJob->measuring_unit == "inch" ? 'selected' : '' }}>Inch</option>
 
                                 </select>
 
@@ -84,8 +89,8 @@
                                             step="any"
                                             class="form-control form-control-sm"
                                             name="premium"
-                                            id="largeformat_premium"
-                                            value="0"
+                                            id="edit_largeformat_premium"
+                                            value="{{ $largeFormatJob->premium }}"
                                             required>
                                     </div>
                                 </div>
@@ -97,8 +102,8 @@
                                             step="any"
                                             class="form-control form-control-sm"
                                             name="discount"
-                                            id="largeformat_discount"
-                                            value="0"
+                                            id="edit_largeformat_discount"
+                                            value="{{ $largeFormatJob->discount }}"
                                             required>
                                     </div>
                                 </div>
@@ -117,7 +122,8 @@
                                     step="any"
                                     class="form-control form-control-sm"
                                     name="width"
-                                    id="width"
+                                    id="edit_width"
+                                    value="{{ $largeFormatJob->width }}"
                                     required />
                             </div>
                         </div>
@@ -129,7 +135,8 @@
                                     step="any"
                                     class="form-control form-control-sm"
                                     name="height"
-                                    id="height"
+                                    id="edit_height"
+                                    value="{{ $largeFormatJob->height }}"
                                     required />
                             </div>
                         </div>
@@ -144,10 +151,10 @@
                                     type="number"
                                     class="form-control form-control-sm"
                                     name="copies"
-                                    id="largeformat_copies"
+                                    id="edit_largeformat_copies"
                                     placeholder="Number of Copies"
                                     min="1"
-                                    value="1"
+                                    value="{{ $largeFormatJob->copies }}"
                                     required />
                             </div>
                         </div>
@@ -158,7 +165,8 @@
                                     type="text"
                                     class="form-control form-control-sm"
                                     name="total"
-                                    id="largeformat_total"
+                                    id="edit_largeformat_total"
+                                    value="{{ $largeFormatJob->total }}"
                                     readonly
                                     required />
                             </div>
@@ -186,30 +194,10 @@
                     </button>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-check me-3  "></i>
-                        Create Job
+                        Update Job
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-
-
-
-<?php
-// $customer = new Customer($q->db, $q->mysqli);
-// $invoice = new Invoice($q->db, $q->mysqli);
-// $account = new Account($q->db, $q->mysqli);
-// $service = new Service($q->db, $q->mysqli);
-
-
-// // clean the GET variable
-// $_GET = array_map([$seagate, 'Clean'], $_GET);
-
-// $customer_id = $_GET['customer_id'];
-// $customer->customer_id = $customer_id;
-// $customer->CustomerInfo();
-
-
-?>
