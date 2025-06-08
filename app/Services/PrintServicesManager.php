@@ -4,11 +4,18 @@ namespace App\Services;
 
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Traits\Cacheable;
 use PhpParser\Node\Expr\Cast\Array_;
 use App\Models\Services\PrintService;
 
 class PrintServicesManager
 {
+
+    use Cacheable;
+
+    protected $cacheTag = 'print_services';
+
+
     /**
      * Create a new class instance.
      */
@@ -31,7 +38,12 @@ class PrintServicesManager
             $query->where('category_id', $categoryId);
         }
 
-        return $query->get();
+        return $this->rememberCache(
+            'all_services' . ($categoryId ? "_cat_{$categoryId}" : ''),
+            function () use ($query) {
+                return $query->get();
+            }
+        );
     }
 
     public function getServicesArray($categoryId = null): array
@@ -52,6 +64,62 @@ class PrintServicesManager
     {
         return $this->getServicesArray($categoryId);
     }
+
+
+    /**
+     * Returns all Large Format Services As An Array
+     *
+     * @return array
+     */
+    public function getLargeFormatServices()
+    {
+        return $this->getFilteredServicesArray('001');
+    }
+
+
+    /**
+     * Returns all Design Services As An Array
+     *
+     * @return array
+     */
+    public function getDesignServices()
+    {
+        return $this->getFilteredServicesArray('002');
+    }
+
+
+    /**
+     * Returns all Embroidery Services As An Array
+     *
+     * @return array
+     */
+    public function getEmbroideryServices()
+    {
+        return $this->getFilteredServicesArray('003');
+    }
+
+
+    /**
+     * Returns all Press Services As An Array
+     *
+     * @return array
+     */
+    public function getPressServices()
+    {
+        return $this->getFilteredServicesArray('004');
+    }
+
+
+    /**
+     * Returns all Photography Services As An Array
+     *
+     * @return array
+     */
+    public function getPhotographyServices()
+    {
+        return $this->getFilteredServicesArray('005');
+    }
+
 
     public function getServiceCost($serviceId)
     {
