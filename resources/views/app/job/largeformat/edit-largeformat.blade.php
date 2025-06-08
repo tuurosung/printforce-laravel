@@ -18,6 +18,7 @@
                     type="button"
                     class="btn-close"
                     data-dismiss="modal"
+                    data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <form method="POST" action="{{ route('jobs.large-format.update', $largeFormatJob) }}">
