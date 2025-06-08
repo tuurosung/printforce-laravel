@@ -26,6 +26,12 @@
     <link href="{{ asset('assets/css/toastify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
 
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+        <link rel='stylesheet'
+            href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
 
@@ -63,6 +69,12 @@
             src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-XLt.otf") }}');
         }
 
+        @font-face {
+            font-family: 'CalSans';
+            font-weight: 400;
+            src: url('{{ asset("assets/font/CalSans/CalSans-Regular.ttf") }}') format('truetype');
+        }
+
 
         .urbanist {
             font-family: 'Urbanist', sans-serif;
@@ -70,6 +82,10 @@
 
         .Avante {
             font-family: 'Avante' !important;
+        }
+
+        .cal-sans {
+            font-family: 'CalSans', sans-serif !important;
         }
 
         body {
@@ -172,6 +188,10 @@
             font-weight: 500;
         }
 
+        .table > tbody > tr > td {
+        padding-right: 20px;
+        }
+
         .badge {
             display: inline-block;
             padding: .35em .65em;
@@ -208,6 +228,33 @@
 
         .nav-pills .nav-link {
             border-radius: 35px !important;
+        }
+
+        .form-control,
+        .form-select,
+        .select2-container .select2-selection--single {
+            border: 1px solid #ececec;
+            border-top-color: rgb(236, 236, 236);
+            border-right-color: rgb(236, 236, 236);
+            border-bottom-color: rgb(236, 236, 236);
+            border-left-color: rgb(236, 236, 236);
+            border-radius: 5px;
+            height: 40px;
+            /* box-shadow: none; */
+            /* padding-left: 20px; */
+            font-size: 14px;
+            width: 100%;
+
+            --bs-border-opacity: 1;
+            border-color: rgba(var(--bs-gray-300-rgb), var(--bs-border-opacity)) !important;
+
+            box-shadow: 0 .125rem .25rem rgba(var(--bs-black-rgb), .075) !important;
+        }
+
+        .form-control:focus {
+            outline: none !important;
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
         }
     </style>
 
