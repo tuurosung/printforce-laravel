@@ -22,6 +22,64 @@ class CustomerService
     }
 
 
+    /**
+     * FIlter Customers by search term. and return a collection of customers.
+     *
+     * @param string $searchTerm
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function filterCustomers(string $searchTerm)
+    {
+        $customers = Customer::with([
+            'largeFormatJobs',
+            'embroideryJobs',
+            'pressJobs',
+            'designJobs',
+            'photography_jobs',
+            'payments'
+        ])
+        ->where(function ($query) use ($searchTerm) {
+            $query->where('name', 'like', "%{$searchTerm}%")
+                  ->orWhere('phone', 'like', "%{$searchTerm}%");
+        })
+        ->limit(10)
+        ->get();
+
+        return $customers;
+    }
+
+
+
+    /**
+     * Filter Customers by search term and return a json array of customer_id and name.
+     *
+     *
+     * @param string $searchTerm
+     */
+
+    public static function filterCustomersJson(string $searchTerm)
+    {
+        $query = Customer::select(['customer_id', 'name'])
+            ->where(function ($query) use ($searchTerm) {
+                $query->where('name', 'like', "%{$searchTerm}%")
+                      ->orWhere('phone', 'like', "%{$searchTerm}%");
+            })
+            ->limit(10)
+            ->get();
+
+        $customers = []; //initialize an empty array to hold the formatted results
+
+        // Loop through the query results and format them
+        foreach ($query as $customer) {
+            $customers[] = [
+                'id' => $customer->customer_id,
+                'text' => $customer->name
+            ];
+        }
+
+        return response()->json($customers); // Return the formatted results as a JSON response
+    }
+
     public static function getCustomerRanking()
     {
         $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('COUNT(job_id) as count_largeformat_jobs')])
