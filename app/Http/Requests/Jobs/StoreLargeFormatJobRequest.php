@@ -31,6 +31,7 @@ class StoreLargeFormatJobRequest extends FormRequest
             'height' => 'required|numeric|min:0',
             'copies' => 'required|numeric|min:0',
             'total' => 'required|numeric',
+            'date' => 'required|date',
             'notes' => 'nullable|string|max:255',
         ];
     }
