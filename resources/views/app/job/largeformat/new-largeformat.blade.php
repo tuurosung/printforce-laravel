@@ -25,6 +25,17 @@
 
                 <div class="modal-body">
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <x-printforce.inputs.date-input
+                                name="date"
+                                id="largeformat_date"
+                                label="Job Date"
+                                value="{{ now()->format('Y-m-d') }}"
+                                required />
+                        </div>
+                    </div>
+
 
                     <div class="row">
 
