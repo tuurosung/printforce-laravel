@@ -17,7 +17,7 @@
                 <button
                     type="button"
                     class="btn-close"
-                    data-bs-dismiss="modal"
+                    data-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <form method="POST" action="{{ route('jobs.large-format.store', $customer) }}">
@@ -192,7 +192,7 @@
                     <button
                         type="button"
                         class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                        data-dismiss="modal">
                         Close
                     </button>
                     <button type="submit" class="btn btn-primary">
@@ -204,23 +204,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-<?php
-// $customer = new Customer($q->db, $q->mysqli);
-// $invoice = new Invoice($q->db, $q->mysqli);
-// $account = new Account($q->db, $q->mysqli);
-// $service = new Service($q->db, $q->mysqli);
-
-
-// // clean the GET variable
-// $_GET = array_map([$seagate, 'Clean'], $_GET);
-
-// $customer_id = $_GET['customer_id'];
-// $customer->customer_id = $customer_id;
-// $customer->CustomerInfo();
-
-
-?>
