@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Customers\FilterCustomersJson;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customers\CustomerController;
 use App\Http\Controllers\Customers\FilterCustomersController;
@@ -26,6 +27,7 @@ Route::prefix('customers')
             });
 
         Route::get('/filter', FilterCustomersController::class)->name('filter');
+        Route::get('/filter-json', FilterCustomersJson::class)->name('filter-json');
 
         // debtors
         Route::prefix('debtors')
