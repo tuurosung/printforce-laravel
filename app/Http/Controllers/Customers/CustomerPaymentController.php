@@ -2,18 +2,38 @@
 
 namespace App\Http\Controllers\Customers;
 
+use App\Services\CustomerService;
+use App\Traits\HandleResourceActions;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Payments\StoreNewPaymentRequest;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Accounting\OperatingAccount;
+use App\Services\Accounting\AccountService;
+use App\Services\CustomerPaymentService;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 class CustomerPaymentController extends Controller
 {
+
+    use HandleResourceActions;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected $model = new CustomerPayment(),
+        private $modelName = 'Customer Payment',
+        private $accountService = new AccountService(),
+        private $customerService = new CustomerService(),
+        private $customerPaymentService = new CustomerPaymentService()
+    )
+    {
+    }
 
 
     /**
@@ -22,30 +42,16 @@ class CustomerPaymentController extends Controller
     public function index()
     {
 
-        // 'customer_id' => 'all',
-        //     'payment_accounts' => OperatingAccount::filterByType(1)
+        // $customers = Customer::all();
 
-        $customers = Customer::all();
-
-        $payment_accounts = OperatingAccount::filterByType(1);
-
-        $stats = [
-            'todays_total_payment' => $this->getTotalPayment('today'),
-            'weeks_total_payment' => $this->getTotalPayment('week'),
-            'months_total_payment' => $this->getTotalPayment('month'),
-            'years_total_payment' => $this->getTotalPayment('year'),
+        $data = [
+            'total' => 0,
+            'payments' => $this->customerPaymentService->getLatestPayments(),
+            'statistics' => $this->customerPaymentService->getPaymentStatistics(),
+            'payment_accounts' => $this->accountService->getAssetAccounts()
         ];
 
-        $payments = CustomerPayment::with(['customer','account'])
-            ->where('payment_date', Carbon::now()->format('Y-m-d'))
-            ->get();
-
-        return view('app.payments.payments', compact([
-            'payments',
-            'customers',
-            'stats',
-            'payment_accounts'
-        ]));
+        return view('app.payments.payments', $data);
     }
 
     /**
@@ -53,34 +59,16 @@ class CustomerPaymentController extends Controller
      */
     public function create($customer_id)
     {
-        $all_customers = Customer::all()->where('status', 'active');
-        $operating_accounts = OperatingAccount::all()->where('status', 'active');
-
-        $data = [
-            'customer_id' => $customer_id,
-            'all_customers' => $all_customers,
-            'operating_accounts' => $operating_accounts
-        ];
-
-        return view('Admin.payments.create', $data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNewPaymentRequest $request)
     {
-        $data =$this->validateRequest($request);
-
-        $payment = new CustomerPayment();
-
-        $save_payment = CustomerPayment::create($data);
-
-        return $save_payment
-            ?  redirect()->back()->with('success', "Payment recorded successfully")
-            :  redirect()->back()->with('error', "Ooops! Something went wrong on our side");
-
+        return $this->handleStore($request->validated());
     }
+
 
     /**
      * Display the specified resource.
@@ -93,180 +81,38 @@ class CustomerPaymentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($payment_id)
+    public function edit(CustomerPayment $customerPayment)
     {
-        if (!$this->isPayment($payment_id)) {
-            return redirect()->back()->with('error', "Invalid payment id");
-        }
+        $payment_id = $customerPayment->id;
 
         $payment = CustomerPayment::find($payment_id);
-        $all_customers = Customer::all()->where('status', 'active');
-        $operating_accounts = OperatingAccount::all()->where('status','active');
 
         $data = [
             'payment' => $payment,
-            'all_customers' => $all_customers,
-            'operating_accounts' => $operating_accounts
+            'customers' => $this->customerService->getCustomersArray(),
+            'payment_accounts' => $this->accountService->getAssetAccounts(),
+            'customerPayment' => $customerPayment,
         ];
 
-        return view('Admin.payments.edit', $data);
+        return view('app.payments.modals.edit-payment', $data);
     }
-
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(StoreNewPaymentRequest $request, CustomerPayment $customerPayment)
     {
-        // validate request
-        $this->validateRequest($request);
-
-        if (!$this->isPayment($request->payment_id)) {
-            return redirect()->back()->with('error', "Invalid payment id");
-        }
-
-        $payment = CustomerPayment::find($request->payment_id);
-
-        $payment->customer_id = $request->customer_id;
-        $payment->amount_paid = $request->amount_paid;
-        $payment->payment_date = $request->date;
-        $payment->account_number = $request->account_number;
-
-        try {
-            $payment->save();
-            return redirect()->back()->with('success', "Payment information updated successfully");
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', "Something went wrong on our side". $e->getMessage());
-        }
+       return $this->handleUpdate($request, $customerPayment);
     }
-
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($payment_id)
+    public function destroy(CustomerPayment $customerPayment)
     {
-        // VerifyCsrfToken
-        $payment = CustomerPayment::find($payment_id);
-
-        $payment->status = 'deleted';
-
-        try {
-            $payment->save();
-            session('success', 'Payment deleted successfully');
-            return redirect()->back()->with('success', 'Payment deleted successfully');
-        } catch (\Exception $e) {
-            Log::warning($e->getMessage());
-            session('error', 'Ooops! We could not delete the given payment');
-            return  redirect()->back()->with('error', 'Ooops! We could not delete the given payment');
-        }
-
-    }
-
-
-
-
-    private function isPayment($payment_id)
-    {
-        return (bool) CustomerPayment::find($payment_id);
-    }
-
-    private function validateRequest($request)
-    {
-        return $request->validate([
-
-            'amount_paid' => 'required|numeric',
-            'customer_id' => 'required',
-            'account_number' => 'required',
-            'payment_date' => 'required'
-
-        ]);
-
-    }
-
-    private function paymentId()
-    {
-        $count =  CustomerPayment::count() + 1;
-        return str_pad($count, 6, "0", STR_PAD_LEFT);
-    }
-
-
-
-    private function getAllPayments()
-    {
-        return CustomerPayment::all()
-            ->sort();
-    }
-
-
-
-    public function filterPayments(Request $request)
-    {
-        $request->validate([
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'customer_id' => 'required'
-        ]);
-
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-
-
-        if ($request->customer_id == 'all') {
-
-            $filteredList =  CustomerPayment::whereBetween('payment_date', [$start_date, $end_date])
-                ->get();
-        } else {
-
-            $filteredList =  CustomerPayment::whereBetween('payment_date', [$start_date, $end_date])
-                ->where('customer_id', $request->customer_id)
-                ->get();
-        }
-
-        return view('app.payments.filtered-payments', compact('filteredList'));
-    }
-
-
-
-    /**
-     * Return the total payment made for a given period
-     *
-     * @param string $period
-     * @return float $totalPayment
-     */
-    private function getTotalPayment($period)
-    {
-        switch ($period) {
-            case 'today':
-                $totalPayment =  CustomerPayment::totalPaymentPeriod(Carbon::now()->today(), Carbon::now()->today());
-                break;
-
-            case 'week':
-                $totalPayment =  CustomerPayment::totalPaymentPeriod(Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek());
-                break;
-
-            case 'month':
-                $totalPayment =  CustomerPayment::totalPaymentPeriod(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
-                break;
-
-            case 'year':
-                $totalPayment =  CustomerPayment::totalPaymentPeriod(Carbon::now()->startOfYear(), Carbon::now()->endOfYear());
-                break;
-
-            default:
-                $totalPayment = 0;
-                break;
-        }
-
-        return $totalPayment;
-    }
-
-
-    public function paymentGraph() {
-
-        return CustomerPayment::paymentGraph();
+        return $this->handleDelete($customerPayment);
     }
 
 }
