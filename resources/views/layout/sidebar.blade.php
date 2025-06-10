@@ -25,30 +25,40 @@
                 </a>
                 <div class="menu-submenu">
                     <div class="menu-item">
-                        <a href="{{ route('largeformatjobs') }}" class="menu-link" id="">
+                        <a href="{{ route('jobs.today') }}" class="menu-link" id="">
+                            <span class="menu-text">Today's Jobs</span>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="{{ route('jobs.large-format.index') }}" class="menu-link" id="">
                             <span class="menu-text">Large Format Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('embroideryjobs') }}" class="menu-link" id="">
+                        <a href="{{ route('jobs.embroidery.index') }}" class="menu-link" id="">
                             <span class="menu-text">Embroidery Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('designjobs') }}" class="menu-link" id="">
+                        <a href="{{ route('jobs.design.index') }}" class="menu-link" id="">
                             <span class="menu-text">Design Jobs</span>
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('pressjobs') }}" class="menu-link" id="">
+                        <a href="{{ route('jobs.press.index') }}" class="menu-link" id="">
                             <span class="menu-text">Press Jobs</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a href="{{ route('payments') }}" class="menu-link" id="orders_nav">
+                    <!-- <div class="menu-item">
+                        <a href="#" class="menu-link" id="orders_nav">
                             <span class="menu-text">Photography Jobs</span>
                         </a>
-                    </div>
+                    </div> -->
+                    <!-- <div class="menu-item">
+                        <a href="#" class="menu-link" id="orders_nav">
+                            <span class="menu-text">Job Reports</span>
+                        </a>
+                    </div> -->
 
                 </div>
             </div>
@@ -61,7 +71,7 @@
         </div> -->
 
             <div class="menu-item">
-                <a class="menu-link" href="{{ route('customers') }}" id="customers_nav">
+                <a class="menu-link" href="{{ route('customers.customer.index') }}" id="customers_nav">
                     <i class="fas fa-users menu-icon"></i>
                     <span class="menu-text"> Customers </span>
                 </a>
@@ -69,7 +79,7 @@
 
             @can('administrator')
             <div class="menu-item">
-                <a class="menu-link" href="{{ route('debtors') }}" id="debtors_nav">
+                <a class="menu-link" href="{{ route('customers.debtors.view') }}" id="debtors_nav">
                     <i class="fas fa-hand-holding-usd menu-icon"></i>
                     <span class="menu-text">Debtors</span>
                 </a>
@@ -78,27 +88,9 @@
 
 
             <!-- Payments Menu -->
-            <div class="menu-item has-sub">
-                <a href="#" class="menu-link" id="orders_nav">
-                    <i class="fas fa-file-invoice menu-icon"></i>
-                    <span class="menu-text"> Payments</span>
-                    <span class="menu-caret">
-                        <b class="caret"></b>
-                    </span>
-                </a>
-                <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="{{ route('payments') }}" class="menu-link" id="orders_nav">
-                            <span class="menu-text">- Payments History</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="/new-payment" class="menu-link" id="orders_nav">
-                            <span class="menu-text">- New Payment</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+
+            <x-printforce.sidebar.single-menu-item menuText="Payment" :menuLink="route('payments.index')" />
+
 
             @can('administrator')
 
@@ -123,18 +115,18 @@
             @can('administrator')
 
             <div class="menu-item">
-                <a href="{{ route('expenses') }}" class="menu-link" id="expenses_nav">
+                <a href="{{ route('accounting.expenditure.index') }}" class="menu-link" id="expenses_nav">
                     <i class="fas fa-chart-line menu-icon"></i>
                     <span class="menu-text">Expenses</span>
                 </a>
             </div>
-
+<!--
             <div class="menu-item">
                 <a href="expenditure-headers/index.php" class="menu-link" id="expenditureH_nav">
                     <i class="fas fa-folder menu-icon"></i>
                     <span class="menu-text">Expenditure Headers</span>
                 </a>
-            </div>
+            </div> -->
 
             @endcan
 
@@ -152,14 +144,14 @@
             @can('administrator')
 
             <div class="menu-item">
-                <a href="{{ route('accounts') }}" class="menu-link" id="accounts_li">
+                <a href="{{ route('accounting.accounts.index') }}" class="menu-link" id="accounts_li">
                     <i class="fas fa-code-branch menu-icon"></i>
                     <span class="menu-text"> Chart Of Acc. </span>
                 </a>
             </div>
 
             <div class="menu-item">
-                <a href="{{ route('transfers') }}" class="menu-link" id="accounts_li">
+                <a href="{{ route('accounting.transfers.index') }}" class="menu-link" id="accounts_li">
                     <i class="fas fa-long-arrow-alt-right menu-icon"></i>
                     <span class="menu-text">Fund Transfers </span>
                 </a>
@@ -172,12 +164,12 @@
             </a>
         </div> -->
 
-            <div class="menu-item">
+            <!-- <div class="menu-item">
                 <a href="assets/index.php" class="menu-link">
                     <i class="fas fa-hdd menu-icon"></i>
                     <span class="menu-text"> Assets </span>
                 </a>
-            </div>
+            </div> -->
 
             <!-- <div class="menu-item">
             <a href="trial_balance.php" class="menu-link" id="accounts_li">
@@ -224,7 +216,7 @@
                     </div>
                 </div>
             </div>
-
+<!--
             <div class="menu-item has-sub">
                 <a href="#" class="menu-link" id="">
                     <i class="fab fa-stripe menu-icon"></i>
@@ -252,7 +244,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="menu-item">
             <a href="#" class="menu-link">
@@ -263,7 +255,7 @@
 
 
             <div class="menu-item">
-                <a href="{{ route('users') }}" class="menu-link" id="registered_users_li">
+                <a href="{{ route('human-resources.users.index') }}" class="menu-link" id="registered_users_li">
                     <i class="fas fa-users menu-icon"></i>
                     <span class="menu-text">Registered Users</span>
                 </a>
@@ -274,7 +266,7 @@
 
             @can('administrator')
             <div class="menu-item">
-                <a href="{{ route('services') }}" class="menu-link" id="reports_li">
+                <a href="{{ route('configuration.print-services.index') }}" class="menu-link" id="reports_li">
                     <i class="fas fa-cogs menu-icon"></i>
                     <span class="menu-text">Services</span>
                 </a>

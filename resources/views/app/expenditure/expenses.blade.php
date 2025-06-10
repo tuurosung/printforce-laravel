@@ -23,7 +23,7 @@
     <div class="col-md-2">
         <x-printforce.cards.colour-card
             title="Total Expenses"
-            value="{{ number_format($total_expenditure, 2) }}"
+            :value="$total_expenditure"
             bgColour="primary"
             />
     </div>
@@ -31,14 +31,14 @@
     <div class="col-md-2">
         <x-printforce.cards.colour-card
             title="Monthly Expenses"
-            value="{{ number_format($monthly_expenditure, 2) }}"
+            :value="$monthly_expenditure"
             bgColour="danger"
             />
     </div>
     <div class="col-md-2">
         <x-printforce.cards.colour-card
             title="Yearly Expenses"
-            value="{{ number_format($yearly_expenditure, 2) }}"
+            :value="$yearly_expenditure"
             bgColour="success"
             />
     </div>

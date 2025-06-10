@@ -20,7 +20,7 @@
                         data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('create-account') }}">
+                <form method="POST" action="{{ route('accounting.accounts.store') }}">
                     @csrf
                     <div class="modal-body">
 

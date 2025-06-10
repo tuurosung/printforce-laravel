@@ -83,8 +83,12 @@ class AccountService
             )->toArray();
     }
 
-
-    public function getAssetAccounts()
+    /**
+     * Returns an array of all Asset Accounts (ie. Cash, Bank Accounts, etc.)
+     *
+     * @return array
+     */
+    public function getAssetAccounts(): array
     {
         return $this->getOperatingAccountsByTypeArray(1);
     }

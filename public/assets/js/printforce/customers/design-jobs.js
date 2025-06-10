@@ -24,6 +24,7 @@ $('#design_service_id').on('change', function (event) {
 
 });
 
+
 /**
  * Handle the design job copies input on keyup
  * This will calculate the total cost based on the number of copies and the service cost

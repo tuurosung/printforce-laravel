@@ -127,6 +127,14 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'simple_errors' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/simple_errors.log'),
+            'level' => env('LOG_LEVEL', 'error'),
+            'replace_placeholders' => true,
+            'formatter' => App\Logging\SimpleErrorFormatter::class,
+        ]
+
     ],
 
 ];

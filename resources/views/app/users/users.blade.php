@@ -34,7 +34,7 @@
                 <tr class="">
                     <td>{{ $loop->iteration }}</td>
                     <td>{{$user->created_at}}</td>
-                    <td>{{ $user->name }}</td>
+                    <td class="text-capitalize">{{ $user->name }}</td>
                     <td>{{ $user->phone_number }}</td>
                     <td>{{ $user->access_level_name }}</td>
                     <td class="text-end">

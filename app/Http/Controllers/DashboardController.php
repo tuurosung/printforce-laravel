@@ -8,9 +8,19 @@ use App\Models\Customers\Customer;
 use App\Models\Accounting\Expenditure;
 use App\Models\Customers\CustomerPayment;
 use App\Http\Controllers\Jobs\JobController;
+use App\Services\CustomerPaymentService;
+use App\Services\CustomerService;
+use App\Services\ExpenditureService;
 
 class DashboardController extends Controller
 {
+
+    public function __construct(
+        private CustomerPaymentService $customerPaymentService,
+        private ExpenditureService $expenditureService
+    )
+    {
+    }
 
 
     /**
@@ -21,15 +31,24 @@ class DashboardController extends Controller
         $countNewCustomers = Customer::countNewCustomers();
         // $debtorsList = $customer->debtorsList();
 
-        $monthly_payments = CustomerPayment::totalPaymentPeriod(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
-        $monthly_expenditure = Expenditure::totalExpenditurePeriod(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
+        $monthly_payments = $this->customerPaymentService->getTotalPaymentForCurrentMonth();
 
         $service_performance = JobController::servicePerformanceAnalytics();
-        $customer_rankings = Customer::customerRankingAnalytics();
+        $customer_rankings = CustomerService::getCustomerRanking();
 
         $payment_graph = CustomerPayment::paymentGraph();
 
-        return view('app.dashboard', compact('monthly_payments', 'monthly_expenditure', 'countNewCustomers', 'service_performance', 'customer_rankings'));
+        $expenditure_statistics = $this->expenditureService->statistics;
+
+
+        return view('app.dashboard', [
+            'monthly_payments' => $monthly_payments,
+            'monthly_expenditure' => $expenditure_statistics['monthly_expenditure'],
+            'countNewCustomers' => $countNewCustomers,
+            'customer_rankings' => $customer_rankings,
+            'service_performance' => $service_performance,
+            'payment_graph' => $payment_graph,
+        ]);
     }
 
 
