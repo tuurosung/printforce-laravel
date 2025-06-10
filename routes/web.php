@@ -19,37 +19,17 @@ Route::get('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->
 Route::post('/user-login', [App\Http\Controllers\LoginController::class, 'authenticate'])->name('user-login');
 
 
-// Route::get('/dashbaord', function(){
-//     return view('app.dashboard');
-// })->name('dashboard');
 
 
 Route::middleware(['auth'])->group(function () {
     require __DIR__ . "/app-routes/dashboardControllers.php";
-    require __DIR__ . "/app-routes/jobsControllers.php";
-    require __DIR__ . "/app-routes/paymentControllers.php";
-    require __DIR__ . "/app-routes/customerControllers.php";
+    require __DIR__ . "/app-routes/job-routes.php";
+    require __DIR__ . "/app-routes/payment-routes.php";
+    require __DIR__ . "/app-routes/customer-routes.php";
     require __DIR__ . "/app-routes/purchaseControllers.php";
-    require __DIR__ . "/app-routes/accountingControllers.php";
+    require __DIR__ . "/app-routes/accounting-routes.php";
     require __DIR__ . "/app-routes/supplierControllers.php";
-    require __DIR__ . "/app-routes/serviceControllers.php";
-    require __DIR__ . "/app-routes/userControllers.php";
+    require __DIR__ . "/app-routes/service-routes.php";
+    require __DIR__ . "/app-routes/user-routes.php";
+    require __DIR__ . "/app-routes/upgrade-routes.php";
 });
-
-
-
-
-
-
-
-
-
-
-
-// index
-// show
-// create
-// store
-// edit
-// udpate
-// delete
