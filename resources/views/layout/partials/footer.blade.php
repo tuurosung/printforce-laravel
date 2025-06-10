@@ -18,9 +18,24 @@
 <script type="text/javascript" src="{{ asset('assets/js/printThis.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js" type="text/javascript"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 
 @stack('stacked-scripts')
+
+<script>
+    window.routes = {
+        'getServiceCost' : "{{  route('configuration.print-services.get-service-cost', ':serviceId') }}",
+        'filterDesignJobs' : "{{ route('jobs.design.filter') }}",
+        'filterLargeFormatJobs' : "{{ route('jobs.large-format.filter') }}",
+        'filterEmbroideryJobs' : "{{ route('jobs.embroidery.filter') }}",
+        'filterPressJobs' : "{{ route('jobs.press.filter') }}",
+        'filterCustomers' : "{{ route('customers.filter') }}",
+        'filterCustomersJson' : "{{ route('customers.filter-json') }}"
+    }
+</script>
+
+<!-- load the service cost function -->
+ <script type="text/javascript" src="{{ asset('assets/js/printforce/print-services/get-service-cost.js') }}"></script>
 
 <script type="text/javascript">
     $('a[data-toggle="pill"], a[data-toggle="tab"], a[data-bs-toggle="pill"], a[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
