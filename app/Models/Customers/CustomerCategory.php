@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Customers;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CustomerCategory extends Model
 {
@@ -14,4 +15,10 @@ class CustomerCategory extends Model
     public $incrementing = false;
 
 
+    public static function getCategories()
+    {
+        return Cache::rememberForever('customer_categories', function () {
+            CustomerCategory::all();
+        });
+    }
 }

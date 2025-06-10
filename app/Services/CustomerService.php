@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+use App\Traits\Cacheable;
 use App\Models\Jobs\PressJob;
 use App\Models\Jobs\DesignJob;
 use App\Models\Customers\Customer;
@@ -10,15 +12,45 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use Illuminate\Database\Query\JoinClause;
+use App\Models\Customers\CustomerCategory;
 
 class CustomerService
 {
+    use Cacheable;
+
+
     /**
      * Create a new class instance.
      */
-    public function __construct()
+    public function __construct(
+        private $customer = new Customer()
+    )
     {
         //
+    }
+
+
+
+    /**
+     * Returns the Latest 100 customers as a collection.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLatestCustomers()
+    {
+        return $this->customer->query()
+            ->with([
+                'largeFormatJobs',
+                'embroideryJobs',
+                'pressJobs',
+                'designJobs',
+                'photography_jobs',
+                'payments',
+                'customerCategory'
+            ])
+            ->latest()
+            ->limit(100)
+            ->get();
     }
 
 
@@ -80,6 +112,44 @@ class CustomerService
         return response()->json($customers); // Return the formatted results as a JSON response
     }
 
+
+
+    /**
+     * Returns all customers as a collection and caches the result for 60 minutes.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllCustomers()
+    {
+        return $this->rememberCache(
+            'all_customers',
+            function () {
+                return $this->customer->query()
+                    ->latest()->get();
+            }
+        );
+    }
+
+
+    /**
+     * Return all customers as an array of customer_id and name.
+     */
+    public function getCustomersArray()
+    {
+        return $this->getAllCustomers()
+            ->mapWithKeys(function ($customer) {
+                return [
+                    $customer->customer_id => $customer->name
+                ];
+            })->toArray();
+    }
+
+
+    /**
+     * Get the top 10 customers based on the number of jobs they have.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Customer>
+     */
     public static function getCustomerRanking()
     {
         $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('COUNT(job_id) as count_largeformat_jobs')])
@@ -129,5 +199,43 @@ class CustomerService
             ->get();
 
         return $customerRanking;
+    }
+
+
+
+    /**
+     * Returns the customer statistics for the dashboard.
+     *
+     * @return array
+     */
+    public function getCustomerStatistics()
+    {
+        $carbonNow = Carbon::now();
+
+        $statistics = $this->customer->query()
+            ->selectRaw('
+                COUNT(*) as total_customers,
+                COUNT(CASE WHEN created_at >= ? AND created_at >= ? THEN 1 END) as new_customers
+            ',[
+                $carbonNow->subDays(30)->format('Y-m-d'), // New customers in the last 30 days
+                $carbonNow->format('Y-m-d') // Current date
+            ])
+            ->first();
+
+        return [
+            'total_customers' => $statistics->total_customers,
+            'new_customers' => $statistics->new_customers,
+        ];
+    }
+
+
+    public function customerCategories()
+    {
+        return $this->rememberCache(
+            'customer_categories',
+            function () {
+                return CustomerCategory::all();
+            }
+        );
     }
 }

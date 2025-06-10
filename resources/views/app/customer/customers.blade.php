@@ -26,15 +26,17 @@
 
             <x-printforce.cards.colour-card
                 title="New Customers"
-                value="{{ $new_customers }}"
-                bgColour="primary" />
+                value="{{ $statistics['new_customers'] }}"
+                bgColour="primary"
+                valueType="count" />
         </div>
         <div class="col-md-3">
 
         <x-printforce.cards.colour-card
                 title="All Customers"
-                value="{{ $count_all_customers }}"
-                bgColour="warning" />
+                value="{{ $statistics['total_customers'] }}"
+                bgColour="warning"
+                valueType="count" />
 
 
         </div>
@@ -106,19 +108,20 @@
                             <td class="text-end"><?php echo number_format($customer->customer_balance, 2); ?></td>
                             <td class="text-end">
                                 <a
-                                    href="#"
+                                    href="javascript:void(0)"
                                     data-url="{{ route('customers.customer.edit', $customer) }}"
-                                    class="text-primary edit_customer  me-3">
+                                    class="text-primary edit  me-3">
                                     <i class="fas fa-pen text-primary "></i>
                                     Edit
                                 </a>
 
                                 @can('administrator')
-                                <form method="POST" action="" class="d-inline-block">
+                                <form method="POST" action="{{ route('customers.customer.delete', $customer) }}" class="d-inline-block">
+                                    @csrf
+                                    @method('delete')
                                 <a
-                                    href="#"
-                                    class="text-danger delete"
-                                    data-url="{{ route('customers.customer.delete', $customer) }}">
+                                    href="javascript:void(0)"
+                                    class="text-danger delete">
                                     <i class="fas fa-trash-alt text-danger" aria-hidden="true"></i>
                                     Delete
                                 </a>
@@ -148,30 +151,5 @@
 
 @section('js')
 
-<script>
-    $('#newCustomerModal').on('shown.bs.modal', function() {
-        $('#name').focus();
-    });
-
-    $('#searchCustomer').on('keyup', function() {
-
-        const url = "{{ route('customers.filter') }}";
-        $.get(url, $('#searchCustomersFrm').serialize(), function(data) {
-            $('#data_holder').html(data);
-        })
-    })
-
-
-    $('.edit_customer').on('click', function(event) {
-
-        var url = $(this).data('url')
-
-        $.get(url)
-            .done(function(data) {
-
-                $('#modal_holder').html(data);
-                $('#editCustomerModal').modal('show');
-            })
-    })
-</script>
+<script type="text/javascript" src="{{ asset('assets/js/printforce/customers/customers.js') }}"></script>
 @endsection

@@ -2,20 +2,30 @@
 
 namespace App\Http\Controllers\Customers;
 
+use App\Facades\PrintServices;
 use App\Models\CustomerCategory;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Services\CustomerService;
+use App\Traits\HandleResourceActions;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Accounting\OperatingAccount;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
+use App\Services\Accounting\AccountService;
 
 class CustomerController extends Controller
 {
 
+    use HandleResourceActions;
+
     public function __construct(
-        private $customer = new Customer()
+        protected $model = new Customer(),
+        private $modelName = 'Customer',
+        private $customer = new Customer(),
+        private $accountService = new AccountService(),
+        private $customerService = new CustomerService()
     )
     {
     }
@@ -26,36 +36,12 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customer = new Customer();
-
-        $customers = Customer::with([
-                'largeFormatJobs',
-                'embroideryJobs',
-                'pressJobs',
-                'designJobs',
-                'photography_jobs',
-                'payments'
-            ])
-            ->latest()
-            ->limit(10)
-            ->get();
-
-
-        $newCustomers = Customer::countNewCustomers();
-        $countAllCustomers = Customer::countAllCustomers();
-
-        // initialize variables
-        $total_jobs = 0;
-        $total_payments = 0;
-        $total_balance = 0;
-
         $data = [
-            'customers' =>  $customers,
-            'new_customers' => $newCustomers,
-            'count_all_customers' => $countAllCustomers,
-            'total_jobs' => $total_jobs,
-            'total_payments' => $total_payments,
-            'total_balance' => $total_balance,
+            'customers' =>  $this->customerService->getLatestCustomers(),
+            'statistics' => $this->customerService->getCustomerStatistics(),
+            'total_jobs' => 0,
+            'total_payments' => 0,
+            'total_balance' => 0,
         ];
 
         return view('app.customer.customers', $data);
@@ -78,13 +64,7 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        $data = $request->validated();
-
-        if (!$this->customer->create($data)) {
-            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
-        }
-
-        return redirect()->back()->with('success', 'Customer created successfully');
+        return $this->handleStore($request->validated());
     }
 
 
@@ -93,10 +73,18 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        // set a session variable to track the current customer
+        session(['current_customer' => $customer->customer_id]);
+
         return view('app.customer.customer-info', [
             'customer' => $customer->loadRelations(),
-            'payment_accounts' => OperatingAccount::filterByType(1),
-            'services' => Service::getAllServices(),
+            'payment_accounts' => $this->accountService->getAssetAccounts(),
+            'services' => PrintServices::getServices(),
+            'largeformat_services' => PrintServices::getLargeFormatServices(),
+            'design_services' => PrintServices::getDesignServices(),
+            'embroidery_services' => PrintServices::getEmbroideryServices(),
+            'press_services' => PrintServices::getPressServices(),
+            'photography_services' => PrintServices::getPhotographyServices(),
         ]);
     }
 
@@ -115,20 +103,7 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        $data = $request->validated();
-
-        try {
-
-            $customer->update($data);
-            return redirect()->back()->with('success', 'Customer updated successfully');
-
-        } catch (\Exception $e) {
-
-            Log::error('Error updating customer: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side'.$e->getMessage());
-
-        }
-
+       return $this->handleUpdate($request, $customer);
     }
 
 
@@ -137,9 +112,11 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        if (!$customer->delete()) {
-            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        // Check if the customer has any jobs or payments
+        if ($customer->customerJobsCount > 0  || $customer->customerCredit > 0) {
+            return redirect()->back()->with('error', 'Customer cannot be deleted because they have associated jobs or payments.');
         }
-        return redirect()->back()->with('success', 'Customer deleted successfully');
+
+        return $this->handleDelete($customer);
     }
 }

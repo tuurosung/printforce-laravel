@@ -2,13 +2,13 @@
 
 namespace App\Models\Customers;
 
+use Dom\Attr;
 use Carbon\Carbon;
 use App\Traits\ScopedActive;
 use App\Models\Jobs\PressJob;
+use Laravel\Scout\Searchable;
 use App\Models\Jobs\DesignJob;
 use App\Helpers\CustomerHelper;
-use App\Helpers\CustomerHelpers\CustomersHelper;
-use App\Models\CustomerCategory;
 use App\Models\Jobs\EmbroideryJob;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\DB;
@@ -19,11 +19,14 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Invoices\CustomerInvoices;
+use Illuminate\Database\Query\JoinClause;
+use App\Models\Customers\CustomerCategory;
+use App\Helpers\CustomerHelpers\CustomersHelper;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Query\JoinClause;
 
 class Customer extends Model
 {
@@ -74,109 +77,215 @@ class Customer extends Model
      */
 
 
-    public function getLargeFormatJobSumAttribute() //largeFormatDebit()
-    {
-        return $this->largeFormatJobs->sum('total');
-    }
 
-    public function getCountLargeFormatJobsAttribute()
+    /**
+     * Returns the total of all large format jobs for the customer.
+     *
+     * @return Attribute
+     */
+    public function largeFormatJobSum() : Attribute
     {
-        return $this->largeFormatJobs->count();
-    }
-
-
-    public function getCountEmbroideryJobsAttribute()
-    {
-        return $this->embroideryJobs->count();
+        return Attribute::make(
+            get: fn() => $this->largeFormatJobs->sum('total') ?? 0.00
+        );
     }
 
 
-    public function getEmbroideryJobSumAttribute()
+    /**
+     * Returns the count of large format jobs for the customer.
+     *
+     * @return int
+     */
+    public function countLargeFormatJobs() : Attribute
     {
-        return $this->embroideryJobs->sum('total');
+        return Attribute::make(
+            get: fn() => $this->largeFormatJobs->count() ?? 0
+        );
     }
 
 
-    public function getCountPressJobsAttribute()
+    /**
+     * Returns the count of embroidery jobs for the customer.
+     *
+     * @return int
+     */
+    public function countEmbroideryJobs() : Attribute
     {
-        return $this->pressJobs->count();
+        return Attribute::make(
+            get: fn() => $this->embroideryJobs->count() ?? 0
+        );
     }
 
 
-    public function getPressJobSumAttribute()
+    /**
+     * Returns the total of all embroidery jobs for the customer.
+     *
+     * @return float
+     */
+    public function embroideryJobSum() : Attribute
     {
-        return $this->pressJobs->sum('total');
+        return Attribute::make(
+            get: fn() => $this->embroideryJobs->sum('total') ?? 0.00
+        );
     }
 
 
-    public function getCountDesignJobsAttribute()
+    /**
+     * Returns the count of press jobs for the customer.
+     *
+     * @return int
+     */
+    public function countPressJobs() : Attribute
     {
-        return $this->designJobs->count();
+        return Attribute::make(
+            get: fn() => $this->pressJobs->count() ?? 0
+        );
     }
 
 
-    public function getDesignJobSumAttribute()
+    /**
+     * Returns the total of all press jobs for the customer.
+     *
+     * @return float
+     */
+    public function pressJobSum() : Attribute
     {
-        return $this->designJobs->sum('total');
-    }
-
-    public function getPhotographyJobSumAttribute()
-    {
-        return $this->photography_jobs->sum('total');
-    }
-
-    public function getJobCountAttribute()
-    {
-        return collect([
-            $this->count_large_format_jobs,
-            $this->count_embroidery_jobs,
-            $this->count_press_jobs,
-            $this->count_design_jobs,
-            $this->count_photography_jobs
-        ])->sum();
+        return Attribute::make(
+            get: fn() => $this->pressJobs->sum('total') ?? 0.00
+        );
     }
 
 
-    public function getCustomerDebitAttribute()
+    /**
+     * Returns the count of design jobs for the customer.
+     *
+     * @return int
+     */
+    public function countDesignJobs() : Attribute
     {
-        return collect([
-            $this->largeFormatJobSum,
-            $this->embroideryJobSum,
-            $this->pressJobSum,
-            $this->designJobSum,
-            $this->photographyJobSum,
-        ])->sum();
+        return Attribute::make(
+            get: fn() => $this->designJobs->count()
+        );
     }
 
 
-    public function getCustomerCreditAttribute()
+    /**
+     * Returns the total of all design jobs for the customer.
+     *
+     * @return float
+     */
+    public function designJobSum() : Attribute
     {
-        return $this->payments->sum('amount_paid');
-    }
-
-    public function getCustomerBalanceAttribute()
-    {
-        return $this->customer_debit - $this->customer_credit;
-    }
-
-    public function customerJobsCount()
-    {
-        return collect([
-            $this->largeFormatJobs->count(),
-            $this->embroideryJobs->count()
-        ])->sum();
+        return Attribute::make(
+            get: fn() => $this->designJobs->sum('total') ?? 0.00
+        );
     }
 
 
-    static function totalCustomerBalance()
+    /**
+     * Returns the count of photography jobs for the customer.
+     *
+     * @return int
+     */
+    public function photographyJobSum() : Attribute
     {
-        return Customer::totalCustomerDebit() - Customer::totalCustomerCredit();
+        return Attribute::make(
+            get: fn() => $this->photography_jobs->count() ?? 0
+        );
+    }
+
+    public function jobCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->count_large_format_jobs + $this->count_embroidery_jobs + $this->count_press_jobs + $this->count_design_jobs + $this->count_photography_jobs
+        );
+    }
+    // {
+    //     return collect([
+    //         $this->count_large_format_jobs,
+    //         $this->count_embroidery_jobs,
+    //         $this->count_press_jobs,
+    //         $this->count_design_jobs,
+    //         $this->count_photography_jobs
+    //     ])->sum();
+    // }
+
+
+    public function customerDebit() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->largeFormatJobSum + $this->embroideryJobSum + $this->pressJobSum + $this->designJobSum + $this->photographyJobSum
+        );
+    }
+    // {
+    //     return collect([
+    //         $this->largeFormatJobSum,
+    //         $this->embroideryJobSum,
+    //         $this->pressJobSum,
+    //         $this->designJobSum,
+    //         $this->photographyJobSum,
+    //     ])->sum();
+    // }
+
+
+
+    /**
+     * Returns the total amount paid by the customer.
+     *
+     * @return float
+     */
+    public function customerCredit() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->payments->sum('amount_paid') ?? 0.00
+        );
     }
 
 
-    public function getCustomerCategoryDescriptionAttribute()
+    /**
+     * Calculates the customer's balance by subtracting the total amount paid from the total amount owed.
+     *
+     * @return Attribute
+     */
+    public function customerBalance() : Attribute
     {
-        return CustomerHelper::$customerCategory[$this->category];
+        return Attribute::make(
+            get: fn() => $this->customerDebit - $this->customerCredit
+        );
+    }
+
+
+    /**
+     * Calculates the total number of jobs for the customer.
+     *
+     * @return int
+     */
+    public function customerJobsCount() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->countLargeFormatJobs + $this->countEmbroideryJobs + $this->countPressJobs + $this->countDesignJobs + $this->photographyJobSum
+        );
+    }
+
+
+    /**
+     * Calculates the total balance of all customers.
+     *
+     * @return float
+     */
+    public function totalCustomerBalance() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->totalCustomerDebit() - $this->totalCustomerCredit()
+        );
+    }
+
+
+    public function customerCategoryDescription() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->customerCategory?->category_name ?? 'No Category Assigned'
+        );
     }
 
 
@@ -184,6 +293,11 @@ class Customer extends Model
      * Relationships -------------------------------------------------------------------
      */
 
+
+    public function customerCategory(): BelongsTo
+    {
+        return $this->belongsTo(CustomerCategory::class, 'category', 'category_id');
+    }
 
 
     /**
@@ -193,7 +307,8 @@ class Customer extends Model
      */
     public function largeFormatJobs(): HasMany
     {
-        return $this->hasMany(LargeFormatJob::class, 'customer_id');
+        return $this->hasMany(LargeFormatJob::class, 'customer_id')
+            ->with('service');
     }
 
 
@@ -298,7 +413,6 @@ class Customer extends Model
 
     public static function customerRankingAnalytics()
     {
-
         return CustomersHelper::customerRanking();
     }
 
