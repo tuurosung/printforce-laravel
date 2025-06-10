@@ -28,7 +28,6 @@ class PrintService extends Model
     protected $table = 'services';
     protected $primaryKey = 'service_id';
     public $incrementing = false;
-
     protected $keyType = 'string';
 
     protected $fillable = ['subscriber_id', 'service_id', 'service_name', 'category_id', 'individual', 'artist', 'institution'];

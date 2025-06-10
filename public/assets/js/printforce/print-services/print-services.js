@@ -5,10 +5,12 @@ $('#new_service_modal').on('shown.bs.modal', function () {
     })
 });
 
-$('.table tbody').on('click', '.edit_service', function (event) {
+$(document).on('click', '.table tbody .edit', function () {
 
     const url = $(this).data('url')
+
     $.get(url, function (msg) {
+        
         $('#modal_holder').html(msg)
         $('#edit_service_modal').modal('show')
 
@@ -18,35 +20,21 @@ $('.table tbody').on('click', '.edit_service', function (event) {
                 dropdownParent: $('#edit_service_modal'),
             })
         });
+
     })
 })
 
 
-$('.table tbody').on('click', '.delete_service', function (event) {
 
-    const $this = $(this);
+$(document).on('click', '.table tbody .delete', function () {
 
-    new swal("Confirm", "Are you sure you want to delete this service?", "warning", {
-        buttons: {
-            cancel: "Cancel",
-            catch: {
-                text: "Yes! Delete it!",
-                value: "catch",
-            }
+    const $form = $(this).closest('form');
+
+    bootbox.confirm("Are you sure you want to delete this service?", function (answer) {
+
+        if (answer) {
+            $form.submit();
         }
-    })
-        .then((value) => {
-            switch (value) {
-                case "cancel":
-                    break;
-                case "catch":
-                    $this.closest('form').submit();
-                    break;
-
-                default:
-                    break;
-            }
-        });
-
+    });
 
 })

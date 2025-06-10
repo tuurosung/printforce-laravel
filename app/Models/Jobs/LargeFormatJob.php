@@ -90,7 +90,4 @@ class LargeFormatJob extends Model
             ->sum('total');
     }
 
-
-    // END STATIC FUNCTIONS
-
 }

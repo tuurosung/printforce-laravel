@@ -72,7 +72,7 @@
                     @foreach ($header->accounts as $account)
                     <tr>
                         <td scope="row">
-                            <a href="{{ route('account-transactions', $account) }}">
+                            <a href="{{ route('accounting.accounts.transactions', $account) }}">
                                 {{ $account->account_number }}
                             </a>
                         </td>
@@ -105,14 +105,14 @@
                                     <a
                                         href="#"
                                         class="dropdown-item me-3 edit_account"
-                                        data-url="{{ route('edit-account', $account->account_number) }}">
+                                        data-url="{{ route('accounting.accounts.edit', $account->account_number) }}">
 
                                         <i class="fas fa-pen me-3 text-primary"></i>
                                         Edit
 
                                     </a>
 
-                                    <form class="d-inline-block dropdown-item" method="POST" action="{{ route('delete-account', $account->account_number) }}">
+                                    <form class="d-inline-block dropdown-item" method="POST" action="{{ route('accounting.accounts.delete', $account->account_number) }}">
                                         @csrf
                                         <a
                                             href="#"

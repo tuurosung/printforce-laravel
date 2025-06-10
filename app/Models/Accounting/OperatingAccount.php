@@ -7,10 +7,10 @@ use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
 use App\Models\Accounting\AddFunds;
 use Illuminate\Support\Facades\Auth;
-use App\Models\OperatingAccountHeader;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Purchases\PurchasePayment;
+use App\Models\Accounting\OperatingAccountHeader;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OperatingAccount extends Model
@@ -28,7 +28,27 @@ class OperatingAccount extends Model
             $account->account_number = self::generateAccountNumber();
             $account->subscriber_id = Auth::user()->subscriber_id;
         });
+
+        (new self)->setAccTypeAttribute();
     }
+
+
+    /**
+     * Updates acc_type using the type attribute from the
+     * OperatingAccountHeader relationship.
+     * This is used to ensure that the acc_type is always
+     * in sync with the account header type.
+     */
+    public function setAccTypeAttribute()
+    {
+        // Use a single query with join to update all records efficiently
+        self::leftJoin('account_headers', 'all_accounts.account_header', '=', 'account_headers.sn')
+            ->update([
+                'all_accounts.acc_type' => \DB::raw('COALESCE(account_headers.type, 0)')
+            ]);
+    }
+
+
 
     protected $table = 'all_accounts';
     protected $primaryKey = 'account_number';
@@ -43,7 +63,7 @@ class OperatingAccount extends Model
         'description'
     ];
 
-    
+
 
     public function accountHeader()
     {

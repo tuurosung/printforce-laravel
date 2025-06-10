@@ -56,7 +56,7 @@
                                     <td class="text-end">{{ number_format($printService['institution'], 2) }}</td>
                                     <td class="text-end">
 
-                                        <a href="#" class="edit_service text-primary me-3"
+                                        <a href="#" class="edit text-primary me-3"
                                             data-url="{{ route('configuration.print-services.edit', $printService) }}">
                                             <i class="fas fa-pen text-primary"></i>
                                             Edit
@@ -66,7 +66,7 @@
                                             action="{{ route('configuration.print-services.delete', $printService) }}">
                                             @csrf
                                             @method ('delete')
-                                            <a href="#" class="delete_service text-danger">
+                                            <a href="#" class="delete text-danger">
                                                 <i class=" fas fa-trash-alt text-danger "></i>
                                                 Delete
                                             </a>

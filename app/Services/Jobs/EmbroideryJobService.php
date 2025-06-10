@@ -2,6 +2,7 @@
 
 namespace App\Services\Jobs;
 
+use Carbon\Carbon;
 use App\Models\Jobs\EmbroideryJob;
 use App\Http\Controllers\Jobs\JobController;
 
@@ -57,6 +58,53 @@ class EmbroideryJobService
 
 
     /**
+     * Get embroidery jobs filtered by date range.
+     *
+     * @param string $start_date
+     * @param string $end_date
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getEmbroideryJobsByDateRange(string $start_date, string $end_date)
+    {
+        $start_date = \Carbon\Carbon::parse($start_date)->startOfDay();
+        $end_date = \Carbon\Carbon::parse($end_date)->endOfDay();
+
+        return $this->embroideryJob->with('customer', 'service')
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->latest()->get();
+    }
+    /**
+     * Get the statistics for embroidery jobs.
+     *
+     * @return array
+     */
+    public function getEmbroideryJobStatistics(): array
+    {
+        $carbonNow = Carbon::now();
+
+
+        $statistics = $this->embroideryJob->query()
+            ->selectRaw('
+                SUM(CASE WHEN date = ? THEN total ELSE 0 END) as today_jobs,
+                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_months_jobs,
+                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_years_jobs
+            ', [
+                $carbonNow->format('Y-m-d'), // Today's date
+                $carbonNow->startOfMonth()->format('Y-m-d'), $carbonNow->endOfMonth()->format('Y-m-d'), // Start and end of this month
+                $carbonNow->startOfYear()->format('Y-m-d'), $carbonNow->endOfYear()->format('Y-m-d') // Start and end of this year
+            ])
+            ->first();
+
+        return [
+            'todays_jobs' => $statistics->today_jobs ?? 0,
+            'this_months_jobs' => $statistics->this_months_jobs ?? 0,
+            'this_years_jobs' => $statistics->this_years_jobs ?? 0,
+        ];
+    }
+
+
+
+    /**
      * Get the performance summary of embroidery jobs.
      *
      * @return \Illuminate\Database\Eloquent\Collection
@@ -79,9 +127,9 @@ class EmbroideryJobService
      */
     public function monthyRevenueContribution()
     {
-
+        $jobService = new JobService();
         // calculate the total revenue for the month
-        $totalRevenue = JobController::sumOfAllJobsThisMonth();
+        $totalRevenue = $jobService->getMonthlyJobSum();
 
         if ($totalRevenue == 0) {
             return 0; // Avoid division by zero
@@ -94,5 +142,17 @@ class EmbroideryJobService
         $thisMonthsRevenueContribution = ($sumEmbroideryJobsThisMonth / $totalRevenue) * 100;
 
         return $thisMonthsRevenueContribution;
+    }
+
+
+    /**
+     * Returns the sum of all embroidery jobs for the current month.
+     *
+     * @return float|int
+     */
+    public function monthlyJobTotal()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['this_months_jobs'] ?? 0;
     }
 }

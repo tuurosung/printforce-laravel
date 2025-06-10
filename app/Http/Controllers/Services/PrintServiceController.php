@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Services;
 
+use App\Traits\HandleResourceActions;
 use Illuminate\Http\Request;
 use App\Facades\PrintServices;
 use App\Models\Services\Service;
@@ -12,6 +13,8 @@ use App\Models\Services\PrintServiceCategory;
 
 class PrintServiceController extends Controller
 {
+
+    use HandleResourceActions;
 
     /**
      * Display a listing of the resource.
@@ -25,7 +28,6 @@ class PrintServiceController extends Controller
             'printServiceCategories' => $printServiceCategories,
         ]);
     }
-
 
 
     /**
@@ -49,6 +51,7 @@ class PrintServiceController extends Controller
             : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
     }
 
+
     /**
      * Display the specified resource.
      */
@@ -56,6 +59,7 @@ class PrintServiceController extends Controller
     {
         //
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -69,6 +73,7 @@ class PrintServiceController extends Controller
             'printServiceCategories' => $printServiceCategories,
         ]);
     }
+
 
     /**
      * Update the specified resource in storage.

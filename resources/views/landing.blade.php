@@ -197,10 +197,11 @@
                     </div>
                 </div>
                 <div class="ms-3">
-                    <button data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-primary fw-bold rounded-pill px-3 py-2">
+                    <a href="{{ route('login') }}" class="btn btn-primary fw-bold rounded-pill px-3 py-2">
+                    <!-- <button data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-primary fw-bold rounded-pill px-3 py-2"> -->
                         <i class="fa fa-unlock-keyhole me-2"></i>
                         Sign In
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

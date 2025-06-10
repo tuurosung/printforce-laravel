@@ -128,4 +128,15 @@ class LargeFormatJobService
         return $thisMonthsRevenueContribution;
     }
 
+
+    /**
+     * Returns the sum of all large format jobs for the current month.
+     * @return float|int
+     */
+    public function monthlyJobTotal()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['this_months_jobs'] ?? 0;
+    }
+
 }

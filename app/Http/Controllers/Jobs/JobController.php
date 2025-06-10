@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Jobs;
 
 use App\Models\Job;
+use App\Services\Jobs\JobService;
+use App\Traits\Cacheable;
 use Illuminate\Http\Request;
 use App\Models\Jobs\PressJob;
 use App\Models\Jobs\DesignJob;
@@ -23,6 +25,11 @@ use App\Helpers\JobHelpers\PhotographyJobHelpers;
 
 class JobController extends Controller
 {
+
+    use Cacheable;
+
+    protected $cacheTag = 'jobs';
+
 
     public function todaysJobs()
     {
@@ -112,17 +119,34 @@ class JobController extends Controller
      * Returns the sum of all jobs for the current month
      * @return mixed
      */
-    public static function sumOfAllJobsThisMonth()
+    public function sumOfAllJobsThisMonth()
     {
-        return Cache::remember('sumOfAllJobsThisMonth', 60 * 60, function () {
-            return collect([
-                LargeFormatJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
-                EmbroideryJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
-                DesignJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
-                PressJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
-                PhotographyJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total')
-            ])->sum();
-        });
+        $jobService = new JobService();
+
+        return $jobService->getMonthlyJobSum();
+
+        // return $this->rememberCache(
+        //     'sumOfAllJobsThisMonth',
+        //     function () {
+        //         return collect([
+        //             LargeFormatJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //             EmbroideryJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //             DesignJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //             PressJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //             PhotographyJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total')
+        //         ])->sum();
+        //     }
+        // );
+
+        // return Cache::remember('sumOfAllJobsThisMonth', 60 * 60, function () {
+        //     return collect([
+        //         LargeFormatJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //         EmbroideryJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //         DesignJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //         PressJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total'),
+        //         PhotographyJob::whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'))->sum('total')
+        //     ])->sum();
+        // });
     }
 
     public static function sumOfAllJobsThisYear()

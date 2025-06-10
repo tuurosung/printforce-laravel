@@ -59,4 +59,45 @@ class PressJobService
             ->whereBetween('created_at', [$start_date, $end_date])
             ->latest('date')->get();
     }
+
+
+    /**
+     * Returns the statistics for press jobs.
+     *
+     * @return array
+     */
+    public function getPressJobStatistics()
+    {
+        $carbonNow = Carbon::now();
+
+        $statistics = $this->pressJob->query()
+            ->selectRaw('
+                SUM(CASE WHEN date = ? THEN total ELSE 0 END) as today_jobs,
+                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_months_jobs,
+                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_years_jobs
+                ', [
+                    $carbonNow->format('Y-m-d'), // Today's date
+                    $carbonNow->startOfMonth()->format('Y-m-d'), $carbonNow->endOfMonth()->format('Y-m-d'), // Start and end of this month
+                    $carbonNow->startOfYear()->format('Y-m-d'), $carbonNow->endOfYear()->format('Y-m-d') // Start and end of this year
+                ])
+            ->first();
+
+        return [
+            'todays_jobs' => $statistics->today_jobs ?? 0,
+            'this_months_jobs' => $statistics->this_months_jobs ?? 0,
+            'this_years_jobs' => $statistics->this_years_jobs ?? 0,
+        ];
+    }
+
+
+    /**
+     * Returns the sum of all press jobs for the current month.
+     *
+     * @return float
+     */
+    public function monthlyJobTotal()
+    {
+        $statistics = $this->getPressJobStatistics();
+        return $statistics['this_months_jobs'] ?? 0;
+    }
 }

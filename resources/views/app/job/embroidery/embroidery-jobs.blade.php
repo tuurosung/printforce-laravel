@@ -97,7 +97,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $job->date }}</td>
                             <td>{{ $job->customer?->name }}</td>
-                            <td>{{ $job->service->service_name }}</td>
+                            <td>{{ $job->service?->service_name }}</td>
                             <td class="text-end pe-20px">{{ number_format($job->unit_cost, 2) }}</td>
                             <td class="text-center">{{ $job->qty }}</td>
                             <td class="text-end pe-20px">{{ number_format($job->embroidery_cost, 2) }}</td>
