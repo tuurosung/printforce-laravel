@@ -2,10 +2,12 @@
 
 namespace App\Models\Jobs;
 
-use App\Models\Services\Service;
 use App\Traits\ScopedActive;
+use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Models\Services\PrintService;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,9 +24,11 @@ class PressJob extends Model
 
         static::creating(function ($pressJob) {
             $pressJob->job_id = generateDashedRandomNumber();
-            $pressJob->subscriber_id = Auth::user()->subscriber_id;
+            $pressJob->subscriber_id = session()->get('active_subscriber');
         });
+
     }
+
 
     protected $table = 'jobs_press';
     protected $primaryKey = 'job_id';
@@ -43,13 +47,31 @@ class PressJob extends Model
         'copies',
         'total',
         'notes',
+        'date'
     ];
 
+
+    /**
+     * Relationships ------------------------------------------------------------
+     */
+
+
+    /**
+     * Define the relationship with the Service model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Service, PressJob>
+     */
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id');
     }
 
+
+    /**
+     * Define the relationship with the Customer model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Customer, PressJob>
+     */
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');

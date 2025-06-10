@@ -24,6 +24,16 @@
                 @csrf
                 <div class="modal-body">
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <x-printforce.inputs.date-input
+                                name="date"
+                                id="design_date"
+                                label="Job Date"
+                                required />
+                        </div>
+                    </div>
+
 
                     <div class="row">
                         <div class="col">
@@ -107,22 +117,3 @@
         </div>
     </div>
 </div>
-
-
-
-<?php
-
-// $customer = new Customer($q->db, $q->mysqli);
-// $invoice = new Invoice($q->db, $q->mysqli);
-
-// $account = new Account($q->db, $q->mysqli);
-// $service = new Service($q->db, $q->mysqli);
-
-// // clean the GET variable
-// $_GET = array_map([$seagate, 'Clean'], $_GET);
-
-// $customer_id = $_GET['customer_id'];
-// $customer->customer_id = $customer_id;
-// $customer->CustomerInfo();
-
-?>

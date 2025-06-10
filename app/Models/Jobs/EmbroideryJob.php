@@ -90,7 +90,8 @@ class EmbroideryJob extends Model
         'mat_unit_cost',
         'purchase_cost',
         'total',
-        'notes'
+        'notes',
+        'date',
     ];
 
     /**

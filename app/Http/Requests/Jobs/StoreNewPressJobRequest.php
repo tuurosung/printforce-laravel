@@ -27,6 +27,7 @@ class StoreNewPressJobRequest extends FormRequest
             'copies' => 'required|numeric|min:1',
             'total' => 'required|numeric',
             'notes' => 'nullable|string|max:100',
+            'date' => 'required|date',
         ];
     }
 }

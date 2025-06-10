@@ -32,6 +32,14 @@
 
                                     <h6 class="mb-4">Job Details </h6>
 
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <x-printforce.inputs.date-input name="date" id="embroidery_date" label="Job Date" required />
+                                        </div>
+                                        <div class="col-md-6"></div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col">
 

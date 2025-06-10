@@ -31,6 +31,7 @@ class StoreEmbroideryJobRequest extends FormRequest
             'purchase_cost' => 'required',
             'total' => 'required',
             'notes' => 'nullable',
+            'date' => 'required|date',
         ];
     }
 }

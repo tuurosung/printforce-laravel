@@ -21,7 +21,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="" autocomplete="off" method="POST" action="{{ route('store.customer') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('customers.customer.store') }}">
                 @csrf
                 <div class="modal-body py-4">
 

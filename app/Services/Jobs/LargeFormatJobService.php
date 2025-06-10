@@ -28,7 +28,7 @@ class LargeFormatJobService
     public function getLatestLargeFormatJobs()
     {
         return $this->largeFormatJob->with('customer', 'service')
-            ->latest()->take(100)->get();
+            ->latest('date')->take(100)->get();
     }
 
 

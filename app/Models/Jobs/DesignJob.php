@@ -48,6 +48,7 @@ class DesignJob extends Model
         'copies',
         'total',
         'notes',
+        'date'
     ];
 
     public function customer()
