@@ -66,8 +66,6 @@
                                     <option value="{{ $key }}">{{ $value }}</option>
 
                                     @endforeach
-                                    <option value="administrator">Administrator</option>
-                                    <option value="reception">Reception</option>
                                 </select>
                             </div>
 
