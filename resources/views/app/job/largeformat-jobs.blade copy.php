@@ -94,7 +94,7 @@
                     <td>{{ $i++ }}</td>
                     <td>{{ $job->date }}</td>
                     <td>{{ $job->customer?->name }}</td>
-                    <td>{{ $job->service->service_name }}</td>
+                    <td>{{ $job->service?->service_name }}</td>
                     <td class="text-end pe-20px">{{ number_format($job->width, 2) }}</td>
                     <td class="text-end pe-20px">{{ number_format($job->height, 2) }}</td>
                     <td class="text-end pe-20px">{{ number_format($job->cost, 2) }}</td>
