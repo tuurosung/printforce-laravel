@@ -25,7 +25,7 @@
         <tr>
             <td>{{ $i++ }}</td>
             <td>{{ $jobs->date }}</td>
-            <td>{{ $jobs->service->service_name }}</td>
+            <td>{{ $jobs->service?->service_name }}</td>
             <td class="text-end">{{ number_format($jobs->unit_cost, 2) }}</td>
             <td class="text-center">{{ $jobs->qty }}</td>
             <td class="text-end">{{ number_format($jobs->embroidery_cost, 2) }}</td>

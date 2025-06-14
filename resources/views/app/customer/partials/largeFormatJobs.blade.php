@@ -23,7 +23,7 @@
         <tr>
             <td>{{ $i++ }}</td>
             <td>{{ $jobs->date }}</td>
-            <td>{{ $jobs->service->service_name }}</td>
+            <td>{{ $jobs->service?->service_name }}</td>
             <td class="text-end pe-20px">{{ number_format($jobs->width, 2) }}</td>
             <td class="text-end pe-20px">{{ number_format($jobs->height, 2) }}</td>
             <td class="text-end pe-20px">{{ number_format($jobs->cost, 2) }}</td>

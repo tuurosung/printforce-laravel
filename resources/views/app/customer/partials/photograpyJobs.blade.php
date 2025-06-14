@@ -19,7 +19,7 @@
         <tr>
             <td>{{ $i++ }}</td>
             <td>{{ $jobs->date }}</td>
-            <td>{{ $jobs->service->service_name }}</td>
+            <td>{{ $jobs->service?->service_name }}</td>
             <td class="text-right">{{ $jobs->total }}</td>
             <td class="text-right">
                 <div class="dropdown dropstart">
