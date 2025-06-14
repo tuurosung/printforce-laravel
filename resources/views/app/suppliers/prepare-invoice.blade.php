@@ -2,239 +2,49 @@
 
 @section('content')
 
-@php
-$supplier = $purchase->supplier;
-@endphp
 
-<div class="d-flex justify-content-between mb-4">
-    <div>
-        <h2 class="h2 mb-0">Prepare Invoice</h2>
-    </div>
-    <div>
-        <form id="saveInvoiceFrm" class="d-inline-block" method="POST" action="{{ route('offload-cart') }}">
-            @csrf
 
-            <input type="hidden" name="purchase_id" value="{{ $purchase->purchase_id }}">
-            <input type="hidden" name="supply_cost" value="{{ $purchase->purchasedItems->sum('sub_total') }}">
 
-            <button
-                type="button"
-                id="saveInvoiceBtn"
-                class="btn btn-primary">
-
-                <i class="fas fa-check me-3  "></i>
-                Save Invoice
-
-            </button>
-        </form>
-        <button
-            type="button"
-            class="btn btn-danger">
-
-            <i class="fas fa-trash-alt me-3  "></i>
-            Trash
-
-        </button>
-
-    </div>
-</div>
-
-@include('layout.errors')
 
 <div class="row g-5">
-    <div class="col-md-6">
 
-        <div class="card border-0 h-100">
-            <div class="card-body p-4">
-
-                <h5 class="mb-3">Prepare Invoice</h5>
+    <div class="col-md-8 offset-md-2">
 
 
+        <x-printforce.headers.page-header title="Prepare Invoice">
 
-                <div class="card border-2 border-primary mb-3">
-                    <div class="card-body">
+            @if ($purchase->lockstatus != 'locked')
+            <form class="d-inline-block" method="POST" action="{{ route('purchases.offload-cart', $purchase) }}">
+                @csrf
+                <button type="button" id="saveInvoiceBtn" class="btn btn-primary">
 
-                        <form class="
-                            <?php
-                            if ($purchase->lockstatus == 'locked') {
-                                echo 'd-none';
-                            }
-                            ?>
-                            " id="" autocomplete="off" method="POST" action="{{ route('add-to-cart') }}">
+                    <i class="fas fa-check me-3  "></i>
+                    Save Invoice
 
-                            @csrf
+                </button>
+            </form>
+            <button type="button" class="btn btn-danger">
 
-                            <input type="text" class="d-none" name="purchase_id" value="{{ $purchase->purchase_id }}">
-                            <input type="text" class="d-none" name="supplier_id" value="{{ $supplier->supplier_id }}">
+                <i class="fas fa-trash-alt me-3  "></i>
+                Trash
 
-                            <div class="row">
-                                <div class="col">
+            </button>
 
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Description</label>
-                                        <input
-                                            type="text"
-                                            class="form-control form-control-sm"
-                                            name="description"
-                                            id="description"
-                                            required
-                                            placeholder="eg: Printing of A4 Flyer"
-                                            required />
-                                    </div>
+            @endif
 
-                                </div>
+            @if ($purchase->lockstatus == 'locked')
+            <button type="button" class="btn btn-primary" id="print" data-url="{{ route('purchases.print-invoice', $purchase) }}">
+                <i class="fi fi-sr-print me-3"></i>
+                Print Invoice
+            </button>
+            @endif
 
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Unit Cost</label>
-                                        <input
-                                            type="text"
-                                            class="form-control form-control-sm"
-                                            name="unit_cost"
-                                            id="unit_cost"
-                                            value=""
-                                            required
-                                            placeholder=""
-                                            required />
-                                    </div>
-
-                                </div>
-                                <div class="col">
-
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Qty</label>
-                                        <input
-                                            type="text"
-                                            class="form-control form-control-sm"
-                                            name="qty"
-                                            id="qty"
-                                            value="1"
-                                            required />
-                                    </div>
-
-                                </div>
-                                <div class="col">
-
-                                    <div class="mb-3">
-                                        <label for="" class="form-label">Total</label>
-                                        <input
-                                            type="text"
-                                            class="form-control form-control-sm"
-                                            name="sub_total"
-                                            id="total"
-                                            value=""
-                                            readonly />
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="text-end">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary">
-                                    <i class="fas fa-plus me-3 py-1 "></i>
-                                    Add To Invoice
-                                </button>
-                            </div>
-
-                        </form>
+        </x-printforce.headers.page-header>
 
 
 
 
-                    </div>
-                </div>
-
-                <div class="mb-5">
-                    <div class="form-check form-check-inline mb-2 fs-12px">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1"> 17.5% VAT/NHIL</label>
-                    </div>
-
-                    <div class="form-check form-check-inline mb-2 fs-12px">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">1% COVID Levy</label>
-                    </div>
-                    <div class="form-check form-check-inline mb-2">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">4% Flat Rate</label>
-                    </div>
-                </div>
-
-
-
-
-                <table class="table table-sm">
-                    <thead class="">
-                        <tr>
-                            <th>#</th>
-                            <th>Description</th>
-                            <th class="text-end">Unit Price</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-end">Amount</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @php
-                        $i = 1;
-                        @endphp
-
-                        @foreach ($purchase->cartItems as $cartItem)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>
-
-                                {{ $cartItem->description }}
-
-                            </td>
-                            <td class="text-end">{{ number_format($cartItem->unit_cost, 2) }}</td>
-                            <td class="text-center">{{ $cartItem->qty }}</td>
-                            <td class="text-end">{{ number_format($cartItem->sub_total, 2)  }}</td>
-                            <td class="text-end">
-                                <div class="dropdown">
-                                    <a
-                                        class=""
-                                        type="button"
-                                        id="triggerId"
-                                        data-toggle="dropdown"
-                                        data-bs-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v    "></i>
-                                    </a>
-                                    <div class="dropdown-menu" aria-labelledby="triggerId">
-                                        <a class="dropdown-item d-flex" href="#">
-                                            Remove
-                                            <i class="fas fa-trash-alt ms-auto text-danger"></i>
-                                        </a>
-                                        <!-- <a class="dropdown-item" href="#">Action</a> -->
-                                    </div>
-                                </div>
-
-                            </td>
-
-                        </tr>
-                        @endforeach
-
-
-                    </tbody>
-                </table>
-
-
-            </div>
-        </div>
-
-
-
-    </div>
-    <div class="col-md-6">
+        @include('layout.errors')
 
         <div class="card border-0 h-100">
             <div class="card-body p-4">
@@ -287,8 +97,60 @@ $supplier = $purchase->supplier;
 
                 </div>
 
+                @if ($purchase->lockstatus != 'locked')
 
-                <table class="table table-sm">
+                <form class="{{ $purchase->lockstatus == 'locked' ? 'd-none' : '' }} mb-4" id="" autocomplete="off"
+                    method="POST" action="{{ route('purchases.purchased-items.add-to-cart', $purchase) }}">
+
+                    @csrf
+
+                    <div class="d-flex gap-3">
+                        <div>
+                            <div class="mb-3">
+                                <label for="" class="form-label">Description</label>
+                                <input type="text" class="form-control form-control-sm" name="description"
+                                    id="description" required placeholder="eg: Printing of A4 Flyer" required />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="mb-3 w-100px">
+                                <label for="" class="form-label">Unit Cost</label>
+                                <input type="number" class="form-control form-control-sm" name="unit_cost"
+                                    id="unit_cost" value="" min="1" step="0.01" required placeholder="" required />
+                            </div>
+                        </div>
+                        <div class="w-100px">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Qty</label>
+                                <input type="number" class="form-control form-control-sm" name="qty" id="qty" value="1"
+                                    step="1" required />
+                            </div>
+                        </div>
+                        <div class="w-100px">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Total</label>
+                                <input type="text" class="form-control form-control-sm" name="sub_total" id="total"
+                                    value="" readonly />
+                            </div>
+                        </div>
+                        <div>
+                            <div class="" style="padding-top: 29px;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus me-3"></i>
+                                    Add To Invoice
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </form>
+                @endif
+
+
+                <table class="table table-sm datatable">
                     <thead class="elegant-color-dark white-text">
                         <tr>
                             <th>#</th>
@@ -299,16 +161,34 @@ $supplier = $purchase->supplier;
                         </tr>
                     </thead>
                     <tbody>
+                        @if ($purchase->lockstatus == 'locked')
                         @php
-                        $i = 1;
+                            $purchaseItems = $purchase->purchasedItems;
+                            @endphp
+                        @elseif ($purchase->lockstatus == 'editing')
+                        @php
+                            $purchaseItems = $purchase->cartItems;
                         @endphp
-                        @foreach ($purchase->cartItems as $cartItem)
+                        @endif
+                        @foreach ($purchaseItems as $cartItem)
                         <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $cartItem->description }}</td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                {{ $cartItem->description }}
+                                @if ($purchase->lockstatus != 'locked')
+                                <form method="POST"
+                                    action="{{ route('purchases.purchased-items.remove-from-cart', $cartItem) }}"
+                                    class="d-inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <a href="javascript:void(0)" class="text-danger remove-item">delete</a>
+                                </form>
+                                @endif
+
+                            </td>
                             <td class="text-end">{{ number_format($cartItem->unit_cost, 2) }}</td>
-                            <td class="text-center"><?php echo $cartItem['qty']; ?></td>
-                            <td class="text-end"><?php echo number_format($cartItem['sub_total'], 2); ?> </td>
+                            <td class="text-center"><?php    echo $cartItem['qty']; ?></td>
+                            <td class="text-end"><?php    echo number_format($cartItem['sub_total'], 2); ?> </td>
                         </tr>
                         @endforeach
 
@@ -318,75 +198,52 @@ $supplier = $purchase->supplier;
                     </tbody>
                 </table>
 
-
-                <div class="row mb-5">
-                    <div class="col-md-7">
-
+                <div class="d-flex justify-content-between mt-5">
+                    <div>
+                        <p class="mb-0 fs-12px fw-600">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You can add more items to the invoice.
+                        </p>
+                        <p class="mb-0 fs-12px fw-600">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Click on the delete link to remove an item from the invoice.
+                        </p>
+                        <p class="mb-0 fs-12px fw-600">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Click on the save button to save the invoice.
+                        </p>
                     </div>
-                    <div class="col-md-5">
+                    <div>
 
-                        <div class="card border-primary border-1">
-                            <div class="card-body">
-
-                                <!-- Subtotal -->
-                                <div class="row fs-14px mb-2">
-                                    <div class="col-md-6 text-end">
-                                        Sub - Total (GHS)
-                                    </div>
-                                    <div class="col-md-6 font-weight-bold text-end">
-                                        {{ number_format($purchase->cartItems->sum('sub_total'), 2) }}
-                                    </div>
-                                </div>
-
-
-                                <!-- Taxes -->
-                                <div class="row fs-14px mb-2">
-                                    <div class="col-md-6 text-end">
-                                        Total Tax(GHS)
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <?php echo number_format($supplier->total_tax, 2); ?>
-                                    </div>
-                                </div>
-
-
-                                <!-- Total -->
-                                <div class="row fs-14px">
-                                    <div class="col-md-6 fw-600 text-end">
-                                        TOTAL (GHS)
-                                    </div>
-                                    <div class="col-md-6 text-end fw-600">
-                                        {{ number_format($purchase->cartItems->sum('sub_total') + $purchase->total_tax, 2) }}
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-
-
-
-
-
-
-
-                        <section class="" style="margin-top:7rem">
-                            <p class="m-0 font-weight-bold text-uppercase text-center" style="font-size:11px"><?php echo $supplier->created_by; ?></p>
-                        </section>
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="text-end fw-600">Sub-Total (GHS)</td>
+                                <td class="text-end fw-600">
+                                    {{ $purchase->lockstatus == 'locked' ? number_format($purchase->total, 2) : number_format($purchase->cart_sub_total, 2) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-end fw-600">Total Tax (GHS)</td>
+                                <td class="text-end fw-600">
+                                    0.00
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-end fw-600">Total (GHS)</td>
+                                <td class="text-end fw-600">
+                                    {{ $purchase->lockstatus == 'locked' ? number_format($purchase->total, 2) : number_format($purchase->cart_sub_total, 2) }}
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
+
 
             </div>
         </div>
 
     </div>
 </div>
-
-
-
-
-
-
 
 
 <div id="modal_holder"></div>
@@ -399,136 +256,80 @@ $supplier = $purchase->supplier;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 
 <script type="text/javascript">
-    $('#qty,#unit_cost').on('keyup', function(event) {
-        event.preventDefault();
-        var qty = $('#qty').val()
-        var unit_cost = $('#unit_cost').val()
-        $('#total').val((parseInt(qty) * parseFloat(unit_cost)).toFixed(2))
-    });
 
-    $('#saveInvoiceBtn').on('click', function(event) {
+$('#qty,#unit_cost').on('keyup', function(event) {
+    event.preventDefault();
+    calculateItemTotal();
+});
 
-        new swal("Confirm","You cannot edit the invoice after saving, Do you want to proceed?","warning", {
-            buttons : {
-                cancel : "Cancel",
-                catch: {
-                    text: "Yes, Delete it!",
-                    value: "catch"
-                }
-            }
-        })
-        .then ((value) => {
-            switch (value) {
-                case "cancel" :
-                    break;
-                case "catch" :
-                    $('#saveInvoiceFrm').submit();
-                    break;
-            }
-        })
+
+
+$('#saveInvoiceBtn').on('click', function(event) {
+
+    const $form = $(this).closest('form');
+
+    bootbox.confirm("Are you sure you want to save this invoice?", function(answer) {
+        if (answer) {
+            $form.submit();
+        }
+    })
+})
+
+
+$(document).on('click', '.table tbody .remove-item', function() {
+
+    const $form = $(this).closest('form');
+
+
+    bootbox.confirm("Remove this invoice item?", function(answer) {
+        if (answer) {
+            $form.submit();
+        }
     })
 
-    $('#updateFrm').on('submit', function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: '../serverscripts/admin/Suppliers/updateFrm.php',
-            type: 'POST',
-            data: $("#updateFrm").serialize(),
-            success: function(msg) {
-                if (msg === 'update_successful') {
-                    window.location.reload()
-                } else {
-                    bootbox.alert(msg)
-                }
-            }
-        })
+});
+
+
+$('#print').on('click', function(event) {
+    event.preventDefault();
+    const url = $(this).data('url');
+    print_popup(url, 'Print Invoice', 800, 600);
+});
+
+var doc = new jsPDF();
+var specialElementHandlers = {
+    '#editor': function(element, renderer) {
+        return true;
+    }
+};
+
+$('#print_pdf').click(function() {
+    doc.fromHTML($('#pdfprint').html(), 15, 15, {
+        'width': 170,
+        'elementHandlers': specialElementHandlers
     });
-
-    $('#savePurchaseBtn').on('click', function(event) {
-        bootbox.confirm('Save Purchase Invoice', function(r) {
-            if (r === true) {
-                $.post("../serverscripts/admin/Suppliers/savePurchase.php", 'purchase_id={{ $purchase->purchase_id }}',
-                    function(msg) {
-                        if (msg === 'save_successful') {
-                            bootbox.alert("Purchase recorded successfully", function() {
-                                window.location = 'purchases.php'
-                            })
-                        } else {
-                            bootbox.alert(msg)
-                        }
-                    }
-                );
-            }
-        }) //end bootbox
-    })
-
-    // $('.table tbody').on('click', '.remove', function(event) {
-    //     event.preventDefault();
-    //     var sn = $(this).attr('ID')
-    //     bootbox.confirm("Remove this invoice item?", function(r) {
-    //         if (r === true) {
-    //             $.get('../serverscripts/admin/Invoices/delete_invoice_item.php?sn=' + sn, function(msg) {
-    //                 if (msg === 'delete_successful') {
-    //                     bootbox.alert("Invoice item removed", function() {
-    //                         window.location.reload()
-    //                     })
-    //                 } else {
-    //                     bootbox.alert(msg)
-    //                 }
-    //             }) //end get
-    //         }
-    //     })
-
-    // });
+    doc.save('sample-file.pdf');
+});
 
 
-    // $('#print').on('click', function(event) {
-    //     event.preventDefault();
-    //     var purchase_id = $(this).data('purchase_id')
-    //     print_popup('invoice_print.php?purchase_id=' + purchase_id)
-    // });
+/**
+ * Calculate the total amount for an
+ * invoice item based on quantity and unit cost.
+ *
+ * @return void
+ */
+function calculateItemTotal() {
 
-    // var doc = new jsPDF();
-    // var specialElementHandlers = {
-    //     '#editor': function(element, renderer) {
-    //         return true;
-    //     }
-    // };
+    // do nothing if description is empty
+    if ($('#description').val().trim() === '') {
+        $('#total').val('');
+        return;
+    }
 
-    // $('#print_pdf').click(function() {
-    //     doc.fromHTML($('#pdfprint').html(), 15, 15, {
-    //         'width': 170,
-    //         'elementHandlers': specialElementHandlers
-    //     });
-    //     doc.save('sample-file.pdf');
-    // });
+    const qty = parseFloat($('#qty').val()) ?? 0;
+    const unitCost = parseFloat($('#unit_cost').val()) ?? 0;
+    const total = qty * unitCost;
+    $('#total').val(total.toFixed(2));
+}
 </script>
 @endsection
-
-
-<?php
-
-
-// if (isset($_SESSION['active_purchase_invoice'])) {
-//     $purchase_id = $seagate->Clean($_SESSION['active_purchase_invoice']);
-//     $supplier_id = $seagate->Clean($_SESSION['active_supplier_id']);
-// } elseif (isset($_GET) && !empty($_GET['purchase_id'])) {
-
-//     $purchase_id = $seagate->Clean($_GET['purchase_id']);
-//     $supplier_id = $seagate->Clean($_GET['supplier_id']);
-// } else {
-//     echo "<script type='text/javascript'>window.location='purchases.php';</script>";
-// }
-
-
-// $supplier = new Supplier($q->db, $q->mysqli);
-// $supplier->purchase_id = $purchase_id;
-
-
-// $supplier->supplier_id = $supplier_id;
-// $supplier->SupplierInfo();
-
-// $supplier->purchase_id = $purchase_id;
-// $supplier->PurchaseInfo();
-
-?>
