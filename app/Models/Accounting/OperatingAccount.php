@@ -26,10 +26,10 @@ class OperatingAccount extends Model
 
         static::creating(function ($account) {
             $account->account_number = self::generateAccountNumber();
-            $account->subscriber_id = Auth::user()->subscriber_id;
+            $account->subscriber_id = session('active_subscriber');
         });
 
-        (new self)->setAccTypeAttribute();
+        // (new self)->setAccTypeAttribute();
     }
 
 
