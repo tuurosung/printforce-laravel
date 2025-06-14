@@ -21,7 +21,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="" autocomplete="off" method="POST" action="{{ route('create.purchase') }}">
+            <form id="" autocomplete="off" method="POST" action="{{ route('purchases.store') }}">
                 @csrf
                 <div class="modal-body">
 
@@ -49,31 +49,20 @@
                     <div class="row">
 
                         <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Date Issued</label>
-                                <input
-                                    type="text"
-                                    name="date_issued"
-                                    id="date_issued"
-                                    class="form-control form-control-sm"
-                                    placeholder="2023-02-09"
-                                    value="{{ $today }}"
-                                    required />
-                            </div>
+                            <x-printforce.inputs.date-input
+                                name="date_issued"
+                                id="date_issued"
+                                label="Date Issued"
+                                required="true" />
                         </div>
 
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="" class="form-label">Due Date</label>
-                                <input
-                                    type="text"
-                                    name="due_date"
-                                    id="due_date"
-                                    class="form-control form-control-sm"
-                                    placeholder="2023-02-09"
-                                    value="{{ $suggested_due_date }}"
-                                    required />
-                            </div>
+                            <x-printforce.inputs.date-input
+                                name="due_date"
+                                id="due_date"
+                                label="Due Date"
+                                value="{{ now()->addDays(30)->format('Y-m-d') }}"
+                                required="true" />
                         </div>
 
                     </div>

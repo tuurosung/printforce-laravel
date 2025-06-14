@@ -2,13 +2,31 @@
 
 namespace App\Http\Controllers\Purchases;
 
+use App\Traits\HandleResourceActions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Purchases\StorePurchasedItemRequest;
+use App\Models\Purchases\Purchase;
 use App\Models\Purchases\PurchasedItem;
 use App\Models\Purchases\PurchasedItems;
 
 class PurchasedItemController extends Controller
 {
+
+    use HandleResourceActions;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected $model = new PurchasedItem(),
+        private $modelName = 'Purchased Item',
+        private $purchasedItem = new PurchasedItem()
+    )
+    {
+    }
+
+
     /**
      * Display a listing of the resource.
      */
@@ -16,6 +34,7 @@ class PurchasedItemController extends Controller
     {
         //
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -25,26 +44,26 @@ class PurchasedItemController extends Controller
         //
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
-    public function addToCart(Request $request)
+    public function addToCart(StorePurchasedItemRequest $request, Purchase $purchase)
     {
-        $data = $request->validate([
-            'purchase_id' => 'required',
-            'supplier_id' => 'required',
-            'description' => 'required',
-            'unit_cost' => 'required',
-            'qty' => 'required',
-            'sub_total' => 'required',
-        ]);
 
-        $is_added = PurchasedItem::create($data);
+        // exit if purchase is not active
+        if ($purchase->lockstatus == 'locked') {
+            return redirect()->back()->with('error', 'Cannot add items to a purchase that is not active');
+        }
 
-        return $is_added
-            ? redirect()->back()->with('success', 'Item added successfully')
-            : redirect()->back()->with('error', 'Failed to add item');
+        $data = $request->validated() + [
+            'purchase_id' => $purchase->purchase_id,
+            'supplier_id' => $purchase->supplier_id,
+        ];
+
+        return $this->handleStore($data);
     }
+
 
     /**
      * Display the specified resource.
@@ -54,6 +73,7 @@ class PurchasedItemController extends Controller
         //
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -61,6 +81,7 @@ class PurchasedItemController extends Controller
     {
         //
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -70,11 +91,13 @@ class PurchasedItemController extends Controller
         //
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PurchasedItem $purchasedItems)
+    public function removeFromCart(PurchasedItem $purchasedItem)
     {
-        //
+        return $this->handleDelete($purchasedItem);
     }
+
 }
