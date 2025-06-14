@@ -2,22 +2,17 @@
 
 @section('content')
 
-<div class="d-flex justify-content-between mb-5">
-    <div>
-        <h3 class="h2">Suppliers</h3>
-    </div>
-    <div>
-        <a
-            data-toggle="modal"
-            data-target="#new_supplier_modal"
-            type="button"
-            class="btn btn-primary">
+<x-printforce.headers.page-header title="Suppliers" >
 
-            <i class="fas fa-plus me-3"></i>
-            New Supplier
-        </a>
-    </div>
-</div>
+    <button data-toggle="modal" data-target="#new_supplier_modal" type="button" class="btn btn-primary">
+
+        <i class="fas fa-plus me-3"></i>
+        New Supplier
+    </button>
+</x-printforce.headers.page-header>
+
+
+    @include('layout.errors')
 
 <div class="card border-0">
     <div class="card-body">
@@ -26,6 +21,7 @@
             <thead class="">
                 <tr>
                     <th>#</th>
+                    <th>Date Created</th>
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Address</th>
@@ -36,52 +32,37 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                $i = 1;
-                @endphp
 
                 @foreach ($suppliers as $supplier)
                 <tr>
-                    <td><?php echo $i++; ?></td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $supplier->created_at }}</td>
                     <td style="text-decoration: underline;">
 
-                        <a href="{{ route('supplier-info', $supplier->supplier_id) }}">
+                        <a href="{{ route('suppliers.info', $supplier) }}">
                             {{ $supplier->supplier_name }}
                         </a>
 
                     </td>
                     <td>{{ $supplier->supplier_phone }}</td>
                     <td>{{ $supplier->supplier_address }}</td>
-                    <td><?php echo number_format($supplier->totalPurchase(), 2); ?></td>
-                    <td><?php echo number_format($supplier->totalPayment(), 2); ?></td>
-                    <td><?php echo number_format($supplier->supplierBalance(), 2); ?></td>
+                    <td>{{ number_format($supplier->total_purchase, 2) }}</td>
+                    <td>{{ number_format($supplier->total_payment, 2) }}</td>
+                    <td>{{ number_format($supplier->supplier_balance, 2) }}</td>
                     <td class="text-end">
-                        <div class="dropdown">
-                            <a
-                                class="dropdown-toggle"
-                                type="button"
-                                id="triggerId"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                                Options
+                        <a href="javascript:void(0)" class="edit me-1 text-primary"
+                            data-url="{{ route('suppliers.edit', $supplier->supplier_id) }}">
+                            <i class="fi fi-rc-pencil"></i>
+                            Edit
+                        </a>
+                        <form action="{{ route('suppliers.delete', $supplier) }}" method="POST" class="d-inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <a type="button" class="text-danger delete">
+                                <i class="fas fa-trash-alt"></i>
+                                Delete
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="triggerId">
-                                <a
-                                    class="dropdown-item edit-supplier me-3"
-                                    data-url="{{ route('edit-supplier', $supplier->supplier_id) }}">
-
-                                    <i class="fas fa-pen text-primary me-3"></i>
-                                    Edit
-                                </a>
-                                <a
-                                    class="dropdown-item delete">
-
-                                    <i class="fas fa-trash-alt text-danger me-3"></i>
-                                    Delete
-                                </a>
-                            </div>
-                        </div>
+                        </form>
 
 
                     </td>
@@ -103,50 +84,30 @@
 
 @section('js')
 
-<script type="text/javascript">
-    $('.table tbody').on('click', '.edit-supplier', function() {
+    <script type="text/javascript">
+    $(document).on('click', '.table tbody .edit', function() {
 
         const url = $(this).data('url')
 
-        showEditModal(url)
-    })
-
-    $('.table tbody').on('click', '.delete-supplier', function() {
-
-        const supplier = $(this)
-        confirmDelete(supplier)
-    })
-
-    const showEditModal = function(url) {
-        $.get(url, function(msg) {
+        $.get(url, function (msg) {
 
             $('#modal_holder').html(msg)
-            new bootstrap.Modal(document.getElementById('edit_supplier_modal')).show()
+            $('#edit_supplier_modal').modal('show')
         })
-    }
+    })
 
-    const confirmDelete = function(supplier) {
 
-        new swal("Confirm", "Are you sure you want to delete this supplier?", "warning", {
-                buttons: {
-                    cancel: "Cancel",
-                    catch: {
-                        text: "Yes! Delete it!",
-                        value: "catch",
-                    }
-                }
-            })
-            .then((value) => {
+    $(document).on('click', '.table tbody .delete', function() {
 
-                switch (value) {
-                    case "cancel":
-                        break;
-                    case "catch":
-                        supplier.closest('form').submit();
-                        break;
-                }
-            })
+        const $form = $(this).closest('form')
 
-    }
-</script>
+        bootbox.confirm("Are you sure you want to delete this supplier?", function(answer) {
+
+            if (answer) {
+                $form.submit()
+            }
+        })
+
+    })
+    </script>
 @endsection

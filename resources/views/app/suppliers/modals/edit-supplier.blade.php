@@ -20,8 +20,9 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form id="" method="POST" action="{{ route('update-supplier') }}" autocomplete="off">
+            <form id="" method="POST" action="{{ route('suppliers.update', $supplier) }}" autocomplete="off">
                 @csrf
+                @method('patch')
                 <div class="modal-body">
 
                     <input
