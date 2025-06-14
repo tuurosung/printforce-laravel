@@ -20,7 +20,7 @@ class PrintService extends Model
         parent::boot();
 
         static::creating(function ($service) {
-            $service->service_id = self::generateServiceId();
+            $service->service_id = generateRandomString();
             $service->subscriber_id = Auth::user()->subscriber_id;
         });
     }
