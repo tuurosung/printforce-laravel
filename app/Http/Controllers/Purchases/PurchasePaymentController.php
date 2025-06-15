@@ -2,19 +2,41 @@
 
 namespace App\Http\Controllers\Purchases;
 
+use App\Purchases\PurchasePaymentService;
+use App\Services\Accounting\AccountService;
+use App\Traits\HandleResourceActions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Purchases\StorePurchasePaymentRequest;
 use App\Models\Purchases\PurchasePayment;
+use App\Models\Suppliers\Supplier;
 
 class PurchasePaymentController extends Controller
 {
+
+    use HandleResourceActions;
+
+
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(
+        protected $model = new PurchasePayment(),
+        private $modelName = "PurchasePayment",
+        private $accountService = new AccountService(),
+        private $purchasePaymentService = new PurchasePaymentService()
+    ){}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // $all
+        $payments = $this->purchasePaymentService->getRecentPayments();
+        return view('app.purchase-payments.purchase-payments', [
+            'payments' => $payments
+        ]);
     }
 
     /**
@@ -28,32 +50,13 @@ class PurchasePaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePurchasePaymentRequest $request, Supplier $supplier)
     {
-        $this->validateRequest($request);
+        $data = $request->validated() + [
+            'supplier_id' => $supplier->supplier_id,
+        ];
 
-        $payment = new PurchasePayment();
-
-        $payment->subscriber_id = $this->active_subscriber;
-        $payment->payment_id = $this->paymentId();
-        $payment->supplier_id = $request->supplier_id;
-        $payment->amount_paid = $request->amount_paid;
-        $payment->reference = $request->reference;
-        $payment->date = $request->date;
-        $payment->account_number = $request->account_number;
-        $payment->notes = $request->notes;
-
-        try {
-
-            if ($payment->save()) {
-                return redirect()->back()->with('success', "Bingo! Payment saved successfully");
-            }
-
-            return redirect()->back()->with('error', "Ooops! Something went wrong on our side");
-        } catch (\Exception $e) {
-
-            return redirect()->back()->with('error', "Ooops! Something went wrong on our side".$e->getMessage());
-        }
+        return $this->handleStore($data);
     }
 
     /**
@@ -69,15 +72,19 @@ class PurchasePaymentController extends Controller
      */
     public function edit(PurchasePayment $purchasePayment)
     {
-        //
+        return view('app.purchase-payments.modals.edit-purchase-payment', [
+            'purchasePayment' => $purchasePayment,
+            'supplier' => $purchasePayment->supplier,
+            'operating_accounts' => $this->accountService->getAssetAccounts()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PurchasePayment $purchasePayment)
+    public function update(StorePurchasePaymentRequest $request, PurchasePayment $purchasePayment)
     {
-        //
+        return $this->handleUpdate($request, $purchasePayment);
     }
 
     /**
@@ -85,22 +92,7 @@ class PurchasePaymentController extends Controller
      */
     public function destroy(PurchasePayment $purchasePayment)
     {
-        //
+        return $this->handleDelete($purchasePayment);
     }
 
-    private function validateRequest($request)
-    {
-        $request->validate([
-            'amount_paid' => 'required',
-            'date' => 'required',
-            'account_number' => 'required',
-            'notes' => 'required'
-        ]);
-    }
-
-    private function paymentId()
-    {
-        $count = PurchasePayment::where('subscriber_id', $this->active_subscriber)->count() + 1;
-        return str_pad($count, 6, "0", STR_PAD_LEFT);
-    }
 }
