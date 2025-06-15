@@ -16,7 +16,7 @@ class SelectInput extends Component
         public string $label,
         public string $id = '',
         public string $placeholder = '',
-        public $selected = '',
+        public string $selected = '',
         public array $options = [],
     )
     {
