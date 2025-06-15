@@ -169,7 +169,7 @@
 
 
 @include('app.suppliers.modals.create-new-purchase')
-@include('app.suppliers.modals.create-new-supplyPayment')
+@include('app.suppliers.modals.new-purchase-payment')
 
 @endsection
 
