@@ -212,8 +212,8 @@
         $(this).datepicker('hide')
     });
 
-    function print_popup(id) {
-        window.open(id, "popupWindow", "width=620,height=600,scrollbars=yes");
+    function print_popup(url) {
+        window.open(url, 'popupWindow', 'height=900,width=600,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes');
     }
 
     $('#activity_type').on('change', function(event) {

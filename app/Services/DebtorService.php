@@ -11,6 +11,7 @@ use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use App\Models\Customers\CustomerPayment;
 use Illuminate\Database\Query\JoinClause;
+use PhpParser\Node\Expr\AssignOp\Coalesce;
 
 class DebtorService
 {
@@ -20,6 +21,56 @@ class DebtorService
     public function __construct()
     {
         //
+    }
+
+
+    private static array $jobModels = [
+        LargeFormatJob::class => 'largeformat_jobs_total',
+        EmbroideryJob::class => 'embroidery_jobs_total',
+        DesignJob::class => 'design_jobs_total',
+        PressJob::class => 'press_jobs_total',
+        PhotographyJob::class => 'photography_jobs_total'
+    ];
+
+
+    public static function getDebtorsListOptimized()
+    {
+        $query = Customer::select(['customers.customer_id', 'customers.name'])
+            ->where('customers.status', 'active');
+
+        // Build the debit sum expression
+        $debitSum = collect(static::$jobModels)->map(function ($alias, $modelClass) {
+            $tableName = (new $modelClass)->getTable();
+            return "COALESCE({$tableName}.{$alias}, 0)";
+        })->implode(' + ');
+
+        $query->selectRaw("({$debitSum}) as debit");
+
+        // Add payments subquery
+        $paymentsTable = (new CustomerPayment)->getTable();
+        $query->selectRaw("COALESCE({$paymentsTable}.payments_amount_paid, 0) as credit");
+
+        // Join all job tables using Eloquent models
+        foreach (static::$jobModels as $modelClass => $alias) {
+            $subquery = $modelClass::select(['customer_id', DB::raw("SUM(total) as {$alias}")])
+                ->groupBy('customer_id');
+
+            $tableName = (new $modelClass)->getTable();
+            $query->leftJoinSub($subquery, $tableName, function ($join) use ($tableName) {
+                $join->on('customers.customer_id', '=', "{$tableName}.customer_id");
+            });
+        }
+
+        // Join payments using Eloquent model
+        $paymentsSubquery = CustomerPayment::select(['customer_id', DB::raw('SUM(amount_paid) as payments_amount_paid')])
+            ->groupBy('customer_id');
+
+        $paymentsTable = (new CustomerPayment)->getTable();
+        $query->leftJoinSub($paymentsSubquery, $paymentsTable, function ($join) use ($paymentsTable) {
+            $join->on('customers.customer_id', '=', "{$paymentsTable}.customer_id");
+        });
+
+        return $query->havingRaw('debit > credit')->get();
     }
 
 

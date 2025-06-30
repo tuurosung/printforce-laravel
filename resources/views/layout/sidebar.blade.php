@@ -5,11 +5,8 @@
         <div class="menu mt-5">
 
             @can('administrator')
-            <div class="menu-item">
-                <a href="{{ route('dashboard') }}" class="menu-link">
-                    <i class="fas fa-laptop menu-icon"></i>
-                    <span class="menu-text"> Dashboard</span> </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item menuText="Dashboard" :menuLink="route('dashboard')"
+                menuIcon="dashboard-panel" id="dashboard_nav" />
             @endcan
 
 
@@ -17,7 +14,7 @@
             <!-- Payments Menu -->
             <div class="menu-item has-sub">
                 <a href="#" class="menu-link" id="orders_nav">
-                    <i class="fas fa-briefcase menu-icon"></i>
+                    <i class="fi fi-rr-briefcase-dollar menu-icon"></i>
                     <span class="menu-text"> Jobs</span>
                     <span class="menu-caret">
                         <b class="caret"></b>
@@ -70,20 +67,13 @@
             </a>
         </div> -->
 
-            <div class="menu-item">
-                <a class="menu-link" href="{{ route('customers.customer.index') }}" id="customers_nav">
-                    <i class="fas fa-users menu-icon"></i>
-                    <span class="menu-text"> Customers </span>
-                </a>
-            </div>
+
+            <x-printforce.sidebar.single-menu-item menuText="Customers" :menuLink="route('customers.customer.index')"
+                menuIcon="users" id="customers_nav" />
 
             @can('administrator')
-            <div class="menu-item">
-                <a class="menu-link" href="{{ route('customers.debtors.view') }}" id="debtors_nav">
-                    <i class="fas fa-hand-holding-usd menu-icon"></i>
-                    <span class="menu-text">Debtors</span>
-                </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item menuText="Debtors" :menuLink="route('customers.debtors.view')"
+                menuIcon="sack-dollar" />
             @endcan
 
 
@@ -92,15 +82,19 @@
             <x-printforce.sidebar.single-menu-item menuText="Payment" :menuLink="route('payments.index')" />
 
 
+
+            <div class="menu-divider"></div>
             @can('administrator')
 
             <!-- Purchases -->
-            <div class="menu-item">
-                <a href="{{ route('suppliers') }}" class="menu-link">
-                    <i class="fas fa-people-carry menu-icon"></i>
-                    <span class="menu-text">Suppliers</span>
-                </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item menuText="Suppliers" :menuLink="route('suppliers.index')"
+                menuIcon="seller-store" />
+
+            <x-printforce.sidebar.single-menu-item menuText="Purchases" :menuLink="route('purchases.index')"
+                menuIcon="shopping-cart" />
+            <x-printforce.sidebar.single-menu-item menuText="Purchase Payments"
+                :menuLink="route('purchases.payments.index')" menuIcon="money-bill-transfer" />
+
 
             <!-- <div class="menu-item">
             <a href="store.php" class="menu-link">
@@ -111,16 +105,14 @@
 
             @endcan
 
+            <div class="menu-divider"></div>
 
             @can('administrator')
 
-            <div class="menu-item">
-                <a href="{{ route('accounting.expenditure.index') }}" class="menu-link" id="expenses_nav">
-                    <i class="fas fa-chart-line menu-icon"></i>
-                    <span class="menu-text">Expenses</span>
-                </a>
-            </div>
-<!--
+            <x-printforce.sidebar.single-menu-item menuText="Expenses" :menuLink="route('accounting.expenditure.index')"
+                menuIcon="chart-histogram" />
+
+            <!--
             <div class="menu-item">
                 <a href="expenditure-headers/index.php" class="menu-link" id="expenditureH_nav">
                     <i class="fas fa-folder menu-icon"></i>
@@ -143,134 +135,104 @@
         </div> -->
             @can('administrator')
 
-            <div class="menu-item">
-                <a href="{{ route('accounting.accounts.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-code-branch menu-icon"></i>
-                    <span class="menu-text"> Chart Of Acc. </span>
-                </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item menuText="Chart Of Accounts"
+                :menuLink="route('accounting.accounts.index')" menuIcon="bank" />
 
-            <div class="menu-item">
-                <a href="{{ route('accounting.transfers.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-long-arrow-alt-right menu-icon"></i>
-                    <span class="menu-text">Fund Transfers </span>
-                </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item menuText="Fund Transfers"
+                :menuLink="route('accounting.transfers.index')" menuIcon="money-coin-transfer" />
+
 
             <!-- <div class="menu-item">
-            <a href="accounts.php" class="menu-link" id="accounts_li">
-                <i class="fas fa-chart-bar menu-icon"></i>
-                <span class="menu-text"> Fin. Accounts </span>
-            </a>
-        </div> -->
+                    <a href="accounts.php" class="menu-link" id="accounts_li">
+                        <i class="fas fa-chart-bar menu-icon"></i>
+                        <span class="menu-text"> Fin. Accounts </span>
+                    </a>
+                </div> -->
 
             <!-- <div class="menu-item">
-                <a href="assets/index.php" class="menu-link">
-                    <i class="fas fa-hdd menu-icon"></i>
-                    <span class="menu-text"> Assets </span>
-                </a>
-            </div> -->
+                        <a href="assets/index.php" class="menu-link">
+                            <i class="fas fa-hdd menu-icon"></i>
+                            <span class="menu-text"> Assets </span>
+                        </a>
+                    </div> -->
 
             <!-- <div class="menu-item">
-            <a href="trial_balance.php" class="menu-link" id="accounts_li">
-                <i class="fas fa-chart-line menu-icon"></i>
-                <span class="menu-text"> Trial Balance </span>
-            </a>
-        </div> -->
+                    <a href="trial_balance.php" class="menu-link" id="accounts_li">
+                        <i class="fas fa-chart-line menu-icon"></i>
+                        <span class="menu-text"> Trial Balance </span>
+                    </a>
+                </div> -->
 
             <!-- <div class="menu-item">
-            <a href="profit_and_loss.php" class="menu-link" id="accounts_li">
-                <i class="fas fa-balance-scale menu-icon"></i>
-                <span class="menu-text">Profit And Loss</span>
-            </a>
-        </div> -->
+                    <a href="profit_and_loss.php" class="menu-link" id="accounts_li">
+                        <i class="fas fa-balance-scale menu-icon"></i>
+                        <span class="menu-text">Profit And Loss</span>
+                    </a>
+                </div> -->
 
             @endcan
 
-
+            <div class="menu-divider"></div>
 
 
 
             @can('administrator')
 
-            <div class="menu-item has-sub">
-                <a href="#" class="menu-link" id="">
-                    <i class="fas fa-users menu-icon"></i>
-                    <span class="menu-text">HR Manager</span>
-                    <span class="menu-caret">
-                        <b class="caret">
+            <x-printforce.sidebar.single-menu-item menuText="Employees" menuLink="#" menuIcon="member-list" />
 
-                        </b>
-                    </span>
-                </a>
-                <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="employees/new-employee.php" class="menu-link" id="">
-                            <span class="menu-text">- New Employee</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="employees/index.php" class="menu-link" id="">
-                            <span class="menu-text">- All Employees</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-<!--
-            <div class="menu-item has-sub">
-                <a href="#" class="menu-link" id="">
-                    <i class="fab fa-stripe menu-icon"></i>
-                    <span class="menu-text">Salary</span>
-                    <span class="menu-caret">
-                        <b class="caret">
 
-                        </b>
-                    </span>
-                </a>
-                <div class="menu-submenu">
-                    <div class="menu-item">
-                        <a href="" class="menu-link" id="">
-                            <span class="menu-text">- Create WageBill</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="" class="menu-link" id="">
-                            <span class="menu-text">- All WageBills</span>
-                        </a>
-                    </div>
-                    <div class="menu-item">
-                        <a href="" class="menu-link" id="">
-                            <span class="menu-text">- PaySlips</span>
-                        </a>
-                    </div>
-                </div>
-            </div> -->
+            <!--
+                            <div class="menu-item has-sub">
+                                <a href="#" class="menu-link" id="">
+                                    <i class="fab fa-stripe menu-icon"></i>
+                                    <span class="menu-text">Salary</span>
+                                    <span class="menu-caret">
+                                        <b class="caret">
+
+                                        </b>
+                                    </span>
+                                </a>
+                                <div class="menu-submenu">
+                                    <div class="menu-item">
+                                        <a href="" class="menu-link" id="">
+                                            <span class="menu-text">- Create WageBill</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a href="" class="menu-link" id="">
+                                            <span class="menu-text">- All WageBills</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a href="" class="menu-link" id="">
+                                            <span class="menu-text">- PaySlips</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div> -->
 
             <!-- <div class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="fas fa-hand-holding-usd menu-icon"></i>
-                <span class="menu-text">Payroll</span>
-            </a>
-        </div> -->
+                            <a href="#" class="menu-link">
+                                <i class="fas fa-hand-holding-usd menu-icon"></i>
+                                <span class="menu-text">Payroll</span>
+                            </a>
+                        </div> -->
 
+            <x-printforce.sidebar.single-menu-item menuText="Registered Users"
+                :menuLink="route('human-resources.users.index')" menuIcon="mode-portrait" id="registered_users_li" />
 
-            <div class="menu-item">
-                <a href="{{ route('human-resources.users.index') }}" class="menu-link" id="registered_users_li">
-                    <i class="fas fa-users menu-icon"></i>
-                    <span class="menu-text">Registered Users</span>
-                </a>
-            </div>
 
             @endcan
 
 
+            <div class="menu-divider"></div>
+
             @can('administrator')
-            <div class="menu-item">
-                <a href="{{ route('configuration.print-services.index') }}" class="menu-link" id="reports_li">
-                    <i class="fas fa-cogs menu-icon"></i>
-                    <span class="menu-text">Services</span>
-                </a>
-            </div>
+            <x-printforce.sidebar.single-menu-item
+                menuText="Services"
+                :menuLink="route('configuration.print-services.index')"
+                menuIcon="settings"
+                />
 
             @endcan
 

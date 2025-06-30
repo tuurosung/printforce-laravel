@@ -49,9 +49,10 @@ trait HandleResourceActions
     public function handleUpdate($request, $model)
     {
         try {
-            if (!$model->update($request->validated())) {
-                return $this->handleError('Oops! Sorry, unable to update ' . $this->modelName());
-            }
+
+            $this->model->where('subscriber_id', session('active_subscriber'))
+                ->where($this->model->getKeyName(), $model->{$this->model->getKeyName()})
+                ->update($request->validated());
 
             return $this->handleSuccess('Bingo! '.$this->modelName() . ' updated successfully');
 
@@ -77,9 +78,13 @@ trait HandleResourceActions
     {
         try {
 
-            if (!$model->delete()) {
-                return $this->handleError('Oops! Sorry, unable to delete ' . $this->modelName());
-            }
+            $this->model->where('subscriber_id', session('active_subscriber'))
+                ->where($this->model->getKeyName(), $model->{$this->model->getKeyName()})
+                ->delete();
+
+            // if (!$model->delete()) {
+            //     return $this->handleError('Oops! Sorry, unable to delete ' . $this->modelName());
+            // }
 
             return $this->handleSuccess('Bingo! '. $this->modelName() . ' deleted successfully');
 

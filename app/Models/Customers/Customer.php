@@ -190,6 +190,18 @@ class Customer extends Model
     public function photographyJobSum() : Attribute
     {
         return Attribute::make(
+            get: fn() => $this->photography_jobs->sum('total') ?? 0
+        );
+    }
+
+    /**
+     * Returns the count of photography jobs for the customer.
+     *
+     * @return int
+     */
+    public function countPhotographyJobs() : Attribute
+    {
+        return Attribute::make(
             get: fn() => $this->photography_jobs->count() ?? 0
         );
     }
@@ -200,15 +212,6 @@ class Customer extends Model
             get: fn() => $this->count_large_format_jobs + $this->count_embroidery_jobs + $this->count_press_jobs + $this->count_design_jobs + $this->count_photography_jobs
         );
     }
-    // {
-    //     return collect([
-    //         $this->count_large_format_jobs,
-    //         $this->count_embroidery_jobs,
-    //         $this->count_press_jobs,
-    //         $this->count_design_jobs,
-    //         $this->count_photography_jobs
-    //     ])->sum();
-    // }
 
 
     public function customerDebit() : Attribute
@@ -217,15 +220,6 @@ class Customer extends Model
             get: fn() => $this->largeFormatJobSum + $this->embroideryJobSum + $this->pressJobSum + $this->designJobSum + $this->photographyJobSum
         );
     }
-    // {
-    //     return collect([
-    //         $this->largeFormatJobSum,
-    //         $this->embroideryJobSum,
-    //         $this->pressJobSum,
-    //         $this->designJobSum,
-    //         $this->photographyJobSum,
-    //     ])->sum();
-    // }
 
 
 

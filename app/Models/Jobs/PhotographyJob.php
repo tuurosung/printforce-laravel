@@ -5,6 +5,7 @@ namespace App\Models\Jobs;
 use App\Traits\ScopedActive;
 use App\Models\Services\Service;
 use App\Traits\ScopedToSubscriber;
+use App\Models\Services\PrintService;
 use Illuminate\Database\Eloquent\Model;
 
 class PhotographyJob extends Model
@@ -18,6 +19,6 @@ class PhotographyJob extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id');
     }
 }

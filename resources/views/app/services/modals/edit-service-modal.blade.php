@@ -118,7 +118,7 @@
                     </button>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-check me-3  "></i>
-                        Create Service
+                        Update Service Information
                     </button>
                 </div>
             </form>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Facades\PrintServices;
 use App\Models\Services\Service;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PrintServices\StoreNewPrintServiceRequest;
 use App\Models\Services\PrintService;
 use App\Models\Services\ServiceCategory;
 use App\Models\Services\PrintServiceCategory;
@@ -15,6 +16,16 @@ class PrintServiceController extends Controller
 {
 
     use HandleResourceActions;
+
+
+    /**
+     * Create a new class instance
+     */
+    public function __construct(
+        protected $model = new PrintService(),
+        private $modelName = 'Print Service',
+        private $printService = new PrintService()
+    ){}
 
     /**
      * Display a listing of the resource.
@@ -33,22 +44,9 @@ class PrintServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNewPrintServiceRequest $request)
     {
-        // validate request
-        $data = $request->validate([
-            'service_name' => 'required',
-            'category_id' => 'required',
-            'individual' => 'required|numeric',
-            'artist' => 'required|numeric',
-            'institution' => 'required|numeric',
-        ]);
-
-        $is_created = PrintService::create($data);
-
-        return $is_created
-            ? redirect()->back()->with('success', "Bingo! Service created successfully")
-            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+        return $this->handleStore($request->validated());
     }
 
 
@@ -78,27 +76,9 @@ class PrintServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(StoreNewPrintServiceRequest $request, PrintService $printService)
     {
-        // validate request
-        $data = $request->validate([
-            'service_id' => 'required',
-            'service_name' => 'required',
-            'category_id' => 'required',
-            'individual' => 'required|numeric',
-            'artist' => 'required|numeric',
-            'institution' => 'required|numeric',
-        ]);
-
-        // find service
-        $service = Service::find($data['service_id']);
-
-        // update
-        $is_updated = $service->update($data);
-
-        return $is_updated
-            ? redirect()->back()->with('success', "Bingo! Service updated successfully")
-            : redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+        return $this->handleUpdate($request, $printService);
     }
 
     /**
@@ -106,11 +86,6 @@ class PrintServiceController extends Controller
      */
     public function destroy(PrintService $printService)
     {
-        if ($printService->delete()) {
-            return redirect()->back()->with('success', "Bingo! Service deleted successfully");
-        }
-
-        return redirect()->back()->with('error', "Ooops! Something went wrong on our side");
+       return $this->handleDelete($printService);
     }
-
 }

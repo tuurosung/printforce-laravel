@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // \Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
+        //     echo '<pre>';
+        //     print_r([$query->sql, $query->time]);
+        //     echo '</pre>';
+        // });
+
         $gates = [
             'administrator' => 'administrator',
         ];

@@ -6,9 +6,12 @@ use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use App\Models\Scopes\SubscriberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+#[ScopedBy(SubscriberScope::class)]
 class PrintService extends Model
 {
     use HasFactory;
@@ -21,6 +24,21 @@ class PrintService extends Model
 
         static::creating(function ($service) {
             $service->service_id = generateRandomString();
+            $service->subscriber_id = Auth::user()->subscriber_id;
+        });
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('status', function ($builder) {
+            $builder->where('status', 'active');
+        });
+
+        static::updating(function ($service) {
+            $service->subscriber_id = Auth::user()->subscriber_id;
+        });
+
+        static::deleting(function ($service) {
             $service->subscriber_id = Auth::user()->subscriber_id;
         });
     }

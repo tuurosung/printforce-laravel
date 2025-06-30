@@ -22,7 +22,7 @@
         <tr>
             <td><?php echo $i++; ?></td>
             <td><?php echo $invoices['invoice_id']; ?></td>
-            <td><?php echo $customer->name; ?></td>
+            <td><?php echo $customer?->name; ?></td>
             <td><?php echo $invoices['ref']; ?></td>
             <td class="text-right"><?php echo $invoices['sub_total']; ?></td>
             <td class="text-right"><?php echo number_format($invoices['vat_amount'] + $invoices['nhil_amount'] + $invoices['getfund_amount'], 2); ?></td>
