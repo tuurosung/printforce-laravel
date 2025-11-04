@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Customers;
 
 use App\Services\CustomerService;
+use App\Services\Payments\PaymentAlertService;
+use App\Services\Payments\SendPaymentAlert;
 use App\Traits\HandleResourceActions;
 use DateTime;
 use Carbon\Carbon;
@@ -30,10 +32,9 @@ class CustomerPaymentController extends Controller
         private $modelName = 'Customer Payment',
         private $accountService = new AccountService(),
         private $customerService = new CustomerService(),
-        private $customerPaymentService = new CustomerPaymentService()
-    )
-    {
-    }
+        private $customerPaymentService = new CustomerPaymentService(),
+        private $paymentAlertService = new PaymentAlertService()
+    ){}
 
 
     /**
@@ -66,7 +67,26 @@ class CustomerPaymentController extends Controller
      */
     public function store(StoreNewPaymentRequest $request)
     {
-        return $this->handleStore($request->validated());
+        $data = $request->validated();
+
+        // create the payment record
+        $paymentCreated = CustomerPayment::create($data);
+
+        if (!$paymentCreated) {
+            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        }
+
+        // send payment receipt to customer
+        $alertSent = $this->paymentAlertService->send(
+            $data['customer_id'],
+            $data['amount_paid']
+        );
+
+        if ($alertSent) {
+            return redirect()->back()->with('success', 'Payment receipt sent to customer');
+        }
+
+        return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
     }
 
 
