@@ -20,7 +20,7 @@ class User extends Authenticatable
 
         static::creating(function ($model) {
             // $model->user_id = generateRandomString();
-            $model->subscriber_id = Auth::user()->subscriber_id;
+            // $model->subscriber_id = Auth::user()->subscriber_id;
         });
     }
 
@@ -32,12 +32,16 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'subscriber_id',
         'name',
         'email',
         'phone_number',
         'password',
-        'access_level'
+        'access_level',
+        'firstname',
+        'lastname'
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -98,11 +102,34 @@ class User extends Authenticatable
 
     public function getAccessLevelName()
     {
-        return match ($this->access_level) {
-            'administrator' => 'Administrator',
-            'reception' => 'Receptionist',
-            'super_admin' => 'Super Admin',
+        $accessLevel = config('printforce.users.access_levels');
+
+        return match (true) {
+            array_key_exists($this->access_level, $accessLevel) => $accessLevel[$this->access_level],
             default => 'Undefined Access',
         };
+
+        // return match ($this->access_level) {
+        //     'administrator' => 'Administrator',
+        //     'reception' => 'Receptionist',
+        //     'super_admin' => 'Super Admin',
+        //     default => 'Undefined Access',
+        // };
+    }
+
+
+    public function isAdministrator()
+    {
+        return $this->access_level === 'administrator';
+    }
+
+
+    public function isReceptionist(){
+        return $this->access_level === 'reception';
+    }
+
+
+    public function isPrintTechnician(){
+        return $this->access_level === 'print_technician';
     }
 }

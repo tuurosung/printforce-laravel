@@ -34,11 +34,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $data = $request->validated();
-
-        $data['password'] = Hash::make($data['password']);
-
-        $is_created = User::create($data);
+        $is_created = User::create($request->getUserData());
 
         return $is_created
             ? redirect()->back()->with('success', "Bingo! User created successfully")

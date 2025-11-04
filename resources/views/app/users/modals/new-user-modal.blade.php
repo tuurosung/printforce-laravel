@@ -25,15 +25,36 @@
                 @csrf
                 <div class="modal-body">
 
-                    <div class="mb-3">
-                        <label for="" class="form-label">Full Name</label>
-                        <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            name="name"
-                            id="name"
-                            value=""
-                            required />
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="firstname" class="form-label">First Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="firstname"
+                                    id="firstname"
+                                    placeholder="your first name"
+                                    required
+                                />
+                            </div>
+
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="lastname" class="form-label">Last Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="lastname"
+                                    id="lastname"
+                                    aria-describedby="helpId"
+                                    placeholder="your last name"
+                                    required
+                                />
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="row">
@@ -61,7 +82,7 @@
                                     id="access_level"
                                     value="">
 
-                                    @foreach (App\Helpers\UserHelpers::$accessLevels as $key => $value)
+                                    @foreach (config('printforce.users.access_levels') as $key => $value)
 
                                     <option value="{{ $key }}">{{ $value }}</option>
 
@@ -115,6 +136,11 @@
 
                     </div>
 
+                    @use(Lunaweb\RecaptchaV3\Facades\RecaptchaV3)
+
+
+                    {!! RecaptchaV3::field('create') !!}
+
                 </div>
                 <div class="modal-footer">
                     <button
@@ -124,7 +150,7 @@
                         data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" value="create">
                         <i class="fas fa-check me-3  "></i>
                         Create User
                     </button>

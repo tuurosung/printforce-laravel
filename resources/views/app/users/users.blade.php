@@ -1,4 +1,4 @@
-@extends('layout.app')
+    @extends('layout.app')
 
 @section('content')
 
@@ -24,6 +24,7 @@
                     <th>Date Created</th>
                     <th>Name</th>
                     <th>Phone</th>
+                    <th>Email</th>
                     <th>Access Level</th>
                     <th></th>
                 </tr>
@@ -36,6 +37,7 @@
                     <td>{{$user->created_at}}</td>
                     <td class="text-capitalize">{{ $user->name }}</td>
                     <td>{{ $user->phone_number }}</td>
+                    <td>{{ $user->email }}</td>
                     <td>{{ $user->access_level_name }}</td>
                     <td class="text-end">
                         @can('administrator')
