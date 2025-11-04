@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Alerts\LoginAlertService;
+use App\Services\Alerts\MessagingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -9,6 +11,13 @@ use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
+
+    public function __construct(
+        private $loginAlertService = new LoginAlertService()
+    ){}
+
+
+
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials =  $request->validate([
@@ -25,20 +34,8 @@ class LoginController extends Controller
             // set subscriber session
             Session::put('active_subscriber', Auth::user()->subscriber_id);
 
-            // send SMS Notification
-            $company_name = Auth::user()->company->company_name;
-            $phone_number = Auth::user()->phone_number;
-
-            $operating_system = $request->server('HTTP_USER_AGENT');
-            $ip_address = $request->server('REMOTE_ADDR');
-
-            $message = "Someone logged into your account on Printforce from a " . $operating_system . " at " . $ip_address;
-
-            $messaging = new MessagingController();
-            $messaging->receipient = $phone_number;
-            $messaging->message = $message;
-
-            $messaging->send();
+            // send login alert
+            $this->loginAlertService->send($request);
 
             return redirect()->intended('dashboard');
         }
