@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Customers\CustomerPayment;
 use Carbon\Carbon;
+use App\Models\Customers\Customer;
+use App\Models\Customers\CustomerPayment;
 
 class CustomerPaymentService
 {
@@ -97,5 +98,12 @@ class CustomerPaymentService
             'this_months_payments' => $statistics->months_total_payment ?? 0,
             'this_years_payments' => $statistics->years_total_payment ?? 0,
         ];
+    }
+
+
+
+    public function sendPaymentAlert(Customer $customer, CustomerPayment $customerPayment)
+    {
+
     }
 }
