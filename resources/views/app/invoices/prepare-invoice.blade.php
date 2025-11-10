@@ -155,19 +155,10 @@
 </div>
 
 
-
-
-
 @include('app.invoices.modals.new-invoice-item-modal')
 
 @endsection
 
 @push('stacked-scripts')
-
-    @production
-        @vite(['resources/js/modules/invoices/print-service-calculator.js'])
-    @else
-            @vite(['resources/js/modules/invoices/print-service-calculator.js'])
-    @endproduction
-
+    @vite(['resources/js/modules/invoices/print-service-calculator.js'])
 @endpush
