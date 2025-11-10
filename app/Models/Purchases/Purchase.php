@@ -145,8 +145,8 @@ class Purchase extends Model
      */
     public function purchasedItems()
     {
-        return $this->hasMany(PurchasedItem::class, 'purchase_id')
-            ->active();
+        return $this->hasMany(PurchasedItem::class, 'purchase_id');
+            // ->active();
     }
 
 

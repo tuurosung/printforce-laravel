@@ -25,8 +25,9 @@ class PurchasedItem extends Model
         });
     }
 
-
+    protected $table = 'purchased_items';
     protected $primaryKey = 'sn';
+    protected $keyType = 'int';
     public $incrementing = true;
 
     protected $fillable = [
