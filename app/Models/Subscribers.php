@@ -10,12 +10,43 @@ class Subscribers extends Model
 {
     use HasFactory;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            // $model->subscriber_id = generateDashedRandomNumber();
+        });
+    }
+
     protected $activeSubscriber;
 
     protected $table = 'subscriptions';
     protected $primaryKey = 'subscriber_id';
-    protected $fillable = ['user_id', 'plan_id', 'status', 'start_date', 'end_date'];
     public $incrementing = false;
+
+
+    protected $fillable = [
+        'subscriber_id',
+        'full_name',
+        'email',
+        'phone_number',
+        'company_name',
+        'company_email',
+        'company_phone',
+        'company_address',
+        'user_id',
+        'plan_id',
+        'status',
+        'start_date',
+        'end_date',
+        'subscription_plan',
+        'last_payment_date',
+        'next_payment_date'
+    ];
+
+
+
 
 
     static function activeSubscriber()
