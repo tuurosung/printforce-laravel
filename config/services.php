@@ -31,4 +31,11 @@ return [
         ],
     ],
 
+    'hubtel' => [
+        'client_id' => env('HUBTEL_CLIENT_ID'),
+        'client_secret' => env('HUBTEL_CLIENT_SECRET'),
+        'from' => env('HUBTEL_FROM'),
+        'base_url' => env('HUBTEL_BASE_URL')
+    ]
+
 ];
