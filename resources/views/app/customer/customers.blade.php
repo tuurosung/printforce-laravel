@@ -19,7 +19,7 @@
         </div>
     </div>
 
-
+    @can('administrator')
     <div class="row mb-5">
 
         <div class="col-md-3">
@@ -43,6 +43,8 @@
 
 
     </div>
+
+    @endcan
 
     @include('layout.errors')
 

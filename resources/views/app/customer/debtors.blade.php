@@ -13,8 +13,8 @@
     </x-printforce.headers.page-header>
 
 
-
-    <div class="row mb-4">
+    @can('administrator')
+<div class="row mb-4">
         <div class="col-md-2">
 
             <x-printforce.cards.colour-card
@@ -35,6 +35,9 @@
                 />
         </div>
     </div>
+    @endcan
+
+
 
     <div class="card border-0">
         <div class="card-body">
