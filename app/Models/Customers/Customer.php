@@ -17,6 +17,7 @@ use App\Models\Jobs\PhotographyJob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Invoices\CustomerInvoice;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Invoices\CustomerInvoices;
 use Illuminate\Database\Query\JoinClause;
@@ -214,10 +215,25 @@ class Customer extends Model
     }
 
 
+    public function countInvoices() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getCountInvoices()
+        );
+    }
+
+    public function invoiceSum() : Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->calculateTotalInvoice()
+        );
+    }
+
+
     public function customerDebit() : Attribute
     {
         return Attribute::make(
-            get: fn() => $this->largeFormatJobSum + $this->embroideryJobSum + $this->pressJobSum + $this->designJobSum + $this->photographyJobSum
+            get: fn() => $this->largeFormatJobSum + $this->embroideryJobSum + $this->pressJobSum + $this->designJobSum + $this->photographyJobSum + $this->invoiceSum
         );
     }
 
@@ -363,11 +379,12 @@ class Customer extends Model
     /**
      * Defines a belongs-to relationship with the CustomerInvoices model.
      *
-     * @return BelongsTo<CustomerInvoices, Customer>
+     * @return HasMany<CustomerInvoice, Customer>
      */
     public function invoices()
     {
-        return $this->belongsTo(CustomerInvoices::class, 'customer_id');
+        return $this->hasMany(CustomerInvoice::class, 'customer_id')
+            ->where('status', 'active');
     }
 
 
@@ -408,6 +425,20 @@ class Customer extends Model
     public static function customerRankingAnalytics()
     {
         return CustomersHelper::customerRanking();
+    }
+
+
+    public function getCountInvoices()
+    {
+        return $this->invoices()->count();
+    }
+
+
+    private function calculateTotalInvoice()
+    {
+        return $this->invoices->sum(function ($invoice) {
+            return $invoice->sub_total;
+        });
     }
 
 }
