@@ -15,9 +15,9 @@ Route::get('/login', function(){
     return view('auth.login');
 })->name('login');
 
-Route::get('/subscription-expired', function(){
-    return view('auth.subscription-expired');
-})->name('subscription');
+
+require __DIR__ . "/app-routes/subscription-routes.php";
+
 
 
 Route::get('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
@@ -37,4 +37,6 @@ Route::middleware(['auth'])
     require __DIR__ . "/app-routes/service-routes.php";
     require __DIR__ . "/app-routes/user-routes.php";
     require __DIR__ . "/app-routes/upgrade-routes.php";
+    require __DIR__ . "/app-routes/invoice-routes.php";
+
 });
