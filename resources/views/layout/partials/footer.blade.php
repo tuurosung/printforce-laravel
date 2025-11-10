@@ -38,6 +38,7 @@
  <script type="text/javascript" src="{{ asset('assets/js/printforce/print-services/get-service-cost.js') }}"></script>
 
 <script type="text/javascript">
+
     $('a[data-toggle="pill"], a[data-toggle="tab"], a[data-bs-toggle="pill"], a[data-bs-toggle="tab"]').on('show.bs.tab', function(e) {
         localStorage.setItem('activeTab', $(e.target).attr('href'));
     });

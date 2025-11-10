@@ -31,7 +31,7 @@
         </form>
         <div class="menu-item">
             <a href="#" class="menu-link fw-600">
-                <span class="text-primary me-3">{{ Auth::user()->company->displayDaysRemaining() }}</span>
+                <span class="text-{{ Auth::user()->company->isExpired() ? 'danger' : 'primary' }} me-3">{{ Auth::user()->company->displayDaysRemaining() }}</span>
                 {{ Auth::user()->company->company_name }}
             </a>
         </div>

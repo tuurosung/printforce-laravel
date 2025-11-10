@@ -1,8 +1,13 @@
 @include('layout.partials.header')
 @include('layout.topnav')
 
+<style>
+    body{
+        background-color: #fff;
+    }
+</style>
 <div class="app-content-full-height bg-white" style="padding-top: 90px !important;">
-    <div class="container d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <div class="container d-flex justify-content-center align-items-center bg-white" style="">
 
 
         <div class="container">
@@ -81,7 +86,7 @@
                 patience and understanding.</p>
             <div class="text-center mb-3 d-flex justify-content-center align-items-center">
                 <img src="{{ asset('images/momo-logo.webp') }}" alt="" class="w-70px me-3">
-                <p class="m-0 fs-24px">Account#: <span class="fw-600">0246173282</span></p>
+                <p class="m-0 fs-24px cal-sans fw-500">Account#: <span class="fw-600">0246173282 </span> | Abdul-Moomin Shahabdeen</p>
             </div>
 
         </div>

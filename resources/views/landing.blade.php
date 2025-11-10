@@ -18,6 +18,8 @@
     <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
     <!-- ================== END page-css ================== -->
 
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
 
 
     <style media="screen">
@@ -231,8 +233,8 @@
 
 
                             <div class="mb-2">
-                                <a href="#" class="btn btn-lg btn-theme px-3">Create Account <i class="fa fa-arrow-right ms-2 opacity-5"></i></a>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-lg btn-white px-3">
+                                <a href="{{ route('register') }}" class="btn btn-lg btn-theme px-3">Create Account <i class="fa fa-arrow-right ms-2 opacity-5"></i></a>
+                                <a href="{{ route('login') }}" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-lg btn-white px-3">
                                     <i class="fa fa-lock me-2 opacity-5"></i>
                                     Sign Into Your Account
                                 </a>
@@ -278,10 +280,31 @@
                 </div>
                 <!-- END div-hero-content -->
 
+
             </div>
             <!-- END container -->
         </div>
         <!-- END #home -->
+        <div class="py-5 pt-md-12 d-flex justify-content-center align-items-center flex-wrap gap-5">
+            <a href="javascript:void(0)">
+                <img src="{{ asset('images/client-logos/agl.png') }}" alt="intel" class="img img-fluid" style="max-height: 100px">
+            </a>
+            <a href="javascript:void(0)">
+                <img src="{{ asset('images/client-logos/tumaprestige.png') }}" alt="oracle" class="img img-fluid" style="max-height: 70px;">
+            </a>
+            <a href="javascript:void(0)">
+                <img src="{{ asset('images/client-logos/newedge.png') }}" alt="dell" class="img img-fluid" style="max-width: 100px;">
+            </a>
+            <a href="javascript:void(0)">
+                <img src="{{ asset('images/client-logos/Saks-initiative.svg') }}" alt="samsung" class="img img-fluid w-100" style="max-width: 100px; height: 90px;">
+            </a>
+            <a href="javascript:void(0)">
+                <img src="../assets/images/frontend-pages/icon-infosys.svg" alt="infosys">
+            </a>
+            <a href="javascript:void(0)">
+                <img src="../assets/images/frontend-pages/icon-capgemini.svg" alt="capgemini">
+            </a>
+        </div>
 
         <!-- BEGIN #about -->
         <div id="about" class="py-5 bg-component">
