@@ -2,9 +2,10 @@
 
 namespace App\Models\Scopes;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Eloquent\Builder;
 
 class SubscriberScope implements Scope
 {
@@ -13,13 +14,11 @@ class SubscriberScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-       $builder->where('subscriber_id', session('active_subscriber'));
+       $builder->where('subscriber_id', Auth::user()->subscriber_id);
 
         // Automatically set subscriber_id when creating a new model instance
         $model->creating(function ($model) {
-            if (session()->has('active_subscriber')) {
-                $model->subscriber_id = session('active_subscriber');
-            }
+            $model->subscriber_id = Auth::user()->subscriber_id;
         });
     }
 }
