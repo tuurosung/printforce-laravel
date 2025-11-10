@@ -11,6 +11,7 @@ use App\Http\Requests\PrintServices\StoreNewPrintServiceRequest;
 use App\Models\Services\PrintService;
 use App\Models\Services\ServiceCategory;
 use App\Models\Services\PrintServiceCategory;
+use App\Services\PrintServicesManager;
 
 class PrintServiceController extends Controller
 {
@@ -46,6 +47,8 @@ class PrintServiceController extends Controller
      */
     public function store(StoreNewPrintServiceRequest $request)
     {
+        PrintServicesManager::dropCaches();
+        
         return $this->handleStore($request->validated());
     }
 
