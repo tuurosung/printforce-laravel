@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use App\Traits\Cacheable;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
-use App\Traits\Cacheable;
 use PhpParser\Node\Expr\Cast\Array_;
 use App\Models\Services\PrintService;
+use Illuminate\Support\Facades\Session;
 
 class PrintServicesManager
 {
@@ -38,12 +39,14 @@ class PrintServicesManager
             $query->where('category_id', $categoryId);
         }
 
-        return $this->rememberCache(
-            'all_services' . ($categoryId ? "_cat_{$categoryId}" : ''),
-            function () use ($query) {
-                return $query->get();
-            }
-        );
+        return $query->get();
+
+        // return $this->rememberCache(
+        //     'all_services' . ($categoryId ? "_cat_{$categoryId}" : ''),
+        //     function () use ($query) {
+        //         return $query->get();
+        //     }
+        // );
     }
 
     public function getServicesArray($categoryId = null): array
@@ -133,5 +136,34 @@ class PrintServicesManager
         $serviceCost = $service[$customer->category];
 
         return $serviceCost;
+    }
+
+
+    public function getServiceDetail($serviceId)
+    {
+        // if service customer_category session isn't set, use individual customer category
+        $customerCategory = Session::get('active_customer_invoice.customer_category');
+
+        $service = $this->findService($serviceId);
+
+        return [
+            'service_id' => $service->service_id,
+            'service_name' => $service->service_name,
+            'service_category' => $service->category_id,
+            'service_description' => $service->service_description,
+            'service_cost' => $service ? $service[$customerCategory] : null,
+        ];
+    }
+
+
+    private function findService($serviceId)
+    {
+        return PrintService::where('service_id', $serviceId)->first();
+    }
+
+
+    public static function dropCaches()
+    {
+        (new self())->forgetCache('all_services');
     }
 }
