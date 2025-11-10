@@ -63,7 +63,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-primary">
 
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#new_invoice_modal">New
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#newInvoiceModal">New
                                     Invoice</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#">Invoice Pmt</a>
                                 <!-- <a class="dropdown-item" href="#">Something else here</a>
@@ -170,7 +170,9 @@
             <div class="tab-pane fade" id="payments">
                 @include('app.customer.partials.payments')
             </div>
-            <div class="tab-pane fade" id="invoice">...</div>
+            <div class="tab-pane fade" id="invoice">
+                @include('app.customer.partials.invoices')
+            </div>
         </div>
     </div>
 
@@ -181,6 +183,7 @@
     @include('app.job.design.new-design')
     @include('app.job.press.new-press')
     @include('app.payments.modals.new-payment-modal')
+    @include('app.invoices.modals.create-invoice')
 
 @endsection
 
