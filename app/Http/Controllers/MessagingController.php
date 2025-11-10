@@ -9,7 +9,7 @@ namespace App\Http\Controllers;
 class MessagingController extends Controller
 {
     const CLIENT_ID = 'bespjkyy';
-    const CLIENT_SECRET = 'iqryjbnt';
+    const CLIENT_SECRET = ' ';
     const FROM = 'PRINTFORCE';
 
     public $receipient;
@@ -92,5 +92,5 @@ class MessagingController extends Controller
         $new_number = preg_replace('/^0?/', $country_code, $phoneNumber);
         return $new_number;
     }
-    
+
 }
