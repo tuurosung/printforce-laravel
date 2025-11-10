@@ -11,10 +11,10 @@
         "php": "^8.2",
         "awobaz/compoships": "^2.3",
         "barryvdh/laravel-ide-helper": "^3.2",
+        "josiasmontag/laravel-recaptchav3": "^1.0",
         "laravel/framework": "^12.0",
         "laravel/pail": "^1.1",
         "laravel/pulse": "^1.4",
-        "laravel/scout": "^10.15",
         "laravel/tinker": "^2.9",
         "typesense/typesense-php": "^5.1"
     },
