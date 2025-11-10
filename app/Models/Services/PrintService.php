@@ -48,7 +48,15 @@ class PrintService extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['subscriber_id', 'service_id', 'service_name', 'category_id', 'individual', 'artist', 'institution'];
+    protected $fillable = [
+        'subscriber_id',
+        'service_id',
+        'service_name',
+        'category_id',
+        'individual',
+        'artist',
+        'institution'
+    ];
 
 
     public static function getAllServices()

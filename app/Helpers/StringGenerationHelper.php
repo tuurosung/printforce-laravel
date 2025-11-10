@@ -25,3 +25,18 @@ function generateDashedRandomNumber($length = 16)
     $split_array = str_split($randomString, 4);
     return implode('-', $split_array);
 }
+
+
+
+
+function generatedNumericId($limit = 10)
+{
+    $string = '';
+
+    for($i = 0; $i < $limit;  $i++)
+    {
+        $string .= random_int(1, 9);
+    }
+
+    return $string;
+}
