@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Customers;
 
-use App\Services\CustomerService;
-use App\Services\Payments\PaymentAlertService;
-use App\Services\Payments\SendPaymentAlert;
-use App\Traits\HandleResourceActions;
 use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\CustomerService;
 use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Payments\StoreNewPaymentRequest;
+use App\Traits\HandleResourceActions;
+use App\Services\CustomerPaymentService;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Accounting\OperatingAccount;
 use App\Services\Accounting\AccountService;
-use App\Services\CustomerPaymentService;
+use App\Services\Payments\SendPaymentAlert;
+use App\Services\Alerts\PaymentAlertService;
+use App\Http\Requests\Payments\StoreNewPaymentRequest;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 class CustomerPaymentController extends Controller
