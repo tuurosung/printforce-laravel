@@ -30,7 +30,6 @@ class CustomerService
     }
 
 
-
     /**
      * Returns the Latest 100 customers as a collection.
      *
