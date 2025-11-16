@@ -6,24 +6,27 @@
 </x-printforce.headers.page-header>
 
 
+@can('administrator')
 <div class="row mb-4">
     <div class="col-md-2">
         <x-printforce.cards.colour-card title="Today's Jobs" value="{{ $statistics['todays_jobs'] }}" bgColour="primary"
             type="count" />
     </div>
     <div class="col-md-2">
-        <x-printforce.cards.colour-card title="Monthly Revenue" value="{{ $statistics['this_months_jobs'] }}" bgColour="warning"
-            type="count" />
+        <x-printforce.cards.colour-card title="Monthly Revenue" value="{{ $statistics['this_months_jobs'] }}"
+            bgColour="warning" type="count" />
     </div>
     <div class="col-md-2">
-        <x-printforce.cards.colour-card title="Annual Revenue" value="{{ $statistics['this_years_jobs'] }}" bgColour="success"
-            type="count" />
+        <x-printforce.cards.colour-card title="Annual Revenue" value="{{ $statistics['this_years_jobs'] }}"
+            bgColour="success" type="count" />
     </div>
     <div class="col-md-2">
-        <x-printforce.cards.colour-card title="Revenue %" value="0"
-            bgColour="danger" type="percentage" />
+        <x-printforce.cards.colour-card title="Revenue %" value="0" bgColour="danger" type="percentage" />
     </div>
 </div>
+@endcan
+
+@include('layout.errors')
 
 <!-- tab v2 with card -->
 <div class="card border-0">
@@ -35,7 +38,7 @@
         <div class="tab-pane fade show active" id="dashboard">
 
 
-            <form method="POST" id="filter_jobs_frm">
+            <form method="POST" id="filter_jobs_frm" action="{{ route('jobs.largeformat.filter') }}">
                 @csrf
                 <div class="d-flex mb-5">
                     <div class="me-3">
@@ -71,75 +74,7 @@
 
             <div id="data_holder">
 
-            <table class="table table-sm datatables">
-                <thead class="">
-                    <tr>
-                        <th>#</th>
-                        <th>Date</th>
-                        <th>Customer</th>
-                        <th>Service</th>
-                        <th class="text-end">Width</th>
-                        <th class="text-end">Height</th>
-                        <th class="text-end">Cost</th>
-                        <th class="text-end">Copies</th>
-                        <th class="text-end">Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                    $i = 1;
-                    $total = 0;
-                    @endphp
-
-                    @foreach ($jobs as $job)
-
-                    <tr>
-                        <td>{{ $i++ }}</td>
-                        <td>{{ $job->date }}</td>
-                        <td>{{ $job->customer?->name }}</td>
-                        <td>{{ $job->service?->service_name }}</td>
-                        <td class="text-end pe-20px">{{ number_format($job->width, 2) }}</td>
-                        <td class="text-end pe-20px">{{ number_format($job->height, 2) }}</td>
-                        <td class="text-end pe-20px">{{ number_format($job->cost, 2) }}</td>
-                        <td class="text-end pe-20px">{{ $job->copies }}</td>
-                        <td class="text-end pe-20px">{{ number_format($job->total, 2) }}</td>
-                        <td class="text-end pe-20px">
-
-                            <!-- <a href="#" class="viewjob me-3 text-primary"
-                                data-url="">
-
-                                <i class="fas fa-file-alt"></i>
-                                JC
-
-                            </a> -->
-                            <a href="javascript:void(0)" class="edit text-primary me-3" data-url="{{ route('jobs.large-format.edit', $job) }}">
-                                <i class="fas fa-pen"></i>
-                                Edit
-                            </a>
-
-                            @can('administrator')
-                            <form method="POST" action="{{ route('jobs.large-format.delete', $job) }}" class="d-inline-block">
-                                @csrf
-                                @method('delete')
-                                <a href="#" class="text-danger delete">
-
-                                    <i class="fas fa-trash-alt"></i>
-                                    Delete
-                                </a>
-                            </form>
-                            @endcan
-
-
-
-                        </td>
-                    </tr>
-
-
-                    @endforeach
-
-                </tbody>
-            </table>
+                
 
             </div>
 
@@ -193,8 +128,6 @@
 <div id="modal_holder"></div>
 @endsection
 
-@section('js')
-
-<script type="text/javascript" src="{{ asset('assets/js/printforce/jobs/largeformat-jobs-scripts.js') }}"></script>
-
-@endsection
+@push('stacked-scripts')
+    @vite(['resources/js/modules/jobs/largeformat/largeformat-jobs-scripts.js'])
+@endpush
