@@ -38,6 +38,7 @@ const PrintServiceCalculator = {
         if (!serviceId) return;
 
         try {
+
             const response = await $.ajax({
                 url: this.elements.$serviceId.data('fetch-url'),
                 method: 'GET',
@@ -48,8 +49,10 @@ const PrintServiceCalculator = {
             this.updateServiceDetails(response);
 
         } catch (error) {
+
             console.error('Error fetching service details:', error);
             this.showError('Failed to fetch service details.'); // Show an error message.
+            
         }
     },
 
