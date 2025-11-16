@@ -43,8 +43,6 @@
 
                     <div class="row">
 
-
-
                         <div class="col">
                             <div class="row">
                                 <div class="col">
