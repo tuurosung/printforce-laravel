@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Services\FetchServiceDetailController;
 use App\Http\Controllers\Services\FilterPrintServicesController;
+use App\Http\Controllers\Services\GetServiceCostController;
 use App\Http\Controllers\Services\PrintServiceController;
 use App\Http\Controllers\Services\PrintServiceCostController;
 
@@ -29,10 +30,16 @@ Route::prefix('configuration')
                 ->name('print-services.')
                 ->group(function () {
 
+                    Route::controller(GetServiceCostController::class)
+                        ->group(function () {
+                            Route::get('/get-service-cost-with-customer-id', 'getServiceCostWithCustomerId')->name('get-service-cost-with-customer-id');
+                        });
+
+                    // Route::get('/get-service_cost-with-user-id', )
                     Route::get('/get-service-cost/{serviceId}', PrintServiceCostController::class)->name('get-service-cost');
                     Route::get('/fetch-service-detail', FetchServiceDetailController::class)->name('fetch-service-detail');
                     Route::get('/filter/{searchTerm}', FilterPrintServicesController::class)->name('filter');
-                    
+
                 });
 
     });
