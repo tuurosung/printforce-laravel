@@ -6,4 +6,8 @@
 
     @include('layout.sidebars.receptionist-sidebar')
 
+@elseif (Auth::user()->isPrintTechnician())
+
+    @include('layout.sidebars.technician-sidebar')
+
 @endif

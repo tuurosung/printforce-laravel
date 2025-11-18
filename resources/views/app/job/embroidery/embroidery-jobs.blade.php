@@ -5,7 +5,7 @@
 
     </x-printforce.headers.page-header>
 
-
+    @can('administrator')
     <div class="row mb-4">
         <div class="col-md-2">
             <x-printforce.cards.colour-card title="Today's Jobs" value="{{ $jobs->sum('total') }}" bgColour="primary"
@@ -23,6 +23,7 @@
         </div>
         <div class="col-md-2"></div>
     </div>
+    @endcan
 
 
     @include('layout.errors')
@@ -38,7 +39,8 @@
         <div class="tab-content p-4">
             <div class="tab-pane fade show active" id="dashboard">
 
-                <form method="POST" id="filter_jobs_frm" action="{{ route('jobs.embroidery.filter') }}">
+                @can('administrator')
+<form method="POST" id="filter_jobs_frm" action="{{ route('jobs.embroidery.filter') }}">
                     @csrf
                     <div class="d-flex mb-5">
                         <div class="me-3">
@@ -71,6 +73,8 @@
                         <div></div>
                     </div>
                 </form>
+                @endcan
+
 
                 <div id="data_holder">
 

@@ -2,6 +2,12 @@
 
 namespace App\Services\Jobs;
 
+use App\Models\Jobs\PressJob;
+use App\Models\Jobs\DesignJob;
+use App\Models\Jobs\EmbroideryJob;
+use App\Models\Jobs\LargeFormatJob;
+use App\Models\Jobs\PhotographyJob;
+
 class JobService
 {
     /**
@@ -36,5 +42,29 @@ class JobService
             $designJobTotal,
             $pressJobTotal,
         ])->sum();
+    }
+
+
+    public static function findJobById(string $job_id)
+    {
+        $models = [
+            LargeFormatJob::class,
+            EmbroideryJob::class,
+            DesignJob::class,
+            PressJob::class,
+            PhotographyJob::class,
+        ];
+
+        foreach ($models as $model) {
+            $job = $model::where('job_id', $job_id)->first();
+            if ($job = $model::firstWhere('job_id', $job_id)) {
+                return [
+                    'job' => $job,
+                    'job_category' => class_basename($model)
+                ];
+            }
+        }
+
+        return null;
     }
 }

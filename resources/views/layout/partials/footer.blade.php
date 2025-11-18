@@ -1,36 +1,25 @@
-<script type="text/javascript" src="{{ asset('assets/js/jquery.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/bootbox.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/datatables/datatables.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/bootstrap-datepicker.js') }}"></script>
 
-<!-- <script type="text/javascript" src={{ asset('assets/js/vendor.min.js') }}></script> -->
 
-<script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/app.min.js') }}"></script>
-
-<script type="text/javascript" src="{{ asset('assets/js/bootstrap.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/bootstrap-modal.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/modules/chart.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/toastify.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/lity.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/printThis.js') }}"></script>
+<script type="text/javascript" src="{{ asset('matdash/app.init.js') }}"></script>
+<script type="text/javascript" src="{{ asset('matdash/app.min.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js" type="text/javascript"></script>
 <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 
-@stack('stacked-scripts')
+
 
 <script>
     window.routes = {
         'getServiceCost' : "{{  route('configuration.print-services.get-service-cost', ':serviceId') }}",
         'filterDesignJobs' : "{{ route('jobs.design.filter') }}",
-        'filterLargeFormatJobs' : "{{ route('jobs.large-format.filter') }}",
+        'filterLargeFormatJobs' : "{{ route('jobs.largeformat.filter') }}",
         'filterEmbroideryJobs' : "{{ route('jobs.embroidery.filter') }}",
         'filterPressJobs' : "{{ route('jobs.press.filter') }}",
         'filterCustomers' : "{{ route('customers.filter') }}",
-        'filterCustomersJson' : "{{ route('customers.filter-json') }}"
+        'filterCustomersJson' : "{{ route('customers.filter-json') }}",
+
+        'getLargeFormatJobs' : "{{ route('jobs.largeformat.get-data') }}",
+        'getEmbroideryJobs' : "{{ route('jobs.embroidery.get-data') }}",
     }
 </script>
 
@@ -311,3 +300,6 @@
     }).showToast();
 </script>
 @endif
+
+
+@stack('stacked-scripts')

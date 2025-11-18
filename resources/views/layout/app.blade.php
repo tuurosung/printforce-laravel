@@ -1,12 +1,16 @@
 @include('layout.partials.header')
 
-<body class="">
-    <div class="app">
+<body class="pace-done">
+    <div class="app" id="app">
         @include('layout.topnav')
         @include('layout.sidebar')
 
-        <div class="app-content">
-            @yield('content')
+        <div class="app-content" id="content">
+            <div class="container-fluid">
+
+                @yield('content')
+
+            </div>
         </div>
 
     </div>

@@ -27,7 +27,7 @@
                         </a>
                     </div>
                     <div class="menu-item">
-                        <a href="{{ route('jobs.large-format.index') }}" class="menu-link" id="">
+                        <a href="{{ route('jobs.largeformat.index') }}" class="menu-link" id="">
                             <span class="menu-text">Large Format Jobs</span>
                         </a>
                     </div>

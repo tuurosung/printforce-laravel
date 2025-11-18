@@ -74,7 +74,7 @@
 
             <div id="data_holder">
                 <table class="table table-sm datatable">
-                    <thead class="">
+                    <thead class="table-dark">
                         <tr>
                             <th>#</th>
                             <th>Date Created</th>

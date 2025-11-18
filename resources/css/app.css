@@ -1,0 +1,12 @@
+@import './fontawesome/css/all.min.css';
+@import '../plugins/datatables/datatables.css';
+@import './printforce/ui.css';
+@import './printforce/uix.css';
+@import './printforce/datepicker.css';
+@import './printforce/toastify.min.css';
+@import './printforce/lity.min.css';
+
+@import './matdash/owl.carousel.min.css';
+@import './matdash/style.css';
+
+@import './printforce/customization.css';

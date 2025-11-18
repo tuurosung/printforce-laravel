@@ -130,6 +130,7 @@ class User extends Authenticatable
 
 
     public function isPrintTechnician(){
-        return $this->access_level === 'print_technician';
+        $printTechnicianLevels = config('printforce.users.technical_users');
+        return in_array($this->access_level, $printTechnicianLevels);
     }
 }

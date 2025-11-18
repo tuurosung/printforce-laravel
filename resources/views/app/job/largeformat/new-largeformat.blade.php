@@ -20,7 +20,7 @@
                     data-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('jobs.large-format.store', $customer) }}">
+            <form method="POST" action="{{ route('jobs.largeformat.store', $customer) }}">
                 @csrf
 
                 <div class="modal-body">
