@@ -73,7 +73,10 @@ class Subscribers extends Model
             return 0; // Subscription has expired
         }
 
-        return $currentDate->diffInDays($expiryDate);
+        $daysRemaining = $currentDate->diffInDays($expiryDate, true);
+
+        // return the absolute value of days remaining
+        return $daysRemaining;
     }
 
     public function isExpired(): bool
