@@ -13,4 +13,12 @@ return [
         'sublimation_technician' => 'Sublimation Technician',
     ],
 
+    'technical_users' => [
+        'large_format_technician',
+        'print_technician',
+        'graphic_designer',
+        'dtf_technician',
+        'sublimation_technician',
+    ]
+
 ];
