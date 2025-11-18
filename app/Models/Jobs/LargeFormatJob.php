@@ -3,16 +3,19 @@
 namespace App\Models\Jobs;
 
 
+use App\Models\User;
 use App\Traits\ScopedActive;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Services\PrintService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -53,14 +56,65 @@ class LargeFormatJob extends Model
         'total',
         'measuring_unit',
         'notes',
-        'date'
+        'date',
+        'job_assigned_to',
+        'job_assigned_at',
+        'job_completed_at',
+        'job_completed_by',
     ];
 
+    /**
+     * Attributes -----------------------------------------------------------------------------------------
+     */
+
+
+    /**
+     * Get the job details as an array.
+     *
+     * @return Attribute
+     */
+    public function details(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->buildDetails(),
+        );
+    }
+
+
+    /**
+     * Get the job status as a string.
+     *
+     * @return string The job status as a string.
+     */
+    public function jobStatusDefinition(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getJobStatusDescription(),
+        );
+    }
+
+
+
+    /**
+     * Relationships -----------------------------------------------------------------------------------
+     */
+
+
+
+    /**
+     * The customer that owns the large format job.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function customer():BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
+
+    /**
+     * The service associated with the large format job.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(PrintService::class, 'service_id')
@@ -68,6 +122,21 @@ class LargeFormatJob extends Model
                 'service_name' => 'Undefined'
             ]);
     }
+
+
+    /**
+     * The user that the job is assigned to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function assignedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'job_assigned_to', 'user_id');
+    }
+
+
+
+
 
     // BEGIN STATIC FUNCTIONS
 
@@ -88,6 +157,27 @@ class LargeFormatJob extends Model
         return LargeFormatJob::whereMonth('created_at', now()->format('m'))
             ->whereYear('created_at', now()->format('Y'))
             ->sum('total');
+    }
+
+
+    public function buildDetails()
+    {
+        return "{$this->width} x {$this->height} {$this->measuring_unit} ({$this->copies} pcs)";
+    }
+
+
+    private function getJobStatusDescription(): string
+    {
+
+        if ($this->job_status == null || $this->job_status == '') {
+            return 'Unknown';
+        }
+
+        if (!in_array($this->job_status, array_keys(config('printforce.jobs.job_statuses')))) {
+            return 'Unknown';
+        }
+
+        return config('printforce.jobs.job_statuses')[$this->job_status];
     }
 
 }
