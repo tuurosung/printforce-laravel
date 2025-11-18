@@ -17,18 +17,6 @@ class EmbroideryJobService
     {
     }
 
-    /**
-     * Returns an array of material purchase options for embroidery jobs.
-     *
-     * @return array<string, string>
-     */
-    public static function materialSupplyOptions(): array
-    {
-        return [
-            'yes' => 'Company To Purchase',
-            'no' => 'Customer To Purchase',
-        ];
-    }
 
 
     /**
