@@ -9,6 +9,8 @@ use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Services\PrintService;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -99,6 +101,12 @@ class EmbroideryJob extends Model
      */
 
 
+    public function jobStatusDefinition(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getJobStatusDefinition()
+        );
+    }
 
 
 
@@ -130,6 +138,15 @@ class EmbroideryJob extends Model
     }
 
 
+    public function assignedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'job_assigned_to', 'user_id')
+            ->withDefault([
+                'name' => 'Unassigned'
+            ]);
+    }
+
+
     /**
      * Get the total cost of the embroidery job.
      *
@@ -140,6 +157,20 @@ class EmbroideryJob extends Model
         return EmbroideryJob::whereMonth('created_at', now()->format('m'))
             ->whereYear('created_at', now()->format('Y'))
             ->sum('total');
+    }
+
+
+    private function getJobStatusDefinition()
+    {
+       if (!$this->job_status) return null;
+
+       $jobStatuses = config('printforce.jobs.job_statuses');
+
+       if (!in_array($this->job_status, array_keys($jobStatuses))) {
+           return 'Unknown Status';
+       }
+
+       return $jobStatuses[$this->job_status];
     }
 
 }
