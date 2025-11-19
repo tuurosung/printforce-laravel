@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Customers\CustomerPayment;
 use App\Models\Purchases\PurchasePayment;
 use App\Models\Accounting\OperatingAccountHeader;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OperatingAccount extends Model
@@ -63,6 +64,23 @@ class OperatingAccount extends Model
         'description'
     ];
 
+
+
+    /**
+     * Attributes -------------------------------------------------------------------------------
+     */
+
+    public function todaysPayment(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getTodaysPayment()
+        );
+    }
+
+
+    /**
+     * Relationships ----------------------------------------------------------------------------
+     */
 
 
     public function accountHeader()
@@ -299,6 +317,17 @@ class OperatingAccount extends Model
         });
 
         return $accountHistory;
+    }
+
+
+
+    public function getTodaysPayment()
+    {
+        $totalPayment = $this->payments()
+            ->whereDate('payment_date', today())
+            ->sum('amount_paid');
+
+        return number_format($totalPayment, 2);
     }
 
 }
