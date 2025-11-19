@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Alerts\LoginAlertService;
-use App\Services\Alerts\MessagingService;
+use App\Mail\LoginAlertMail;
+use App\Notifications\LoginNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
+use App\Services\Alerts\MessagingService;
+use App\Services\Alerts\LoginAlertService;
+use Illuminate\Support\Facades\Notification;
+use Resend;
 
 class LoginController extends Controller
 {
@@ -35,7 +40,24 @@ class LoginController extends Controller
             Session::put('active_subscriber', Auth::user()->subscriber_id);
 
             // send login alert
-            $this->loginAlertService->send($request);
+            // $this->loginAlertService->send($request);
+            // Mail::to(Auth::user()->email)->send(new LoginAlertMail(Auth::user(), $request->ip(), now()));
+            // $resend = Resend::client(env('RESEND_API_KEY'));
+
+            // $resend->emails->send([
+            //     'from' => 'onboarding@resend.dev',
+            //     'to' => 'info@printforcepos.com',
+            //     'subject' => 'Hello World',
+            //     'html' => '<p>Congrats on sending your <strong>first email</strong>!</p>'
+            // ]);
+
+            $details = [
+                'ip' => $request->ip(),
+                'time' => now()->toDateTimeString(),
+            ];
+
+            Notification::route('mail', 'info@printforcepos.com')
+                ->notify(new LoginNotification($details));
 
             return redirect()->intended('dashboard');
         }
