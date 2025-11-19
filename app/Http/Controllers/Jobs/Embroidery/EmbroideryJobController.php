@@ -25,9 +25,7 @@ class EmbroideryJobController extends Controller
         private $modelName = 'Embroidery Job',
         private $embroiderJob = new EmbroideryJob(),
         private $embroideryJobService = new EmbroideryJobService()
-    )
-    {
-    }
+    ){}
 
 
     /**
@@ -37,9 +35,8 @@ class EmbroideryJobController extends Controller
     {
         $data = [
             'jobs' => $this->embroideryJobService->getRecentJobs(),
-            'thisMonthsRevenue' => EmbroideryJob::sumEmbroideryJobsThisMonth(),
-            'thisMonthsRevenueContribution' => $this->embroideryJobService->monthyRevenueContribution(),
-            'performanceSummary' => $this->embroideryJobService->performanceSummary()
+            'performanceSummary' => $this->embroideryJobService->performanceSummary(),
+            'statistics' => $this->embroideryJobService->getEmbroideryJobStatistics(),
         ];
 
         return view('app.job.embroidery.embroidery-jobs', $data);
