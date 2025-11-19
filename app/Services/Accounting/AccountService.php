@@ -92,4 +92,10 @@ class AccountService
     {
         return $this->getOperatingAccountsByTypeArray(1);
     }
+
+
+    public function getAssetAccountList()
+    {
+        return $this->getOperatingAccountsByType(1);
+    }
 }
