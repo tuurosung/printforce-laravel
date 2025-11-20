@@ -22,9 +22,7 @@ class DesignJobController extends Controller
         protected $modelName = "Design Job",
         private $model = new DesignJob(),
         private $designJobService = new DesignJobService(),
-    )
-    {
-    }
+    ){}
 
     /**
      * Display a listing of the resource.
@@ -33,6 +31,7 @@ class DesignJobController extends Controller
     {
         return view('app.job.design.design-jobs', [
             'jobs' => $this->designJobService->getLatestDesignJobs(),
+            'statistics' => $this->designJobService->getDesignJobStatistics()
         ]);
     }
 
