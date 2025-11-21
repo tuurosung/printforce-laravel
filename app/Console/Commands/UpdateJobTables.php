@@ -129,6 +129,109 @@ class UpdateJobTables extends Command
 
         });
 
+        Schema::table('jobs_design', function ($table) use ($columns) {
+
+            foreach ($columns as $column => $config) {
+                if (!Schema::hasColumn('jobs_design', $column)) {
+
+                    $columnDefinition = null;
+
+                    if ($config['type'] === 'string') {
+                        $columnDefinition = $table->string($column);
+                    } elseif ($config['type'] === 'timestamp') {
+                        $columnDefinition = $table->timestamp($column);
+                    }
+
+                    if ($columnDefinition) {
+
+                        if (isset($config['after'])) {
+                            $columnDefinition->after($config['after']);
+                        }
+
+                        if (isset($config['nullable'])) {
+                            $columnDefinition->nullable();
+                        } else {
+                            $columnDefinition->nullable(false);
+                        }
+
+                        if (isset($config['default'])) {
+                            $columnDefinition->default($config['default']);
+                        }
+                    }
+                }
+            }
+
+        });
+
+        Schema::table('jobs_press', function ($table) use ($columns) {
+
+            foreach ($columns as $column => $config) {
+                if (!Schema::hasColumn('jobs_press', $column)) {
+
+                    $columnDefinition = null;
+
+                    if ($config['type'] === 'string') {
+                        $columnDefinition = $table->string($column);
+                    } elseif ($config['type'] === 'timestamp') {
+                        $columnDefinition = $table->timestamp($column);
+                    }
+
+                    if ($columnDefinition) {
+
+                        if (isset($config['after'])) {
+                            $columnDefinition->after($config['after']);
+                        }
+
+                        if (isset($config['nullable'])) {
+                            $columnDefinition->nullable();
+                        } else {
+                            $columnDefinition->nullable(false);
+                        }
+
+                        if (isset($config['default'])) {
+                            $columnDefinition->default($config['default']);
+                        }
+                    }
+                }
+            }
+
+        });
+
+
+        Schema::table('jobs_photography', function ($table) use ($columns) {
+
+            foreach ($columns as $column => $config) {
+                if (!Schema::hasColumn('jobs_photography', $column)) {
+
+                    $columnDefinition = null;
+
+                    if ($config['type'] === 'string') {
+                        $columnDefinition = $table->string($column);
+                    } elseif ($config['type'] === 'timestamp') {
+                        $columnDefinition = $table->timestamp($column);
+                    }
+
+                    if ($columnDefinition) {
+
+                        if (isset($config['after'])) {
+                            $columnDefinition->after($config['after']);
+                        }
+
+                        if (isset($config['nullable'])) {
+                            $columnDefinition->nullable();
+                        } else {
+                            $columnDefinition->nullable(false);
+                        }
+
+                        if (isset($config['default'])) {
+                            $columnDefinition->default($config['default']);
+                        }
+                    }
+                }
+            }
+
+        });
+
 
         $this->info('Job tables update completed successfully.');
     }
