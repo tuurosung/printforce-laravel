@@ -19,15 +19,7 @@ class FilterCustomersController extends Controller
 
         $searchTerm = $request->input('search_term');
 
-        $customers = Customer::with([
-            'largeFormatJobs',
-            'embroideryJobs',
-            'pressJobs',
-            'designJobs',
-            'photography_jobs',
-            'payments'
-        ])
-        ->where(function ($query) use ($searchTerm) {
+        $customers = Customer::where(function ($query) use ($searchTerm) {
             $query->where('name', 'like', "%{$searchTerm}%")
                   ->orWhere('phone', 'like', "%{$searchTerm}%");
         })
