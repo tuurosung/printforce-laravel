@@ -1,89 +1,134 @@
 export const CalculateEmbroideryJobTotal = {
 
-    config: {},
+    selectors: {},
 
-    elements: {},
-
-    init: function () {
-        this.cachedElements();
-        this.bindEvents();
+    constructor() {
+        this.selectors = {
+            qty: '[name="qty"]',
+            unitCost: '[name="unit_cost"]',
+            matUnitCost: '[name="mat_unit_cost"]',
+            matSupply: '[name="mat_supply"]',
+            embroideryCost: '[name="embroidery_cost"]',
+            purchaseCost: '[name="purchase_cost"]',
+            total: '[name="total"]'
+        };
     },
 
+    initForm($parent) {
 
-    cachedElements: function () {
-
-    },
-
-
-    bindEvents: function () {
-
-    },
-
-    handleInputChange: function (parent) {
-
-        parent.on('input', '[name="qty"], [name="mat_unit_cost"]', () => {
-            this.calculateEmbroideryTotal(parent);
-        });
-    },
-
-
-    calculateEmbroideryTotal(parent) {
-
-        const $unitCost = this.getValue(parent, 'unit_cost');
-        const $quantity = this.getValue(parent, 'qty');
-        const $matSupply = parent.find('[name="mat_supply"]').val();
-        const $matUnitCost = this.getValue(parent, 'mat_unit_cost');
-
-        let embroideryCost = $quantity * $unitCost;
-
-        let purchaseCost = 0;
-
-        if ($matSupply === 'yes') {
-            purchaseCost = $matUnitCost * $quantity;
-        } else if ($matSupply === 'no') {
-            purchaseCost = 0;
+        if (!$parent || !$parent.length) {
+            console.error('Invalid parent container provided');
+            return;
         }
 
-        const embroideryTotal = embroideryCost + purchaseCost;
+        this.constructor();
 
-        parent.find(
-            $('[name="purchase_cost"]').val(
-                Math.round(purchaseCost).toFixed(2)
-            )
-        );
+        this.bindEvents($parent)
+        this.calculateTotal($parent);
+    },
 
-        parent.find(
-            $('[name="cost"]').val(
-                Math.round(embroideryCost).toFixed(2)
-            )
-        );
+    bindEvents: function ($parent) {
+        $parent.on('input', `${this.selectors.qty}, ${this.selectors.matUnitCost}`, () => {
+            this.calculateTotal($parent);
+        })
 
-        parent.find(
-            $('[name="embroidery_cost"]').val(
-                Math.round(embroideryTotal).toFixed(2)
-            )
-        );
-
-        parent.find(
-            $('[name="total"]').val(
-                Math.round(embroideryTotal).toFixed(2)
-            )
-        );
+        $parent.on('change', `${this.selectors.matSupply}`, () => {
+            this.handleMatSupplyChange($parent);
+            this.calculateTotal($parent)
+        })
     },
 
 
-    getValue(parent, selector) {
-        const value = parent.find(
-            $(`[name="${selector}"]`)
-        ).val();
+    calculateTotal($parent) {
+        const quantity = this.getNumericValue($parent, this.selectors.qty);
+        const unitCost = this.getNumericValue($parent, this.selectors.unitCost);
+        const matSupply = $parent.find(this.selectors.matSupply).val();
+        const matUnitCost = this.getNumericValue($parent, this.selectors.matUnitCost);
 
-        if (!value || isNaN(value)) {
+        // calculate Costs
+        const embroideryCost = this.calculateEmbroideryCost(quantity, unitCost);
+        const purchaseCost = this.calculatePurchaseCost(matSupply, matUnitCost, quantity);
+        const totalCost = embroideryCost + purchaseCost;
+
+        this.updateFormFields($parent, {
+                [this.selectors.purchaseCost] : purchaseCost,
+                [this.selectors.embroideryCost] : embroideryCost,
+                [this.selectors.total] : totalCost
+            }
+        );
+
+        this.logCalculation($parent, {quantity, unitCost, matSupply, matUnitCost, embroideryCost, purchaseCost, totalCost});
+
+    },
+
+    calculateEmbroideryCost(quantity, unitCost) {
+        return quantity * unitCost;
+    },
+
+    calculatePurchaseCost(matSupply, matUnitCost, quantity) {
+       return matSupply === 'yes' ? matUnitCost * quantity : 0;
+    },
+
+    getNumericValue($parent, selector) {
+        const $element = $parent.find(selector);
+        const value = $element.val();
+
+        if (!value || value.trim().length === 0) {
+            console.warn(`Invalid or empty numeric value for selector: ${selector}`);
             return 0;
         }
 
-        return parseFloat(value);
-    }
+        const parsedValue = parseFloat(value);
+
+        if (isNaN(parsedValue)) {
+            console.warn(`Non-numeric value for selector: ${selector} - Value: ${value}`);
+            return 0;
+        }
+        return parsedValue;
+    },
+
+    updateFormFields($parent, fieldMap) {
+        Object.entries(fieldMap).forEach(([selector, value]) => {
+            const formattedValue = this.formatCurrency(value);
+            $parent.find(selector).val(formattedValue);
+        });
+    },
+
+    formatCurrency(value) {
+        Math.round(value);
+        return value.toFixed(2);
+    },
+
+    handleMatSupplyChange($parent) {
+
+        const $matUnitCost = $parent.find(this.selectors.matUnitCost);
+        const $matSupply = $parent.find(this.selectors.matSupply).val();
+
+        if ($matSupply === 'yes') {
+            $matUnitCost.prop('readonly', false);
+            $matUnitCost.focus();
+        } else {
+            $matUnitCost.val(0).prop('readonly', true);
+        }
+
+    },
+
+    logCalculation($parent, data) {
+        const formId = $parent.attr('id') || 'unknown';
+        console.log(`Embroidery Job Calculation [${formId}]:`, {
+            quantity: data.quantity,
+            unitCost: data.unitCost,
+            embroideryCost: data.embroideryCost,
+            purchaseCost: data.purchaseCost,
+            total: data.totalCost
+        });
+    },
+
+    destroy() {
+        $parent.off('input change');
+    },
+
 
 }
 
-$(document).ready(() => CalculateEmbroideryJobTotal.init());
+$(document).ready(() => CalculateEmbroideryJobTotal.initForm($(this)));
