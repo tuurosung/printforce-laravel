@@ -9,6 +9,8 @@
     <!-- set favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -22,8 +24,10 @@
         href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-chubby/css/uicons-regular-chubby.css'>
 
+    <style href="/resources/css/printforce/customization.css"></style>
+
     <!-- Only load vite in local environment -->
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 
 </head>
