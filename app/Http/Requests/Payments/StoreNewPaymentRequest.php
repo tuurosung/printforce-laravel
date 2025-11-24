@@ -28,4 +28,13 @@ class StoreNewPaymentRequest extends FormRequest
             'payment_date' => 'required'
         ];
     }
+
+
+    public function alertData(): array
+    {
+        return $this->only([
+            'customer_id',
+            'amount_paid'
+        ]);
+    }
 }
