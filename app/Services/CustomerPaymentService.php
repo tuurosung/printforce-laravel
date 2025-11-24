@@ -79,31 +79,48 @@ class CustomerPaymentService
 
         $statistics = $this->customerPayment->query()
             ->selectRaw('
-                SUM(CASE WHEN payment_date = ? THEN amount_paid ELSE 0 END) AS todays_payment,
-                SUM(CASE WHEN payment_date >= ? AND payment_date <= ? THEN amount_paid ELSE 0 END) AS weeks_total_payment,
-                SUM(CASE WHEN payment_date >= ? AND payment_date <= ? THEN amount_paid ELSE 0 END) AS months_total_payment,
-                SUM(CASE WHEN payment_date >= ? AND payment_date <= ? THEN amount_paid ELSE 0 END) AS years_total_payment
-            ', [
-                $carbonNow->format('Y-m-d'), // Today's date
 
-                $carbonNow->startOfWeek()->format('Y-m-d'), $carbonNow->endOfWeek()->format('Y-m-d'), // Start and end of the week
-                $carbonNow->startOfMonth()->format('Y-m-d'), $carbonNow->endOfMonth()->format('Y-m-d'), // Start and end of the month
-                $carbonNow->startOfYear()->format('Y-m-d'), $carbonNow->endOfYear()->format('Y-m-d') // Start and end of the year
-            ])
-            ->first();
+                SUM(CASE WHEN DATE(payment_date) = CURDATE() THEN amount_paid ELSE 0 END) AS todays_payment_total,
+                SUM(CASE WHEN WEEK(payment_date, 1) = WEEK(CURDATE(), 1) AND YEAR(payment_date) = YEAR(CURDATE()) THEN amount_paid ELSE 0 END) AS weeks_total_payment,
+                SUM(CASE WHEN MONTH(payment_date) = MONTH(CURDATE()) AND YEAR(payment_date) = YEAR(CURDATE()) THEN amount_paid ELSE 0 END) AS months_payment_total,
+                SUM(CASE WHEN YEAR(payment_date) = YEAR(CURDATE()) THEN amount_paid ELSE 0 END) AS years_payment_total,
+                SUM(amount_paid) AS all_time_payment_total
+            ')->first();
 
         return [
-            'todays_payments' => $statistics->todays_payment ?? 0,
-            'this_weeks_payments' => $statistics->weeks_total_payment ?? 0,
-            'this_months_payments' => $statistics->months_total_payment ?? 0,
-            'this_years_payments' => $statistics->years_total_payment ?? 0,
+            'todays_payment_total' => $statistics->todays_payment_total ?? 0,
+            'weeks_payment_total' => $statistics->weeks_total_payment ?? 0,
+            'months_payment_total' => $statistics->months_payment_total ?? 0,
+            'years_payment_total' => $statistics->years_payment_total    ?? 0,
+            'all_time_payment_total' => $statistics->all_time_payment_total ?? 0,
         ];
     }
 
 
-
-    public function sendPaymentAlert(Customer $customer, CustomerPayment $customerPayment)
+    public function getTodaysPaymentTotal(): float
     {
+        $statistics = $this->getPaymentStatistics();
+        return $statistics['todays_payment_total'] ?? 0;
+    }
 
+
+    public function getMonthlyPaymentTotal(): float
+    {
+        $statistics = $this->getPaymentStatistics();
+        return $statistics['months_payment_total'] ?? 0;
+    }
+
+
+    public function getYearlyPaymentTotal(): float
+    {
+        $statistics = $this->getPaymentStatistics();
+        return $statistics['years_payment_total'] ?? 0;
+    }
+
+
+    public function getAllTimePaymentTotal(): float
+    {
+        $statistics = $this->getPaymentStatistics();
+        return $statistics['all_time_payment_total'] ?? 0;
     }
 }
