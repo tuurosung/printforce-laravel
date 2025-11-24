@@ -13,10 +13,7 @@ class EmbroideryJobService
      */
     public function __construct(
         private $embroideryJob = new EmbroideryJob()
-    )
-    {
-    }
-
+    ){}
 
 
     /**
@@ -54,13 +51,16 @@ class EmbroideryJobService
      */
     public function getEmbroideryJobsByDateRange(string $start_date, string $end_date)
     {
-        $start_date = \Carbon\Carbon::parse($start_date)->startOfDay();
-        $end_date = \Carbon\Carbon::parse($end_date)->endOfDay();
+        $start_date = Carbon::parse($start_date)->startOfDay();
+        $end_date = Carbon::parse($end_date)->endOfDay();
 
         return $this->embroideryJob->with('customer', 'service')
             ->whereBetween('created_at', [$start_date, $end_date])
             ->latest()->get();
     }
+
+
+
     /**
      * Get the statistics for embroidery jobs.
      *
@@ -73,20 +73,32 @@ class EmbroideryJobService
 
         $statistics = $this->embroideryJob->query()
             ->selectRaw('
-                SUM(CASE WHEN date = ? THEN total ELSE 0 END) as today_jobs,
-                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_months_jobs,
-                SUM(CASE WHEN date >= ? AND date <= ? THEN total ELSE 0 END) as this_years_jobs
-            ', [
-                $carbonNow->format('Y-m-d'), // Today's date
-                $carbonNow->startOfMonth()->format('Y-m-d'), $carbonNow->endOfMonth()->format('Y-m-d'), // Start and end of this month
-                $carbonNow->startOfYear()->format('Y-m-d'), $carbonNow->endOfYear()->format('Y-m-d') // Start and end of this year
-            ])
-            ->first();
+
+                COUNT(CASE WHEN DATE(date) = CURDATE() THEN 1 ELSE NULL END) as todays_job_count,
+                SUM(CASE WHEN DATE(date) = CURDATE() THEN total ELSE 0 END) as todays_jobs_total,
+
+                COUNT(CASE WHEN MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) THEN 1 ELSE NULL END) as this_months_job_count,
+                SUM(CASE WHEN MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_months_jobs_total,
+
+                COUNT(CASE WHEN YEAR(date) = YEAR(CURDATE()) THEN 1 ELSE NULL END) as this_years_job_count,
+                SUM(CASE WHEN YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_years_jobs_total,
+
+                COUNT(*) as all_time_job_count,
+                SUM(total) as all_time_jobs_total
+            ')->first();
 
         return [
-            'todays_jobs' => $statistics->today_jobs ?? 0,
-            'this_months_jobs' => $statistics->this_months_jobs ?? 0,
-            'this_years_jobs' => $statistics->this_years_jobs ?? 0,
+            'todays_job_count' => $statistics->todays_job_count ?? 0,
+            'todays_jobs_total' => $statistics->todays_jobs_total ?? 0,
+
+            'this_months_job_count' => $statistics->this_months_job_count ?? 0,
+            'this_months_jobs_total' => $statistics->this_months_jobs_total ?? 0,
+
+            'this_years_job_count' => $statistics->this_years_job_count ?? 0,
+            'this_years_jobs_total' => $statistics->this_years_jobs_total ?? 0,
+
+            'all_time_job_count' => $statistics->all_time_job_count ?? 0,
+            'all_time_jobs_total' => $statistics->all_time_jobs_total ?? 0,
         ];
     }
 
@@ -115,9 +127,9 @@ class EmbroideryJobService
      */
     public function monthyRevenueContribution()
     {
-        $jobService = new JobService();
+        $jobService = new CustomerJobService();
         // calculate the total revenue for the month
-        $totalRevenue = $jobService->getMonthlyJobSum();
+        $totalRevenue = $jobService->sumMonthlyJobs();
 
         if ($totalRevenue == 0) {
             return 0; // Avoid division by zero
@@ -133,14 +145,53 @@ class EmbroideryJobService
     }
 
 
-    /**
-     * Returns the sum of all embroidery jobs for the current month.
-     *
-     * @return float|int
-     */
-    public function monthlyJobTotal()
+    public function getTodaysJobCount()
     {
         $statistics = $this->getEmbroideryJobStatistics();
-        return $statistics['this_months_jobs'] ?? 0;
+        return $statistics['todays_job_count'] ?? 0;
+    }
+
+    public function getTodaysJobsTotal()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['todays_jobs_total'] ?? 0;
+    }
+
+
+    public function getThisMonthsJobCount()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['this_months_job_count'] ?? 0;
+    }
+
+
+    public function getThisMonthsJobsTotal()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['this_months_jobs_total'] ?? 0;
+    }
+
+
+    public function getThisYearsJobCount()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['this_years_job_count'] ?? 0;
+    }
+
+    public function getThisYearsJobsTotal()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['this_years_jobs_total'] ?? 0;
+    }
+    public function getAllTimeJobCount()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['all_time_job_count'] ?? 0;
+    }
+
+    public function getAllTimeJobsTotal()
+    {
+        $statistics = $this->getEmbroideryJobStatistics();
+        return $statistics['all_time_jobs_total'] ?? 0;
     }
 }
