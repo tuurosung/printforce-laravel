@@ -34,9 +34,6 @@ export const GetEmbroideryJobsData = {
 
     }
 
-
-
-
 }
 
 $(document).ready(() => GetEmbroideryJobsData.init());
