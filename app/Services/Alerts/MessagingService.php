@@ -33,6 +33,25 @@ class MessagingService
     }
 
 
+    public function apiIsReachable(): bool
+    {
+        try {
+            $response = Http::timeout(5)
+                ->get("https://smsc.hubtel.com");
+
+            return $response->successful();
+
+        } catch (\Exception $e) {
+
+            Log::error('SMS API is not reachable', [
+                    'error' => $e->getMessage()
+                ]);
+
+            return false;
+        }
+    }
+
+
     public function send(string $recipient, string $message): bool
     {
         try {
