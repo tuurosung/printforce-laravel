@@ -1,4 +1,3 @@
-
 export const InitializeDataTables = {
 
     init: function() {
@@ -25,5 +24,8 @@ export const InitializeDataTables = {
 }
 
 
-$(document).ready(() => InitializeDataTables.init());
+$(document).ready(() =>{
+    InitializeDataTables.init()
+});
+
 window.InitializeDataTables = InitializeDataTables;
