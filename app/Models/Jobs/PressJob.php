@@ -7,6 +7,7 @@ use App\Models\Services\Service;
 use App\Models\Customers\Customer;
 use App\Models\Services\PrintService;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +52,14 @@ class PressJob extends Model
     ];
 
 
+    public function details(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->buildDetails(),
+        );
+    }
+
+
     /**
      * Relationships ------------------------------------------------------------
      */
@@ -75,5 +84,18 @@ class PressJob extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+
+    public function buildDetails()
+    {
+        $details = '';
+
+        $details .= 'Press Job';
+        $details .= ' - ' . $this->service?->service_name;
+        $details .= ' - ' . $this->copies . ' Copies';
+        $details .= ' - $' . number_format($this->total, 2);
+
+        return $details;
     }
 }
