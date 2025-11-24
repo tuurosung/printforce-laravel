@@ -2,6 +2,7 @@
 
 namespace App\Models\Jobs;
 
+use App\Models\User;
 use App\Traits\ScopedActive;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
@@ -9,11 +10,12 @@ use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Services\PrintService;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -37,43 +39,10 @@ class EmbroideryJob extends Model
     }
 
 
-    private static function updateCreatedAt()
-    {
-        DB::table('jobs_embroidery')
-        ->whereYear('date', '2024')
-            ->whereRaw('date <> created_at')
-            ->limit(5000)
-            ->update([
-                'created_at' => DB::raw('date')
-            ]);
-    }
 
 
 
-    private static function tableInspector()
-    {
-        Schema::table('jobs_embroidery', function (Blueprint $table) {
 
-            // check for timestamps
-            if (!Schema::hasColumn('jobs_embroidery', 'created_at')) {
-                $table->timestamps();
-            }
-
-            // make notes nullable
-            if (!Schema::hasColumn('jobs_embroidery', 'notes')) {
-                $table->string('notes')->nullable();
-            } else {
-                $table->string('notes')->nullable()->change();
-            }
-
-            // make timestamps nullable
-            if (!Schema::hasColumn('jobs_embroidery', 'timestamp')) {
-                $table->timestamp('timestamp')->nullable();
-            } else {
-                $table->timestamp('timestamp')->nullable()->change();
-            }
-        });
-    }
 
     protected $table = 'jobs_embroidery';
     protected $primaryKey = 'job_id';
@@ -95,6 +64,21 @@ class EmbroideryJob extends Model
         'notes',
         'date',
     ];
+
+
+    #[Scope]
+    public function pending(Builder $query): void
+    {
+        $query->where('job_status', 'pending');
+    }
+
+
+    #[Scope]
+    public function completed(Builder $query): void
+    {
+        $query->where('job_status', 'completed');
+    }
+
 
     /**
      * Attributes ----------------------------------------------------------------------
@@ -134,7 +118,10 @@ class EmbroideryJob extends Model
      */
     public function service(): BelongsTo
     {
-        return $this->belongsTo(PrintService::class, 'service_id', 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id', 'service_id')
+            ->withDefault([
+                'service_name' => 'Undefined'
+            ]);
     }
 
 
