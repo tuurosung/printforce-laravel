@@ -27,7 +27,7 @@ Route::post('/user-login', [App\Http\Controllers\LoginController::class, 'authen
 Route::middleware(['auth'])
     ->middleware(CheckSubscriptionValidatity::class)
     ->group(function () {
-    require __DIR__ . "/app-routes/dashboardControllers.php";
+    require __DIR__ . "/app-routes/dashboard-routes.php";
     require __DIR__ . "/app-routes/job-routes.php";
     require __DIR__ . "/app-routes/payment-routes.php";
     require __DIR__ . "/app-routes/customer-routes.php";

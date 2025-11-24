@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', function () {
+
 $('#newCustomerModal').on('shown.bs.modal', function () {
     $('#name').focus();
 });
@@ -34,3 +36,5 @@ $(document).on('click', '.table tbody .delete', function (){
         }
     })
 });
+
+})

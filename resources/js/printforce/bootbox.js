@@ -6,7 +6,9 @@
  * http://bootboxjs.com/
  */
 (function (root, factory) {
+
   'use strict';
+
   if (typeof define === 'function' && define.amd) {
     // AMD
     define(['jquery'], factory);
@@ -17,6 +19,7 @@
     // Browser globals (root is window)
     root.bootbox = factory(root.jQuery);
   }
+
 }(this, function init($, undefined) {
   'use strict';
 
@@ -133,7 +136,7 @@
     return exports;
   };
 
- 
+
   /**
    * Remove a previously-registered locale
    * @param {string} name - The key identifying the locale to remove
@@ -153,7 +156,7 @@
 
   /**
    * Set the default locale
-   * @param {string} name - The key identifying the locale to set as the default locale for all future bootbox calls 
+   * @param {string} name - The key identifying the locale to set as the default locale for all future bootbox calls
    * @returns The updated bootbox object
    */
   exports.setLocale = function (name) {
@@ -192,7 +195,7 @@
     return exports;
   };
 
- 
+
   /**
    * Allows the base init() function to be overridden
    * @param {function} _$ - A function to be called when the bootbox instance is created
@@ -207,7 +210,7 @@
   // *************************************************************************************************************
 
   /**
-   * The core dialog helper function, which can be used to create any custom Bootstrap modal. 
+   * The core dialog helper function, which can be used to create any custom Bootstrap modal.
    * @param {Object} options - An object used to configure the various properties which define a Bootbox dialog
    * @returns A jQuery object upon which Bootstrap's modal function has been called
    */
@@ -340,7 +343,7 @@
       }
 
       if (options.closeButton) {
-        let closeButton = $(templates.closeButton);      
+        let closeButton = $(templates.closeButton);
         if (options.bootstrap < 5) {
           closeButton.html('&times;');
         }
@@ -465,7 +468,7 @@
     });
 
     /*
-    The remainder of this method simply deals with adding our dialog element to the DOM, augmenting it with 
+    The remainder of this method simply deals with adding our dialog element to the DOM, augmenting it with
     Bootstrap's modal functionality and then giving the resulting object back to our caller
     */
 
@@ -590,7 +593,7 @@
       }
       else {
         let el = input[0];
-        
+
         // Clear any previous custom error message
         if(options.errorMessage) {
           el.setCustomValidity('');
@@ -601,8 +604,8 @@
           if(options.errorMessage){
             el.setCustomValidity(options.errorMessage);
           }
-          
-          if(el.reportValidity) { 
+
+          if(el.reportValidity) {
             el.reportValidity();
           }
 
@@ -904,7 +907,7 @@
   // So in the latter case:
   //
   //    mapArguments(["foo", $.noop], ["message", "callback"])
-  //  
+  //
   //  results in
   //
   //    { message: "foo", callback: $.noop }
@@ -975,8 +978,8 @@
   }
 
 
-  // Checks each button object to see if key is valid. 
-  // This function will only be called by the alert, confirm, and prompt helpers. 
+  // Checks each button object to see if key is valid.
+  // This function will only be called by the alert, confirm, and prompt helpers.
   function validateButtons(options, buttons) {
     let allowedButtons = {};
     each(buttons, function (key, value) {
@@ -1043,13 +1046,13 @@
       options.backdrop = (options.backdrop === false || options.backdrop === 0) ? false : 'static';
     } else {
       options.backdrop = typeof options.backdrop === 'string' && options.backdrop.toLowerCase() === 'static' ? 'static' : true;
-    } 
+    }
 
     // No buttons is still a valid dialog but it's cleaner to always have a buttons object to iterate over, even if it's empty
     if (!options.buttons) {
       options.buttons = {};
     }
-    
+
     buttons = options.buttons;
 
     total = getKeyLength(buttons);
@@ -1084,7 +1087,7 @@
         if (total <= 2 && isPrimary) {
           // always add a primary to the main option in a one or two-button dialog
           button.className = 'btn-primary';
-        } 
+        }
         else {
           // adding both classes allows us to target both BS3 and BS4+ without needing to check the version
           button.className = 'btn-secondary btn-default';
@@ -1117,7 +1120,7 @@
 
 
   function destroyModal(e) {
-    // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog. 
+    // Ensure we don't accidentally intercept hidden events triggered by children of the current dialog.
     // We shouldn't need to handle this anymore, now that Bootstrap namespaces its events, but still worth doing.
     if (e.target === e.data.dialog[0]) {
       e.data.dialog.remove();
