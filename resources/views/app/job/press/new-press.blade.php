@@ -20,7 +20,7 @@
                     data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('jobs.press.store', $customer) }}" autocomplete="off">
+            <form method="POST" action="{{ route('jobs.press.store', $customer) }}">
                 @csrf
                 <div class="modal-body">
 
@@ -38,12 +38,20 @@
 
                     <div class="row">
                         <div class="col">
-                            <x-printforce.inputs.select-input
-                                name="service_id"
-                                id="press_service_id"
-                                label="Service Name"
-                                :options="$press_services"
-                                />
+                            <div class="mb-3">
+                                <label for="service_id" class="form-label">Service Name</label>
+                                <select class="form-select select2-input" name="service_id" id="press_service_id"
+                                    data-fetch_url="{{ route('configuration.print-services.get-service-cost-with-customer-id') }}"
+                                    data-customer_id="{{ $customer->customer_id }}" required>
+
+                                    <option value="" selected>Select one</option>
+
+                                    @foreach ($press_services as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
 
                         </div>
                         <div class="col">
