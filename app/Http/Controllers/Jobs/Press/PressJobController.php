@@ -23,9 +23,7 @@ class PressJobController extends Controller
         protected $model = new PressJob(),
         private $modelName = 'Press Job',
         private $pressJobService = new PressJobService()
-    )
-    {
-    }
+    ){}
 
 
 
@@ -36,6 +34,7 @@ class PressJobController extends Controller
     {
         return view('app.job.press.press-jobs', [
             'jobs' => $this->pressJobService->getLatestPressJobs(),
+            'statistics' => $this->pressJobService->getPressJobStatistics()
         ]);
     }
 
