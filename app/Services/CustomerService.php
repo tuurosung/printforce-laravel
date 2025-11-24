@@ -43,7 +43,7 @@ class CustomerService
                 'embroideryJobs',
                 'pressJobs',
                 'designJobs',
-                'photography_jobs',
+                'photographyJobs',
                 'payments',
                 'customerCategory'
             ])
@@ -225,6 +225,20 @@ class CustomerService
             'total_customers' => $statistics->total_customers,
             'new_customers' => $statistics->new_customers,
         ];
+    }
+
+
+    public static function countNewCustomers()
+    {
+        $statistics = (new self)->getCustomerStatistics();
+        return $statistics['new_customers'];
+    }
+
+
+    public static function countAllCustomers()
+    {
+        $statistics = (new self)->getCustomerStatistics();
+        return $statistics['total_customers'];
     }
 
 
