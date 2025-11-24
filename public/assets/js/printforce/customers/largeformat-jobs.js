@@ -6,28 +6,9 @@ var service_cost = $('#lf_service').find(":selected").data('cost');
 $("#lf_cost").val(service_cost);
 $('#width').focus()
 
-$('#largeformat_service_id').on('change', function (event) {
-    event.preventDefault();
-
-    var service_id = $(this).val();
-
-    var service_cost = getServiceCost(service_id);
-
-    service_cost.then(function (cost){
-        $('#largeformat_cost').val(cost);
-        calculateLargeFormatTotal();
-    }).catch(function (error) {
-        console.error('Error fetching service cost:', error);
-        $('#largeformat_cost').val(0);
-        $('#largeformat_total').val(0);
-    })
 
 
-    setTimeout(function () {
-        $('#width').focus()
-    }, 300);
 
-});
 
 // reset the width, height, copies and total when the measuring unit changes
 function resetLargeFormatFields() {
