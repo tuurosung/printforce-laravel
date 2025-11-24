@@ -28,8 +28,9 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $countNewCustomers = Customer::countNewCustomers();
+        // $countNewCustomers = Customer::countNewCustomers();
         // $debtorsList = $customer->debtorsList();
+        $countNewCustomers = CustomerService::countNewCustomers();
 
 
         $service_performance = JobController::servicePerformanceAnalytics();
