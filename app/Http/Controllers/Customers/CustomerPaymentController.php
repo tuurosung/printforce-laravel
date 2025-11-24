@@ -6,18 +6,14 @@ use DateTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\CustomerService;
-use App\Models\Customers\Customer;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Traits\HandleResourceActions;
 use App\Services\CustomerPaymentService;
 use App\Models\Customers\CustomerPayment;
-use App\Models\Accounting\OperatingAccount;
 use App\Services\Accounting\AccountService;
-use App\Services\Payments\SendPaymentAlert;
 use App\Services\Alerts\PaymentAlertService;
 use App\Http\Requests\Payments\StoreNewPaymentRequest;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Services\Alerts\MessagingService;
 
 class CustomerPaymentController extends Controller
 {
@@ -33,7 +29,8 @@ class CustomerPaymentController extends Controller
         private $accountService = new AccountService(),
         private $customerService = new CustomerService(),
         private $customerPaymentService = new CustomerPaymentService(),
-        private $paymentAlertService = new PaymentAlertService()
+        private $paymentAlertService = new PaymentAlertService(),
+        private $messagingService = new MessagingService()
     ){}
 
 
@@ -73,20 +70,20 @@ class CustomerPaymentController extends Controller
         $paymentCreated = CustomerPayment::create($data);
 
         if (!$paymentCreated) {
-            return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+            return redirect()->back()->with('error', 'Ooops! We are unable to process the payment at the moment');
         }
 
         // send payment receipt to customer
         $alertSent = $this->paymentAlertService->send(
             $data['customer_id'],
-            $data['amount_paid']
+            (float) $data['amount_paid']
         );
 
         if ($alertSent) {
             return redirect()->back()->with('success', 'Payment receipt sent to customer');
         }
 
-        return redirect()->back()->with('error', 'Ooops! Something went wrong on our side');
+        return redirect()->back()->with('error', 'Ooops! The payment was successful, but we were unable to send a receipt to the customer at the moment');
     }
 
 
