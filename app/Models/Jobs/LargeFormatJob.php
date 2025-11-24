@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Services\PrintService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -62,6 +64,26 @@ class LargeFormatJob extends Model
         'job_completed_at',
         'job_completed_by',
     ];
+
+
+    /**
+     * Scopes ------------------------------------------------------------------------------------------
+     */
+
+
+
+    #[Scope]
+    public function pending(Builder $query): void
+    {
+        $query->where('job_status', 'pending');
+    }
+
+
+    #[Scope]
+    public function completed(Builder $query): void
+    {
+        $query->where('job_status', 'completed');
+    }
 
     /**
      * Attributes -----------------------------------------------------------------------------------------
