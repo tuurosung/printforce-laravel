@@ -16,6 +16,11 @@
         "laravel/pail": "^1.1",
         "laravel/pulse": "^1.4",
         "laravel/tinker": "^2.9",
+        "nyholm/psr7": "^1.8",
+        "railsware/mailtrap-php": "^3.9",
+        "resend/resend-php": "^1.0",
+        "symfony/http-client": "^7.3",
+        "symfony/mailer": "^7.3",
         "typesense/typesense-php": "^5.1"
     },
     "require-dev": {
