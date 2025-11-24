@@ -23,6 +23,8 @@ export const CalculateLargeFormatJobTotal = {
             .add(parent.find($('[name="discount"]'))
 
         ).on('input', () => this.calculateLargeFormatTotal(parent))
+
+        this.calculateLargeFormatTotal(parent);
     },
 
 
