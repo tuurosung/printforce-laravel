@@ -25,9 +25,7 @@ class LargeFormatJobController extends Controller
         private $modelName = "Large Format Job",
         private $largeFormatJob = new LargeFormatJob(),
         private $largeFormatService = new LargeFormatJobService()
-    )
-    {
-    }
+    ){}
 
     /**
      * Display a listing of the resource.
@@ -37,10 +35,6 @@ class LargeFormatJobController extends Controller
 
         $jobs = $this->largeFormatService->getLatestLargeFormatJobs();
         $statistics = $this->largeFormatService->getLargeFormatJobStatistics();
-
-        // $thisMonthsRevenue = LargeFormatJob::sumLargeFormatJobsThisMonth();
-
-        // $thisMonthsRevenueContribution = LargeFormatJobHelpers::monthlyRevenueContribution();
 
         $performanceSummary = $this->largeFormatService->performanceSummary();
 
@@ -59,8 +53,6 @@ class LargeFormatJobController extends Controller
     {
         //
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -115,15 +107,4 @@ class LargeFormatJobController extends Controller
         return $this->handleDelete($largeFormatJob);
     }
 
-
-    public function filterJobs(Request $request)
-    {
-
-        $filtered_jobs = LargeFormatJob::with('customer', 'service')
-            ->whereBetween('date', [$request->start_date, $request->end_date])
-            ->latest()
-            ->get();
-
-        return view('app.job.largeformat.filter-largeformatjobs', compact('filtered_jobs'));
-    }
 }
