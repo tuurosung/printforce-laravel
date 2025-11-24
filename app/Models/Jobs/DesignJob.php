@@ -6,13 +6,15 @@ namespace App\Models\Jobs;
 use App\Traits\ScopedActive;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
-use App\Models\Services\PrintService;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Services\PrintService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DesignJob extends Model
@@ -51,6 +53,20 @@ class DesignJob extends Model
         'date'
     ];
 
+    #[Scope]
+    public function pending(Builder $query): void
+    {
+        $query->where('job_status', 'pending');
+    }
+
+
+    #[Scope]
+    public function completed(Builder $query): void
+    {
+        $query->where('job_status', 'completed');
+    }
+
+
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
@@ -58,6 +74,9 @@ class DesignJob extends Model
 
     public function service()
     {
-        return $this->belongsTo(PrintService::class, 'service_id');
+        return $this->belongsTo(PrintService::class, 'service_id')
+            ->withDefault([
+                'service_name' => 'Undefined'
+            ]);
     }
 }
