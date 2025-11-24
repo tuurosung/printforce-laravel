@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Customers;
 use App\Facades\PrintServices;
 use App\Models\CustomerCategory;
 use App\Models\Services\Service;
-use App\Models\Customers\Customer;
 use App\Services\CustomerService;
-use App\Traits\HandleResourceActions;
+use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Traits\HandleResourceActions;
+use Illuminate\Support\Facades\Session;
 use App\Models\Accounting\OperatingAccount;
+use App\Services\Accounting\AccountService;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
-use App\Services\Accounting\AccountService;
 
 class CustomerController extends Controller
 {
@@ -26,9 +27,7 @@ class CustomerController extends Controller
         private $customer = new Customer(),
         private $accountService = new AccountService(),
         private $customerService = new CustomerService()
-    )
-    {
-    }
+    ){}
 
 
     /**
@@ -73,18 +72,18 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        // set a session variable to track the current customer
-        session(['current_customer' => $customer->customer_id]);
+        Session::put([
+            'current_customer' => $customer->customer_id
+        ]);
 
         return view('app.customer.customer-info', [
-            'customer' => $customer->loadRelations(),
+            'customer' => $customer,
             'payment_accounts' => $this->accountService->getAssetAccounts(),
-            'services' => PrintServices::getServices(),
-            'largeformat_services' => PrintServices::getLargeFormatServices(),
-            'design_services' => PrintServices::getDesignServices(),
-            'embroidery_services' => PrintServices::getEmbroideryServices(),
-            'press_services' => PrintServices::getPressServices(),
-            'photography_services' => PrintServices::getPhotographyServices(),
+            'largeformat_services' => PrintServices::getLargeFormatServicesArray(),
+            'design_services' => PrintServices::getDesignServicesArray(),
+            'embroidery_services' => PrintServices::getEmbroideryServicesArray(),
+            'press_services' => PrintServices::getPressServicesArray(),
+            'photography_services' => PrintServices::getPhotographyServicesArray(),
         ]);
     }
 
