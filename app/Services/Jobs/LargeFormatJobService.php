@@ -13,10 +13,7 @@ class LargeFormatJobService
      */
     public function __construct(
         private $largeFormatJob = new LargeFormatJob()
-    )
-    {
-        //
-    }
+    ){}
 
 
 
@@ -74,17 +71,33 @@ class LargeFormatJobService
     {
         $statistics = $this->largeFormatJob->query()
             ->selectRaw('
-                SUM(CASE WHEN DATE(date) = CURDATE() THEN total ELSE 0 END) as todays_jobs,
-                SUM(CASE WHEN MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_months_jobs,
-                SUM(CASE WHEN YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_years_jobs,
-                SUM(total) as all_time_jobs
+                COUNT(CASE WHEN DATE(date) = CURDATE() THEN 1 ELSE NULL END) as todays_job_count,
+                SUM(CASE WHEN DATE(date) = CURDATE() THEN total ELSE 0 END) as todays_jobs_total,
+
+                COUNT(CASE WHEN MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) THEN 1 ELSE NULL END) as this_months_job_count,
+                SUM(CASE WHEN MONTH(date) = MONTH(CURDATE()) AND YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_months_jobs_total,
+
+                COUNT(CASE WHEN YEAR(date) = YEAR(CURDATE()) THEN 1 ELSE NULL END) as this_years_job_count,
+                SUM(CASE WHEN YEAR(date) = YEAR(CURDATE()) THEN total ELSE 0 END) as this_years_jobs_total,
+
+                COUNT(*) as all_time_job_count,
+                SUM(total) as all_time_jobs_total
+
             ')->first();
 
         return [
-            'todays_jobs' => $statistics->todays_jobs ?? 0,
-            'this_months_jobs' => $statistics->this_months_jobs ?? 0,
-            'this_years_jobs' => $statistics->this_years_jobs ?? 0,
-            'all_time_jobs' => $statistics->all_time_jobs ?? 0,
+
+            'todays_job_count' => $statistics->todays_job_count ?? 0,
+            'todays_jobs_total' => $statistics->todays_jobs_total ?? 0,
+
+            'this_months_job_count' => $statistics->this_months_job_count ?? 0,
+            'this_months_jobs_total' => $statistics->this_months_jobs_total ?? 0,
+
+            'this_years_job_count' => $statistics->this_years_job_count ?? 0,
+            'this_years_jobs_total' => $statistics->this_years_jobs_total ?? 0,
+
+            'all_time_job_count' => $statistics->all_time_job_count ?? 0,
+            'all_time_jobs_total' => $statistics->all_time_jobs_total ?? 0,
         ];
     }
 
@@ -129,14 +142,56 @@ class LargeFormatJobService
     }
 
 
+    public function getTodaysJobCount()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['todays_job_count'] ?? 0;
+    }
+
+    public function getTodaysJobsTotal()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['todays_jobs_total'] ?? 0;
+    }
+
+
+    public function getThisMonthsJobCount()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['this_months_job_count'] ?? 0;
+    }
+
     /**
      * Returns the sum of all large format jobs for the current month.
      * @return float|int
      */
-    public function monthlyJobTotal()
+    public function getMonthlyJobTotal()
     {
         $statistics = $this->getLargeFormatJobStatistics();
-        return $statistics['this_months_jobs'] ?? 0;
+        return $statistics['this_months_jobs_total'] ?? 0;
     }
 
+    public function getThisYearsJobCount()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['this_years_job_count'] ?? 0;
+    }
+
+    public function getThisYearsJobsTotal()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['this_years_jobs_total'] ?? 0;
+    }
+
+    public function getAllTimeJobCount()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['all_time_job_count'] ?? 0;
+    }
+
+    public function getAllTimeJobsTotal()
+    {
+        $statistics = $this->getLargeFormatJobStatistics();
+        return $statistics['all_time_jobs_total'] ?? 0;
+    }
 }

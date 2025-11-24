@@ -5,16 +5,29 @@ namespace App\Services;
 use App\Traits\Cacheable;
 use App\Models\Services\Service;
 use App\Models\Customers\Customer;
+use App\Traits\Services\HasArrayCollections;
+use App\Traits\Services\HasCategoryCollections;
 use PhpParser\Node\Expr\Cast\Array_;
 use App\Models\Services\PrintService;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Collection;
 
 class PrintServicesManager
 {
 
     use Cacheable;
+    use HasArrayCollections;
+    use HasCategoryCollections;
 
     protected $cacheTag = 'print_services';
+
+    protected ?Collection $services = null;
+
+    const LARGE_FORMAT = "001";
+    const DESIGN = "002";
+    const EMBROIDERY = "003";
+    const PRESS = "004";
+    const PHOTOGRAPHY = "005";
 
 
     /**
@@ -31,97 +44,23 @@ class PrintServicesManager
      * @param int|null $categoryId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getServices($categoryId = null)
+    public function getAllServices()
     {
-        $query = PrintService::query();
 
-        if ($categoryId) {
-            $query->where('category_id', $categoryId);
+        if ($this->services === null) {
+            $this->services = PrintService::get();
         }
 
-        return $query->get();
-
-        // return $this->rememberCache(
-        //     'all_services' . ($categoryId ? "_cat_{$categoryId}" : ''),
-        //     function () use ($query) {
-        //         return $query->get();
-        //     }
-        // );
+        return $this->services;
     }
 
-    public function getServicesArray($categoryId = null): array
-    {
-        return $this->getServices($categoryId)
-            ->mapWithKeys(function ($service) {
-                return [$service->service_id => $service->service_name];
-            })
-            ->toArray();
-    }
 
     public function filterServicesByCategory($categoryId)
     {
-        return $this->getServices($categoryId);
+        return $this->getAllServices()
+            ->where('category_id', $categoryId);
     }
 
-    public function getFilteredServicesArray($categoryId): array
-    {
-        return $this->getServicesArray($categoryId);
-    }
-
-
-    /**
-     * Returns all Large Format Services As An Array
-     *
-     * @return array
-     */
-    public function getLargeFormatServices()
-    {
-        return $this->getFilteredServicesArray('001');
-    }
-
-
-    /**
-     * Returns all Design Services As An Array
-     *
-     * @return array
-     */
-    public function getDesignServices()
-    {
-        return $this->getFilteredServicesArray('002');
-    }
-
-
-    /**
-     * Returns all Embroidery Services As An Array
-     *
-     * @return array
-     */
-    public function getEmbroideryServices()
-    {
-        return $this->getFilteredServicesArray('003');
-    }
-
-
-    /**
-     * Returns all Press Services As An Array
-     *
-     * @return array
-     */
-    public function getPressServices()
-    {
-        return $this->getFilteredServicesArray('004');
-    }
-
-
-    /**
-     * Returns all Photography Services As An Array
-     *
-     * @return array
-     */
-    public function getPhotographyServices()
-    {
-        return $this->getFilteredServicesArray('005');
-    }
 
 
     public function getServiceCost($serviceId)
