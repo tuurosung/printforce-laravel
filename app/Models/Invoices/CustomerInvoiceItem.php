@@ -2,7 +2,9 @@
 
 namespace App\Models\Invoices;
 
+use App\Casts\MoneyFormat;
 use App\Models\Services\Service;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Services\PrintService;
 use Illuminate\Database\Eloquent\Model;
@@ -10,13 +12,19 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class CustomerInvoiceItem extends Model
 {
+    use HasFactory;
 
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->subscriber_id = Auth::user()->subscriber_id;
+
+            if (!app()->environment('production')) {
+                $model->subscriber_id = $model->subscriber_id ?? Auth::user()->subscriber_id;
+            }
+
+            // $model->subscriber_id = Auth::user()->subscriber_id;
         });
     }
 
@@ -34,6 +42,11 @@ class CustomerInvoiceItem extends Model
         'quantity',
         'material_unit_cost',
         'details',
+    ];
+
+    protected $casts = [
+        'unit_cost' => MoneyFormat::class,
+        'total' => MoneyFormat::class
     ];
 
 
