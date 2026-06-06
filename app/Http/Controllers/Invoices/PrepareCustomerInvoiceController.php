@@ -22,7 +22,7 @@ class PrepareCustomerInvoiceController extends Controller
 
         return view('app.invoices.prepare-invoice',[
             'customerInvoice' => $customerInvoice,
-            'printServices' => PrintServices::getServices()
+            'printServices' => PrintServices::getAllServices()
         ]);
     }
 }
