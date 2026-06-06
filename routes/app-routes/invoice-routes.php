@@ -1,10 +1,11 @@
 <?php
 
-use App\Models\Invoices\CustomerInvoices;
+use App\Http\Controllers\Invoices\CheckoutCustomerInvoiceController;
 use App\Http\Controllers\Invoices\CustomerInvoiceController;
 use App\Http\Controllers\Invoices\CustomerInvoiceItemController;
 use App\Http\Controllers\Invoices\PrepareCustomerInvoiceController;
-use App\Http\Controllers\Invoices\CheckoutCustomerInvoiceController;
+use App\Http\Controllers\Invoices\PrintInvoiceController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('invoices')
     ->name('invoices.')
@@ -15,12 +16,12 @@ Route::prefix('invoices')
             ->group(function () {
 
                 Route::get('/', 'index')->name('index');
-                Route::get('/create', 'create')->name('create');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/{customerInvoices}', 'show')->name('show');
-                Route::get('/{customerInvoices}/edit', 'edit')->name('edit');
-                Route::put('/{customerInvoices}/update', 'update')->name('update');
-                Route::delete('/{customerInvoices}/delete', 'destroy')->name('destroy');
+                Route::get('create', 'create')->name('create');
+                Route::post('store', 'store')->name('store');
+                Route::get('show/{customerInvoice}', 'show')->name('show');
+                Route::get('edit/{customerInvoice}', 'edit')->name('edit');
+                Route::patch('update/{customerInvoice}/update', 'update')->name('update');
+                Route::delete('delete/{customerInvoice}', 'destroy')->name('delete');
 
             });
 
@@ -35,11 +36,13 @@ Route::prefix('invoices')
                 Route::post('/store/{customerInvoice}', 'store')->name('store');
                 Route::get('/{customerInvoiceItem}', 'show')->name('show');
                 Route::put('/{customerInvoiceItem}', 'update')->name('update');
-                Route::delete('/{customerInvoiceItem}', 'destroy')->name('destroy');
+                Route::delete('delete/{customerInvoiceItem}', 'destroy')->name('destroy');
 
             });
 
         Route::post('/checkout-customer-invoice/{customerInvoice}', CheckoutCustomerInvoiceController::class)
             ->name('checkout-customer-invoice');
+
+        Route::get('/print-invoice/{customerInvoice}', PrintInvoiceController::class)->name('print-invoice');
 
     });
