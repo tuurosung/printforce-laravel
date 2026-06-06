@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Customers;
 
+use App\Contracts\Customers\CustomerServiceContract;
+use App\Data\CustomerData;
 use App\Facades\PrintServices;
-use App\Models\CustomerCategory;
-use App\Models\Services\Service;
-use App\Services\CustomerService;
-use App\Models\Customers\Customer;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Traits\HandleResourceActions;
-use Illuminate\Support\Facades\Session;
-use App\Models\Accounting\OperatingAccount;
-use App\Services\Accounting\AccountService;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
+use App\Models\Accounting\OperatingAccount;
+use App\Models\CustomerCategory;
+use App\Models\Customers\Customer;
+use App\Models\Services\Service;
+use App\Services\Accounting\AccountService;
+use App\Traits\HandleResourceActions;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class CustomerController extends Controller
 {
@@ -22,11 +23,12 @@ class CustomerController extends Controller
     use HandleResourceActions;
 
     public function __construct(
+        private readonly CustomerServiceContract $customerService,
         protected $model = new Customer(),
         private $modelName = 'Customer',
         private $customer = new Customer(),
         private $accountService = new AccountService(),
-        private $customerService = new CustomerService()
+        // private $customerService = new CustomerService()
     ){}
 
 
@@ -63,7 +65,11 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        return $this->handleStore($request->validated());
+        $customer = $this->customerService->createCustomer(
+            CustomerData::from($request)
+        );
+
+        return redirect()->route('customers.customer.info', $customer);
     }
 
 
