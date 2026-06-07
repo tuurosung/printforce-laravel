@@ -4,9 +4,7 @@ namespace App\Data;
 
 use App\Models\Customers\Customer;
 use Illuminate\Validation\Rule;
-use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Data;
-use Symfony\Contracts\Service\Attribute\Required;
 
 class CustomerData extends Data
 {
