@@ -33,7 +33,7 @@
                                 <label for="invoice_type" class="form-label">Invoice Type</label>
                                 <select class="form-select" name="invoice_type" id="invoice_type" required>
                                     <option value="">--- Select one ---</option>
-                                    @foreach (config('printforce.invoice.invoice_types') as $key => $value)
+                                    @foreach (\App\Enums\Invoices\InvoiceTypeEnum::options() as $key => $value)
                                     <option value="{{ $key }}">{{ $value }}</option>
                                     @endforeach
                                 </select>
