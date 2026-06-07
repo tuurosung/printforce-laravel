@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Contracts\Customers\CustomerServiceContract;
 use App\Contracts\Invoices\InvoiceServiceContract;
-use App\Services\Customers\CustomerService;
+use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Domain\Customers\Repositories\CustomerRepository;
+use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
+use App\Domain\Payments\Repositories\PaymentRepository;
 use App\Services\Invoices\CustomerInvoiceService;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,8 +31,13 @@ class BindContractServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            CustomerServiceContract::class,
-            CustomerService::class
+            CustomerRepositoryInterface::class,
+            CustomerRepository::class
+        );
+
+        $this->app->bind(
+            PaymentRepositoryInterface::class,
+            PaymentRepository::class
         );
     }
 }
