@@ -4,10 +4,6 @@ namespace App\Domain\Payments\Services;
 
 
 use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
-use App\Domain\Payments\Models\CustomerPayment;
-use App\Domain\Payments\Repositories\PaymentRepository;
-use App\Services\BaseService;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 class PaymentService
