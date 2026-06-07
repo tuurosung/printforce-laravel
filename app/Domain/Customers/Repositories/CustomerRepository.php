@@ -10,12 +10,13 @@ use App\Models\Jobs\EmbroideryJob;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use App\Models\Jobs\PressJob;
+use App\Services\BaseService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Override;
 
-class CustomerRepository implements CustomerRepositoryInterface
+class CustomerRepository extends BaseService implements CustomerRepositoryInterface
 {
 
     #[Override]
@@ -119,7 +120,7 @@ class CustomerRepository implements CustomerRepositoryInterface
      */
     public function createCustomer(CustomerData $data): Customer
     {
-        return DB::transaction(function () use ($data) {
+        return $this->transaction(function () use ($data) {
             return Customer::create($data->toArray());
         });
     }
