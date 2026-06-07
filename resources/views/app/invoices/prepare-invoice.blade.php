@@ -4,7 +4,7 @@
 
 
 
-<div class="card border-0 col-lg-6 col-md-8 col-12 col-sm-12 mx-auto" style="min-height:70vh;">
+<div class="card border-0 mx-auto" style="min-height:70vh;">
     <div class="card-body px-5">
 
         <h2 class="cal-sans fw-500 mb-5">Prepare Invoice</h2>
@@ -98,7 +98,11 @@
                     <td>{{ $customerInvoiceItem->details }}</td>
                     <td class="text-end">{{ $customerInvoiceItem->total }}</td>
                     <td class="text-end">
-                        <a href="" class="text-danger">Remove</a>
+                        <form action="{{ route('invoices.invoice-items.destroy', $customerInvoiceItem) }}" method="POST">
+                            @csrf
+                            @method('delete')
+                            <button class="btn btn-link m-0 p-0" href="#" type="submit" class="text-danger">Remove</button>
+                        </form>
                     </td>
                     </tr>
                     @endforeach
@@ -160,5 +164,5 @@
 @endsection
 
 @push('stacked-scripts')
-    @vite(['resources/js/modules/invoices/print-service-calculator.js'])
+@vite(['resources/js/modules/invoices/print-service-calculator.js'])
 @endpush
