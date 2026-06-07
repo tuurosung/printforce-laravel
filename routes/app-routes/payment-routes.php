@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\Customers\CustomerPaymentController;
+use App\Domain\Payments\Http\Controllers\PaymentController;
 use App\Http\Controllers\Payments\PaymentsGraphController;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('payments')
     ->name('payments.')
     ->group(function () {
 
-        Route::controller(CustomerPaymentController::class)->group(function () {
+        Route::controller(PaymentController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create/{customer_id}', 'create')->name('new');
             Route::post('/store', 'store')->name('store');
