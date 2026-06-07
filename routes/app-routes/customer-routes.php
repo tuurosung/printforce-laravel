@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Customers\FilterCustomersJson;
+use App\Domain\Customers\Http\Controllers\CustomerController;
+use App\Domain\Customers\Http\Controllers\FilterCustomersController;
+use App\Domain\Customers\Http\Controllers\PrintDebtorsController;
+use App\Domain\Customers\Http\Controllers\ViewDebtorsController;
+use App\Domain\Customers\Http\Controllers\FilterCustomersJson;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Customers\CustomerController;
-use App\Http\Controllers\Customers\FilterCustomersController;
-use App\Http\Controllers\Customers\PrintDebtorsController;
-use App\Http\Controllers\Customers\ViewDebtorsController;
 
 Route::prefix('customers')
     ->name('customers.')
