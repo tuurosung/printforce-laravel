@@ -12,6 +12,7 @@ class PaymentService
         private PaymentRepositoryInterface $paymentRepository
     ) {}
 
+
     public function getLatestPayments(): Collection
     {
         return $this->paymentRepository->getLatest();
@@ -83,5 +84,4 @@ class PaymentService
     ): Collection {
         return $this->paymentRepository->getByDateRange($startDate, $endDate, $customerId);
     }
-
 }
