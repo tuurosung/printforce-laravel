@@ -25,12 +25,13 @@
                         <tr>
                             <th>#</th>
                             <th>Date Created</th>
+                            <th>Type</th>
                             <th>Invoice ID</th>
                             <th>Customer Name</th>
                             <th class="text-end">Sub-Total</th>
                             <th class="text-end">Taxes</th>
                             <th class="text-end">Total</th>
-                            <th></th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,15 +39,16 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $customerInvoice->created_at }}</td>
-                                <td>
-                                    <a href="#">{{ $customerInvoice->invoice_id }}</a>
+                                <td>{{ $customerInvoice->invoice_type?->label() ?? 'Unknown' }}</td>
+                                <td class="text-underline">
+                                    <a href="{{ route('invoices.show', $customerInvoice) }}">{{ $customerInvoice->invoice_id }}</a>
                                 </td>
                                 <td>{{ $customerInvoice->customer->name }}</td>
-                                <td class="text-end">{{ number_format($customerInvoice->sub_total, 2) }}</td>
+                                <td class="text-end hover:underline">{{ $customerInvoice->sub_total }}</td>
                                 <td class="text-end">
                                     {{ number_format($customerInvoice->vat_amount + $customerInvoice->nhil_amount + $customerInvoice->getfund_amount, 2) }}
                                 </td>
-                                <td class="text-end">{{ number_format($customerInvoice->total, 2) }}</td>
+                                <td class="text-end">{{ $customerInvoice->total }}</td>
                                 <td class="text-end">
                                     <div class="dropdown">
                                         <a class="dropdown-toggle" type="button" id="triggerId" data-bs-toggle="dropdown"
@@ -54,8 +56,17 @@
                                             Options
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="triggerId">
-                                            <a class="dropdown-item" href="#">Edit</a>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item print-invoice" href="#" data-url="{{ route('invoices.print-invoice', $customerInvoice) }}">
+                                                <i class="fi fi-rr-print me-1"></i>
+                                                Print
+                                            </a>
+                                            <a class="dropdown-item" href="#">
+                                                <i class="fi fi-rr-edit me-1"></i>Edit</a>
+                                                <form action="{{ route('invoices.delete', $customerInvoice) }}" method="POST">
+                                                    @csrf
+                                            <a class="dropdown-item" href="#">
+                                                <i class="fi fi-rr-trash me-1 text-danger"></i>Delete</a>
+                                                </form>
                                         </div>
                                     </div>
                                 </td>
@@ -70,4 +81,14 @@
 
     @include('app.invoices.modals.create-invoice')
 
+@endsection
+
+
+@section('js')
+    <script>
+        $(document).on('click', '.table tbody .print-invoice', function () {
+            let $url = $(this).data('url')
+            window.open($url, '_blank', 'height = 900, width = 800, scrollbars = yes');
+        })
+    </script>
 @endsection
