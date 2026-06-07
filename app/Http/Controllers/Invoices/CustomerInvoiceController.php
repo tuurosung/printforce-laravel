@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers\Invoices;
 
-use Illuminate\Http\Request;
-use App\Models\CustomerInvoices;
-use App\Models\Customers\Customer;
+use App\Contracts\Invoices\InvoiceServiceContract;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
-use App\Models\Invoices\CustomerInvoice;
-use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Invoices\StoreCustomerInvoiceRequest;
-use App\Services\CustomerService;
+use App\Models\Invoices\CustomerInvoice;
+use App\Services\Customers\CustomerService;
+use Illuminate\Http\Request;
 
 class CustomerInvoiceController extends Controller
 {
+
+    public function __construct(
+        private readonly InvoiceServiceContract $invoiceService
+    ){}
+
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         return view('app.invoices.invoices', [
-            'customerInvoices' => CustomerInvoice::activeInvoices()->get(),
+            'customerInvoices' => $this->invoiceService->getInvoices(),
             'customers' => (new CustomerService())->getAllCustomers(),
         ]);
     }
@@ -38,29 +42,22 @@ class CustomerInvoiceController extends Controller
      */
     public function store(StoreCustomerInvoiceRequest $request)
     {
-        $invoiceCreated = CustomerInvoice::create(
-            $request->validated()
-        );
+        $invoice = $this->invoiceService->createInvoice($request->validated());
 
-        if (!$invoiceCreated) {
-            return redirect()->back()->with('error', 'Failed to create invoice. Please try again.');
-        }
+        $this->invoiceService->setActiveInvoiceSession($invoice);
 
-        Session::put('active_customer_invoice', [
-            'invoice_id' => $invoiceCreated->invoice_id,
-            'customer_id' => $invoiceCreated->customer_id,
-            'customer_category' => $invoiceCreated->customer->category,
-        ]);
-
-        return to_route('invoices.prepare-customer-invoice', $invoiceCreated);
+        return to_route('invoices.prepare-customer-invoice', $invoice);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CustomerInvoice $customerInvoices)
+    public function show(CustomerInvoice $customerInvoice)
     {
-        //
+
+        return view('app.invoices.show', [
+            'customerInvoice' => $customerInvoice
+        ]);
     }
 
     /**
