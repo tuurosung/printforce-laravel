@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers\Dashboards;
 
-use Illuminate\Http\Request;
-use App\Services\CustomerService;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Domain\Customers\Services\CustomerService;
+use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
+use App\Domain\Payments\Models\CustomerPayment;
 use App\Http\Controllers\Controller;
-use App\Services\ExpenditureService;
-use App\Services\CustomerPaymentService;
-use App\Models\Customers\CustomerPayment;
 use App\Http\Controllers\Jobs\JobController;
+use App\Models\Customers\Customer;
 use App\Services\Accounting\AccountService;
+use App\Services\CustomerPaymentService;
+use App\Services\ExpenditureService;
 use App\Services\Jobs\CustomerJobService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
 
     public function __construct(
-        private CustomerService $customerService,
-        private CustomerPaymentService $customerPaymentService,
+        private readonly CustomerRepositoryInterface $customerService,
+        private readonly PaymentRepositoryInterface $paymentService,
         private ExpenditureService $expenditureService,
         private AccountService $accountService,
     ){}
@@ -28,13 +30,14 @@ class DashboardController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $statistics = $this->customerService->getCustomerStatistics();
+        $payment_statistics = $this->paymentService->getStatistics();
         // $countNewCustomers = Customer::countNewCustomers();
         // $debtorsList = $customer->debtorsList();
-        $countNewCustomers = CustomerService::countNewCustomers();
 
 
         $service_performance = JobController::servicePerformanceAnalytics();
-        $customer_rankings = CustomerService::getCustomerRanking();
+        // $customer_rankings = CustomerService::getCustomerRanking();
 
         $payment_graph = CustomerPayment::paymentGraph();
 
@@ -42,11 +45,11 @@ class DashboardController extends Controller
 
 
         return view('app.dashboard.dashboard', [
-            'todays_payments' => $this->customerPaymentService->getTodaysPaymentTotal(),
-            'monthly_payments' => $this->customerPaymentService->getMonthlyPaymentTotal(),
+            'todays_payments' =>  $payment_statistics['todays_payment_total'],
+            'monthly_payments' => $payment_statistics['months_payment_total'],
             'monthly_expenditure' => $expenditure_statistics['monthly_expenditure'],
-            'countNewCustomers' => $countNewCustomers,
-            'customer_rankings' => $customer_rankings,
+            'countNewCustomers' => $statistics['total_customers'],
+            'customer_rankings' => $this->customerService->getCustomerRanking(),
             'service_performance' => $service_performance,
             'payment_graph' => $payment_graph,
 
