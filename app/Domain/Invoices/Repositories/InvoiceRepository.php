@@ -102,8 +102,8 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
 
     public function checkout(CustomerInvoice $invoice): void
     {
-        DB::transaction(function () use ($invoice) {
-            $this->recalculateTotals($invoice);
+        $this->transaction(function () use ($invoice) {
+
             $invoice->update([
                 'status' => 'active'
             ]);
