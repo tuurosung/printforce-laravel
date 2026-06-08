@@ -4,15 +4,13 @@ namespace App\Domain\Customers\Http\Controllers;
 
 use App\Data\CustomerData;
 use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
-use App\Facades\PrintServices;
+use App\Domain\Customers\Services\CustomerService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
-use App\Models\CustomerCategory;
 use App\Models\Customers\Customer;
-use App\Services\Accounting\AccountService;
 use App\Traits\HandleResourceActions;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\RedirectResponse;
 
 class CustomerController extends Controller
 {
@@ -20,9 +18,8 @@ class CustomerController extends Controller
     use HandleResourceActions;
 
     public function __construct(
-        private readonly CustomerRepositoryInterface $customerService,
-        protected $model = new Customer(),
-        private $accountService = new AccountService(),
+        private readonly CustomerRepositoryInterface $customers,
+        private readonly CustomerService $customerService,
     ){}
 
 
@@ -31,15 +28,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $data = [
-            'customers' =>  $this->customerService->getLatestCustomers(),
-            'statistics' => $this->customerService->getCustomerStatistics(),
-            'total_jobs' => 0,
-            'total_payments' => 0,
-            'total_balance' => 0,
-        ];
 
-        return view('app.customer.customers', $data);
+        return view('app.customer.customers', $this->customerService->getIndexData());
     }
 
 
@@ -57,9 +47,9 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(StoreCustomerRequest $request): RedirectResponse
     {
-        $customer = $this->customerService->createCustomer(
+        $customer = $this->customers->createCustomer(
             CustomerData::from($request)
         );
 
@@ -72,19 +62,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        Session::put([
-            'current_customer' => $customer->customer_id
-        ]);
-
-        return view('app.customer.customer-info', [
-            'customer' => $customer,
-            'payment_accounts' => $this->accountService->getAssetAccounts(),
-            'largeformat_services' => PrintServices::getLargeFormatServicesArray(),
-            'design_services' => PrintServices::getDesignServicesArray(),
-            'embroidery_services' => PrintServices::getEmbroideryServicesArray(),
-            'press_services' => PrintServices::getPressServicesArray(),
-            'photography_services' => PrintServices::getPhotographyServicesArray(),
-        ]);
+        return view('app.customer.customer-info',
+            $this->customerService->getShowData($customer)
+        );
     }
 
 
@@ -100,22 +80,19 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
-       return $this->handleUpdate($request, $customer);
+       $this->customers->updateCustomer($customer, CustomerData::from($request));
+       return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): RedirectResponse
     {
-        // Check if the customer has any jobs or payments
-        if ($customer->customerJobsCount > 0  || $customer->customerCredit > 0) {
-            return redirect()->back()->with('error', 'Customer cannot be deleted because they have associated jobs or payments.');
-        }
-
-        return $this->handleDelete($customer);
+        $this->customers->deleteCustomer($customer);
+        return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 }
