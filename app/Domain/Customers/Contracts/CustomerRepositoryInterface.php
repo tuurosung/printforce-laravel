@@ -11,11 +11,12 @@ interface CustomerRepositoryInterface
 
     // CRUD Operations
     public function createCustomer(CustomerData $data): Customer;
-    public function updateCustomer(Customer $customer, CustomerData $data): bool;
-    public function deleteCustomer(Customer $customer): bool;
+    public function updateCustomer(Customer $customer, CustomerData $data): Customer;
+    public function deleteCustomer(Customer $customer): void;
 
 
     // lifecycle
+    public function setCustomerSession(Customer $customer): void;
     public function getLatestCustomers(): Collection;
     public function filterCustomers(string $searchTerm): Collection;
     public function getAllCustomers(): Collection;
