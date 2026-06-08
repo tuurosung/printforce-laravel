@@ -2,105 +2,82 @@
 
 namespace App\Domain\Customers\Services;
 
-use App\Domain\Customers\Repositories\CustomerRepository;
+
+use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Facades\PrintServices;
 use App\Models\Customers\Customer;
-use App\Models\Jobs\DesignJob;
-use App\Models\Jobs\EmbroideryJob;
-use App\Models\Jobs\LargeFormatJob;
-use App\Models\Jobs\PhotographyJob;
-use App\Models\Jobs\PressJob;
+use App\Services\Accounting\AccountService;
 use App\Traits\Cacheable;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Facades\DB;
 
 class CustomerService
 {
     use Cacheable;
 
     public function __construct(
-        private CustomerRepository $customerRepository
+        private readonly CustomerRepositoryInterface $customers,
+        private AccountService $accountService
     ){}
+
+
+    public function getLatestCustomers(): Collection
+    {
+        return $this->customers->getLatestCustomers();
+    }
+
+
+    public function getCustomerStatistics(): array
+    {
+        return $this->customers->getCustomerStatistics();
+    }
 
 
     public function getCustomerRanking(): Collection
     {
-            $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('COUNT(job_id) as count_largeformat_jobs')])
-                ->groupBy('customer_id');
-
-            $embroideryJobs = EmbroideryJob::select(['customer_id', DB::raw('COUNT(job_id) as count_embroidery_jobs')])
-                ->groupBy('customer_id');
-
-            $designJobs = DesignJob::select(['customer_id', DB::raw('COUNT(job_id) as count_design_jobs')])
-                ->groupBy('customer_id');
-
-            $pressJobs = PressJob::select(['customer_id', DB::raw('COUNT(job_id) as count_press_jobs')])
-                ->groupBy('customer_id');
-
-            $photographyJobs = PhotographyJob::select(['customer_id', DB::raw('COUNT(job_id) as count_photography_jobs')])
-                ->groupBy('customer_id');
-
-
-            $customerRanking = Customer::select('customers.customer_id')->select('customers.name')
-                ->selectRaw('
-                COALESCE(large_format_jobs.count_largeformat_jobs,0) +
-                COALESCE(embroidery_jobs.count_embroidery_jobs,0) +
-                COALESCE(design_jobs.count_design_jobs,0)  +
-                COALESCE(press_jobs.count_press_jobs,0) +
-                COALESCE(photography_jobs.count_photography_jobs,0)
-
-                as total_jobs
-            ')
-                ->leftJoinSub($largeFormatJobs, 'large_format_jobs', function (JoinClause $joinClause) {
-                    $joinClause->on('customers.customer_id', '=', 'large_format_jobs.customer_id');
-                })
-                ->leftJoinSub($embroideryJobs, 'embroidery_jobs', function (JoinClause $joinClause) {
-                    $joinClause->on('customers.customer_id', '=', 'embroidery_jobs.customer_id');
-                })
-                ->leftJoinSub($designJobs, 'design_jobs', function (JoinClause $joinClause) {
-                    $joinClause->on('customers.customer_id', '=', 'design_jobs.customer_id');
-                })
-                ->leftJoinSub($pressJobs, 'press_jobs', function (JoinClause $joinClause) {
-                    $joinClause->on('customers.customer_id', '=', 'press_jobs.customer_id');
-                })
-                ->leftJoinSub($photographyJobs, 'photography_jobs', function (JoinClause $joinClause) {
-                    $joinClause->on('customers.customer_id', '=', 'photography_jobs.customer_id');
-                })
-                ->where('customers.status', 'active')
-                ->orderByRaw('total_jobs DESC')
-                ->limit(10)
-                ->get();
-
-            return $customerRanking;
+        return $this->customers->getCustomerRanking();
     }
 
 
-    public static function getCustomerStatistics(): array
+    public function filterCustomers(string $searchTerm): Collection
     {
-        $carbonNow = Carbon::now();
+        return $this->customers->filterCustomers($searchTerm);
+    }
 
-        $statistics = Customer::query()
-            ->selectRaw('
-                COUNT(*) as total_customers,
-                COUNT(CASE WHEN created_at >= ? AND created_at >= ? THEN 1 END) as new_customers
-            ',[
-                $carbonNow->subDays(30)->format('Y-m-d'), // New customers in the last 30 days
-                $carbonNow->format('Y-m-d') // Current date
-            ])
-            ->first();
 
+    // CRUD Operations------------------------------------------------------------------------------------
+
+
+    public function countNewCustomers()
+    {
+        return $this->customers->getCustomerStatistics()['new_customers'];
+    }
+
+
+    public function getIndexData(): array
+    {
         return [
-            'total_customers' => $statistics->total_customers,
-            'new_customers' => $statistics->new_customers,
+            'total_customers' => $this->customers->getCustomerStatistics()['total_customers'],
+            'new_customers' => $this->countNewCustomers(),
+            'statistics' => $this->getCustomerStatistics(),
+            'customers' => $this->getLatestCustomers(),
+            'total_jobs' => 0,
+            'total_payments' => 0,
+            'total_balance' => 0,
         ];
     }
 
 
-    public static function countNewCustomers()
+    public function getShowData(Customer $customer): array
     {
-        $statistics = (new self)->getCustomerStatistics();
-        return $statistics['new_customers'];
+        return [
+            'customer' => $customer,
+            'payment_accounts' => $this->accountService->getAssetAccounts(),
+            'largeformat_services' => PrintServices::getLargeFormatServicesArray(),
+            'design_services' => PrintServices::getDesignServicesArray(),
+            'embroidery_services' => PrintServices::getEmbroideryServicesArray(),
+            'press_services' => PrintServices::getPressServicesArray(),
+            'photography_services' => PrintServices::getPhotographyServicesArray(),
+        ];
     }
 
 }
