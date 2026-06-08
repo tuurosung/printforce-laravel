@@ -17,6 +17,12 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
     ){}
 
 
+    public function getInvoices(array $filters = []): Collection
+    {
+        return CustomerInvoice::get();
+    }
+
+
     public function createInvoice(array $data): CustomerInvoice
     {
         return $this->transaction(function () use ($data) {
@@ -24,7 +30,99 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
         });
     }
 
+
+    public function addItem(CustomerInvoice $invoice, array $data): bool
+    {
+        $item = CustomerInvoiceItem::create([
+            'invoice_id' => $invoice->invoice_id,
+            ...$data
+        ]);
+
+        if ($item) {
+            $this->recalculateTotals($invoice);
+        }
+
+        return true;
+    }
+
+
+    public function updateItem(int $itemId, array $data): bool
+    {
+        return CustomerInvoiceItem::findOrFail('invoice_item_id', $itemId)
+            ->update($data);
+    }
+
+
+    #[Override]
+    public function removeItem(CustomerInvoiceItem $customerInvoiceItem): bool
+    {
+        return $customerInvoiceItem->delete();
+    }
+
+
+    /**
+     * Recalculate invoice totals
+     *
+     * @param CustomerInvoice $invoice
+     * @return void
+     */
+    #[Override]
+    public function recalculateTotals(CustomerInvoice $invoice): void
+    {
+        $subTotal = $invoice->customerInvoiceItems()
+            ->sum('total');
+
+        $invoice->update([
+            'sub_total' => $subTotal,
+            // 'total' => $this->applyCharges($subTotal, $invoice)
+        ]);
+    }
+
+
+    protected function applyCharges(
+        int $subTotal,
+        CustomerInvoice $invoice
+    ): int {
+        return $subTotal;
+    }
+
+
+    // Lifecycle
+    public function checkout(CustomerInvoice $invoice): void
+    {
+        $this->transaction(function () use ($invoice) {
+
+            $invoice->update([
+                'status' => 'active'
+            ]);
+
+            $this->clearActiveInvoiceSession();
+        });
+    }
+
+
+    public function cancel(CustomerInvoice $invoice): void
+    {
+        $invoice->update([
+            'status' => 'cancelled',
+            'cancelled_at' => now()
+        ]);
+
+        $this->clearActiveInvoiceSession();
+    }
+
+
+    public function markAsPaid(CustomerInvoice $invoice): void
+    {
+        $invoice->update([
+            'status' => 'paid',
+            'paid_at' => now()
+        ]);
+    }
+
+
     // Session Management
+
     #[Override]
     public function setActiveInvoiceSession(CustomerInvoice $invoice): void
     {
@@ -47,93 +145,5 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
     public function getActiveInvoiceId(): ?string
     {
         return Session::get('active_customer_invoice.invoice_id');
-    }
-
-
-    #[Override]
-    public function recalculateTotals(CustomerInvoice $invoice): void
-    {
-        $subTotal = $invoice->customerInvoiceItems()
-            ->sum('total');
-
-        $invoice->update([
-            'sub_total' => $subTotal,
-            // 'total' => $this->applyCharges($subTotal, $invoice)
-        ]);
-    }
-
-
-    protected function applyCharges(
-        int $subTotal,
-        CustomerInvoice $invoice
-    ): int {
-        return $subTotal;
-    }
-
-
-    public function updateItem(int $itemId, array $data): bool
-    {
-        return CustomerInvoiceItem::findOrFail('invoice_item_id', $itemId)
-            ->update($data);
-    }
-
-
-    #[Override]
-    public function removeItem(CustomerInvoiceItem $customerInvoiceItem): bool
-    {
-        return $customerInvoiceItem->delete();
-    }
-
-
-    public function addItem(CustomerInvoice $invoice, array $data): bool
-    {
-        $item = CustomerInvoiceItem::create([
-            'invoice_id' => $invoice->invoice_id,
-            ...$data
-        ]);
-
-        if ($item) {
-            $this->recalculateTotals($invoice);
-        }
-
-        return true;
-    }
-
-
-    public function checkout(CustomerInvoice $invoice): void
-    {
-        $this->transaction(function () use ($invoice) {
-
-            $invoice->update([
-                'status' => 'active'
-            ]);
-
-            $this->clearActiveInvoiceSession();
-        });
-    }
-
-
-    public function getInvoices(array $filters = []): Collection
-    {
-        return CustomerInvoice::get();
-    }
-
-    public function cancel(CustomerInvoice $invoice): void
-    {
-        $invoice->update([
-            'status' => 'cancelled',
-            'cancelled_at' => now()
-        ]);
-
-        $this->clearActiveInvoiceSession();
-    }
-
-
-    public function markAsPaid(CustomerInvoice $invoice): void
-    {
-        $invoice->update([
-            'status' => 'paid',
-            'paid_at' => now()
-        ]);
     }
 }
