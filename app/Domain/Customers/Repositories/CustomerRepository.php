@@ -14,12 +14,12 @@ use App\Services\BaseService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Override;
 
 class CustomerRepository extends BaseService implements CustomerRepositoryInterface
 {
 
-    #[Override]
     public function getAllCustomers(): Collection
     {
         return Customer::all();
@@ -32,24 +32,24 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
     }
 
 
-    #[Override]
     public function getLatestCustomers(): Collection
     {
         return Customer::latest()->take(100)->get();
     }
 
 
-    #[Override]
     public function filterCustomers(string $searchTerm): Collection
     {
-        return Customer::whereLike('name', $searchTerm)
-            ->orWhereLike('phone', $searchTerm)
-            ->orWhereLike('category', $searchTerm)
+        return Customer::where(function($query) use($searchTerm) {
+                $query->whereLike('name', $searchTerm)
+                    ->orWhereLike('phone', $searchTerm)
+                    ->orWhereLike('category', $searchTerm);
+            })
             ->limit(10)
             ->get();
     }
 
-    #[Override]
+
     public function getCustomerRanking(): Collection
     {
         $largeFormatJobs = LargeFormatJob::select(['customer_id', DB::raw('COUNT(job_id) as count_largeformat_jobs')])
@@ -97,21 +97,29 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
             ->get();
     }
 
-    #[Override]
+
     public static function getCustomerStatistics(): array
     {
         $carbonNow = Carbon::now();
 
         $statistics = Customer::query()
-            ->selectRaw('COUNT(*) as total_customers, COUNT(CASE WHEN created_at >= ? THEN 1 END) as new_customers', [
-                $carbonNow->subDays(30)->format('Y-m-d'),
-            ])
+            ->selectRaw('
+                    COUNT(*) as total_customers,
+                    COUNT(CASE WHEN created_at >= ? THEN 1 END) as new_customers
+                ',
+                [$carbonNow->subDays(30)->format('Y-m-d')])
             ->first();
 
         return [
             'total_customers' => $statistics->total_customers,
             'new_customers' => $statistics->new_customers,
         ];
+    }
+
+
+    public function setCustomerSession(Customer $customer): void
+    {
+        Session::put(['current_customer' => $customer->customer_id]);
     }
 
 
@@ -126,14 +134,23 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
     }
 
 
-    public function updateCustomer(Customer $customer, CustomerData $data): bool
+    public function updateCustomer(Customer $customer, CustomerData $data): Customer
     {
-        return $customer->update($data->toArray());
+        $customer->update($data->toArray());
+        return $customer->refresh();
     }
 
 
-    public function deleteCustomer(Customer $customer): bool
+    public function deleteCustomer(Customer $customer): void
     {
-        return $customer->delete();
+        if ($customer->customerJobsCount > 0) {
+            throw new \DomainException(
+                'Customer cannot be deleted because they have associated jobs.'
+            );
+        }
+
+        $this->attempt(function () use ($customer) {
+            $customer->delete();
+        });
     }
 }
