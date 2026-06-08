@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Invoices;
 
-use App\Contracts\Invoices\InvoiceServiceContract;
+use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Domain\Invoices\Contracts\InvoiceRepositoryInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Invoices\StoreCustomerInvoiceRequest;
 use App\Models\Invoices\CustomerInvoice;
-use App\Services\Customers\CustomerService;
 use Illuminate\Http\Request;
 
 class CustomerInvoiceController extends Controller
 {
 
     public function __construct(
-        private readonly InvoiceServiceContract $invoiceService
+        private readonly InvoiceRepositoryInterface $invoiceService,
+        private readonly CustomerRepositoryInterface $customerService
     ){}
 
 
@@ -25,7 +26,7 @@ class CustomerInvoiceController extends Controller
     {
         return view('app.invoices.invoices', [
             'customerInvoices' => $this->invoiceService->getInvoices(),
-            'customers' => (new CustomerService())->getAllCustomers(),
+            'customers' => $this->customerService->getAllCustomers(),
         ]);
     }
 
