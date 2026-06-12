@@ -2,6 +2,7 @@
 
 namespace App\Models\Customers;
 
+use App\Enums\Customers\CustomerCategoryEnum;
 use App\Traits\Customers\HasBalance;
 use App\Traits\Customers\HasCategories;
 use App\Traits\Customers\HasInvoices;
@@ -9,15 +10,16 @@ use App\Traits\Customers\HasJobs;
 use App\Traits\Customers\HasPayments;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
+    use SoftDeletes;
+
     use HasFactory;
     use ScopedActive;
     use ScopedToSubscriber;
@@ -52,27 +54,17 @@ class Customer extends Model
         'customer_id',
         'name',
         'phone',
-        'category'
+        'category',
     ];
 
 
-    /**
-     * Scopes -----------------------------------------------------------------------
-     */
+    protected $casts = [
+        'created_at' => 'datetime',
+        'debit' => 'decimal: 2',
+        'credit' => 'decimal: 2',
+        'category' => CustomerCategoryEnum::class
+    ];
 
-
-
-    /**
-     * Returns the definition of the customer category description.
-     *
-     * @return Attribute
-     */
-    public function customerCategoryDescription() : Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->customerCategory?->category_name ?? 'No Category Assigned'
-        );
-    }
 
 
 }
