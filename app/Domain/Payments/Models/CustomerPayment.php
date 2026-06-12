@@ -10,9 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Accounting\OperatingAccount;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+#[Fillable(['subscriber_id', 'customer_id', 'payment_id', 'amount_paid', 'account_number', 'payment_date'])]
 class CustomerPayment extends Model
 {
     use SoftDeletes;
@@ -36,15 +38,6 @@ class CustomerPayment extends Model
     protected $table = 'payments';
     protected $primaryKey = 'payment_id';
     public $incrementing = false;
-
-    protected $fillable = [
-        'subscriber_id',
-        'customer_id',
-        'payment_id',
-        'amount_paid',
-        'account_number',
-        'payment_date',
-    ];
 
 
     public function customer(): BelongsTo
