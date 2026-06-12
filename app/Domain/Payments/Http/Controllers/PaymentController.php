@@ -33,10 +33,11 @@ class PaymentController extends Controller
     public function index()
     {
 
-        // $customers = Customer::all();
+        $customers = $this->customerService->getCustomersArray();
 
         $data = [
             'total' => 0,
+            'customers' => $customers,
             'payments' => $this->customerPaymentService->getLatest(),
             'statistics' => $this->customerPaymentService->getStatistics(),
             'payment_accounts' => $this->accountService->getAssetAccounts()
@@ -93,12 +94,7 @@ class PaymentController extends Controller
      */
     public function edit(CustomerPayment $customerPayment)
     {
-        $payment_id = $customerPayment->id;
-
-        $payment = CustomerPayment::find($payment_id);
-
         $data = [
-            'payment' => $payment,
             'customers' => $this->customerService->getCustomersArray(),
             'payment_accounts' => $this->accountService->getAssetAccounts(),
             'customerPayment' => $customerPayment,
