@@ -2,6 +2,7 @@
 
 namespace App\Models\Customers;
 
+use App\Casts\MoneyFormat;
 use App\Enums\Customers\CustomerCategoryEnum;
 use App\Traits\Customers\HasBalance;
 use App\Traits\Customers\HasCategories;
@@ -10,12 +11,13 @@ use App\Traits\Customers\HasJobs;
 use App\Traits\Customers\HasPayments;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+#[Fillable(['subscriber_id', 'customer_id', 'name', 'phone', 'category'])]
 class Customer extends Model
 {
     use SoftDeletes;
@@ -49,22 +51,14 @@ class Customer extends Model
     protected $keyType = 'string';
 
 
-    protected $fillable = [
-        'subscriber_id',
-        'customer_id',
-        'name',
-        'phone',
-        'category',
-    ];
-
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'debit' => 'decimal: 2',
-        'credit' => 'decimal: 2',
-        'category' => CustomerCategoryEnum::class
-    ];
-
-
-
+    protected function casts(): array
+    {
+        return [
+            'name' => 'string',
+            'phone' => 'string',
+            'debit' => MoneyFormat::class,
+            'credit' => MoneyFormat::class,
+            'category' => CustomerCategoryEnum::class
+        ];
+    }
 }
