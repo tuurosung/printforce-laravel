@@ -2,15 +2,17 @@
 
 namespace App\Services;
 
-use App\Traits\Cacheable;
-use App\Models\Services\Service;
+use App\Domain\PrintServices\Contracts\PrintServiceRepositoryInterface;
+use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
+use App\Models\Services\PrintService;
+use App\Models\Services\Service;
+use App\Traits\Cacheable;
 use App\Traits\Services\HasArrayCollections;
 use App\Traits\Services\HasCategoryCollections;
-use PhpParser\Node\Expr\Cast\Array_;
-use App\Models\Services\PrintService;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Session;
+use PhpParser\Node\Expr\Cast\Array_;
 
 class PrintServicesManager
 {
@@ -23,58 +25,34 @@ class PrintServicesManager
 
     protected ?Collection $services = null;
 
-    const LARGE_FORMAT = "001";
-    const DESIGN = "002";
-    const EMBROIDERY = "003";
-    const PRESS = "004";
-    const PHOTOGRAPHY = "005";
 
 
-    /**
-     * Create a new class instance.
-     */
-    public function __construct()
+    public function __construct(
+        private readonly PrintServiceRepositoryInterface $printServices
+    ){}
+
+
+    public function getServicesByCategory(ServiceCategoryEnum $category): Collection
     {
-        //
-    }
-
-    /**
-     * Get all services or filter by category and status.
-     *
-     * @param int|null $categoryId
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllServices()
-    {
-
-        if ($this->services === null) {
-            $this->services = PrintService::get();
-        }
-
-        return $this->services;
+        return $this->printServices->filterByCategory($category);
     }
 
 
-    public function filterServicesByCategory($categoryId)
+    public function getServicesByCategoryAsArray(ServiceCategoryEnum $category): array
     {
-        return $this->getAllServices()
-            ->where('category_id', $categoryId);
+        return $this->printServices->filterByCategory($category)
+            ->mapWithKeys(function ($service){
+                return [
+                    $service->service_id => $service->service_name
+                ];
+            })
+            ->toArray();
     }
 
 
-
-    public function getServiceCost($serviceId)
+    public function getServiceCost(Customer $customer, PrintService $service): float
     {
-        $service = PrintService::find($serviceId);
-        $customer = Customer::find(session('current_customer'));
-
-        if (!$service) {
-            return null;
-        }
-
-        $serviceCost = $service[$customer->category];
-
-        return $serviceCost;
+        return $service->priceFor($customer);
     }
 
 
@@ -94,11 +72,6 @@ class PrintServicesManager
         ];
     }
 
-
-    private function findService($serviceId)
-    {
-        return PrintService::where('service_id', $serviceId)->first();
-    }
 
 
     public static function dropCaches()
