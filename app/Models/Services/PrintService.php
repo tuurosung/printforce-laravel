@@ -2,16 +2,22 @@
 
 namespace App\Models\Services;
 
+use App\Enums\Services\ServiceCategoryEnum;
+use App\Models\Customers\Customer;
+use App\Models\Scopes\SubscriberScope;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Scopes\SubscriberScope;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 #[ScopedBy(SubscriberScope::class)]
+#[Fillable(['subscriber_id', 'service_id', 'service_name', 'category_id', 'individual', 'artist', 'institution'])]
 class PrintService extends Model
 {
     use HasFactory;
@@ -48,15 +54,27 @@ class PrintService extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = [
-        'subscriber_id',
-        'service_id',
-        'service_name',
-        'category_id',
-        'individual',
-        'artist',
-        'institution'
-    ];
+
+    protected function casts(): array
+    {
+        return [
+
+        ];
+    }
+
+
+
+    #[Scope]
+    protected function inCategory(Builder $query, ServiceCategoryEnum $category): Builder
+    {
+        return $query->where('category_id', $category->value);
+    }
+
+
+    public function priceFor(Customer $customer): float
+    {
+        return $this->{$customer->category->priceColumn()};
+    }
 
 
     public static function getAllServices()
