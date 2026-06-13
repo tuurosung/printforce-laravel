@@ -3,248 +3,107 @@
 
 @section('content')
 
+<x-headers.page-header pageTitle="Jobs" currentPage="Today's Jobs"></x-headers.page-header>
 
-<div class="d-flex justify-content-between mb-5">
-    <div>
-        <h2 class="h2 mb-0">Todays Jobs Summary</h2>
+
+<div class="grid grid-cols-12 gap-6 mb-8">
+    <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
+
+        <x-printforce.cards.colour-card title="Total Jobs" bgColour="primary" :value="$statistics['total']" />
     </div>
-    <div></div>
+    <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
+        <x-printforce.cards.colour-card title="Today's Jobs" bgColour="warning"
+            value="{{ $statistics['todays_jobs_total'] }}" />
+    </div>
 </div>
 
+<div class="card card-body px-2 py-2 mb-9">
+    <div class="flex">
+        <div
+            class="flex bg-gray-100 hover:bg-gray-200 rounded-md transition p-1 dark:bg-gray-700 dark:hover:bg-gray-600">
+            <nav class="flex space-x-2 " aria-label="Tabs" role="tablist">
 
-<div class="row mb-5">
-    <div class="col-md-3">
+                <x-tabs.tab-item id="dashboard-tab" label="Dashboard" icon="paper-plane" dataHsTab="dashboard-content"
+                    :ariaSelected="true" />
+                <x-tabs.tab-item id="jobs-tab" label="Registered Jobs" icon="briefcase" dataHsTab="jobs-content"
+                    :ariaSelected="false" />
+                <x-tabs.tab-item id="invoices-tab" label="Invoices" icon="file-invoice-dollar"
+                    dataHsTab="invoices-content" :ariaSelected="false" />
+                <x-tabs.tab-item label="Payments" icon="sack-dollar" dataHsTab="payments-content"
+                    :ariaSelected="false" />
 
-        <div class="card border-primary">
-            <div class="card-body">
-                <p class="mb-1">Today's Jobs</p>
-                <h4 class="h4 mb-0">GHS {{
-                    number_format(
-                    collect([
-                        $todays_largeformat_jobs->sum('total'),
-                        $todays_embroidery_jobs->sum('total'),
-                        $todays_design_jobs->sum('total')
-                    ])->sum()
-                    , 2)
-                }}</h4>
-            </div>
+            </nav>
         </div>
-
     </div>
-    <div class="col-md-3"></div>
-    <div class="col-md-3"></div>
-    <div class="col-md-3"></div>
+
+    <div class="mt-3">
+        <div id="dashboard-content" role="tabpanel" aria-labelledby="dashboard-tab" class="pt-5"></div>
+    </div>
 </div>
+
+
+
 
 
 <div class="card border-0">
     <div class="card-body">
 
-        <h5 class="h5 mb-4">Large Format Jobs</h5>
-        <div
-            class="table-responsive mb-5">
-            <table
-                class="table table-bordered table-sm">
+        <div class="flex gap-6 mb-8">
+            <div>
+                <div class="">
+                    <label class="form-label">Start Date</label>
+                    <input class="form-control" value="{{ now()->format('Y-m-d') }}">
+                </div>
+            </div>
+            <div>
+                <div class="">
+                    <label class="form-label">End Date</label>
+                    <input class="form-control" value="{{ now()->format('Y-m-d') }}">
+                </div>
+            </div>
+            <div class="flex ">
+                <button type="" class="btn btn-primary mt-auto py-2.5 px-4">
+                    <i class="fi fi-rr-search me-3" aria-hidden="true"></i>Filter Jobs</button>
+            </div>
+        </div>
+
+        <div class="table-responsive mb-5">
+            <table class="table w-full text-sm text-left rtl:text-right text-body">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Job Type</th>
+                        <th scope="col">Service</th>
                         <th scope="col">Customer</th>
-                        <th scope="col" class="text-center">Width</th>
-                        <th scope="col" class="text-center">Height</th>
+                        <th scope="col" class="">Details</th>
                         <th scope="col" class="text-center">Copies</th>
-                        <th scope="col" class="text-end">Discount</th>
-                        <th scope="col" class="text-end">Premium</th>
                         <th scope="col" class="text-end">Total</th>
+                        <th scope="col" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    @php
-                    $i = 1;
-                    @endphp
-
-                    @foreach ($todays_largeformat_jobs as $job)
+                    @foreach ($allJobs as $job)
                     <tr class="">
-                        <td scope="row">{{ $i++ }}</td>
-                        <td>{{ $job->service->service_name }}</td>
-                        <td>{{ $job->customer->name }}</td>
-                        <td class="text-center">{{ $job->width .''.$job->measuring_unit }}</td>
-                        <td class="text-center">{{ $job->height .''.$job->measuring_unit }}</td>
-                        <td class="text-center">{{ $job->copies }}</td>
-                        <td class="text-end">{{ number_format($job->discount, 2) }}</td>
-                        <td class="text-end">{{ number_format($job->premium, 2) }}</td>
+                        <td scope="row">{{ $loop->iteration }}</td>
+                        <td>{{ $job->created_at }}</td>
+                        <td>{{ $job->job_type }}</td>
+                        <td>{{ $job->service?->service_name }}</td>
+                        <td>{{ $job->customer?->name }}</td>
+                        <td class="text-center">{{ $job->details }}</td>
+                        <td class="text-center">{{ $job->unit_cost ?? $job->qty }}</td>
                         <td class="text-end">{{ number_format($job->total, 2) }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('jobs.view-job', [$job->job_id, $job->job_type]) }}" class="underline">
+                                View
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
                     <tr>
-                        <td colspan="8" class="text-end fw-600">Total</td>
-                        <td class="text-end fw-600">{{ number_format($todays_largeformat_jobs->sum('total'), 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-
-        <h5 class="h5 mb-4">Embroidery Jobs</h5>
-        <div
-            class="table-responsive mb-5">
-            <table
-                class="table table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col" class="text-end">Unit Cost</th>
-                        <th scope="col" class="text-center">Qty</th>
-                        <th scope="col" class="text-end">Embr. Cost</th>
-                        <th scope="col" class="text-end">Mat. Purchase Cost</th>
-                        <th scope="col" class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @php
-                    $i = 1;
-                    @endphp
-
-                    @foreach ($todays_embroidery_jobs as $job)
-                    <tr class="">
-                        <td scope="row">{{ $i++ }}</td>
-                        <td>{{ $job->service->service_name }}</td>
-                        <td>{{ $job->customer->name }}</td>
-                        <td class="text-end">{{ number_format($job->unit_cost, 2) }}</td>
-                        <td class="text-center">{{ $job->qty }}</td>
-                        <td class="text-end">{{ number_format($job->embroidery_cost, 2) }}</td>
-                        <td class="text-end">{{ number_format($job->purchase_cost, 2) }}</td>
-                        <td class="text-end">{{ number_format($job->total, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="7" class="text-end fw-600">Total</td>
-                        <td class="text-end fw-600">{{ number_format($todays_embroidery_jobs->sum('total'), 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h5 class="h5 mb-4">Press Jobs</h5>
-        <div
-            class="table-responsive mb-5">
-            <table
-                class="table table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col" class="text-end">Unit Cost</th>
-                        <th scope="col" class="text-center">Qty</th>
-                        <th scope="col" class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @php
-                    $i = 1;
-                    @endphp
-
-                    @foreach ($todays_press_jobs as $job)
-                    <tr class="">
-                        <td scope="row">{{ $i++ }}</td>
-                        <td>{{ $job->service->service_name }}</td>
-                        <td>{{ $job->customer->name }}</td>
-                        <td class="text-end">{{ number_format($job->cost, 2) }}</td>
-                        <td class="text-center">{{ $job->copies }}</td>
-                        <td class="text-end">{{ number_format($job->total, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="5" class="text-end fw-600">Total</td>
-                        <td class="text-end fw-600">{{ number_format($todays_press_jobs->sum('total'), 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <h5 class="h5 mb-4">Design Jobs</h5>
-        <div
-            class="table-responsive mb-5">
-            <table
-                class="table table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col" class="text-end">Unit Cost</th>
-                        <th scope="col" class="text-center">Qty</th>
-                        <th scope="col" class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @php
-                    $i = 1;
-                    @endphp
-
-                    @foreach ($todays_design_jobs as $job)
-                    <tr class="">
-                        <td scope="row">{{ $i++ }}</td>
-                        <td>{{ $job->service->service_name }}</td>
-                        <td>{{ $job->customer->name }}</td>
-                        <td class="text-end">{{ number_format($job->unit_cost, 2) }}</td>
-                        <td class="text-center">{{ $job->copies }}</td>
-                        <td class="text-end">{{ number_format($job->total, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="5" class="text-end fw-600">Total</td>
-                        <td class="text-end fw-600">{{ number_format($todays_design_jobs->sum('total'), 2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-
-        <h5 class="h5 mb-4">Photography Jobs</h5>
-        <div
-            class="table-responsive mb-5">
-            <table
-                class="table table-bordered table-sm">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col" class="text-end">Unit Cost</th>
-                        <th scope="col" class="text-center">Qty</th>
-                        <th scope="col" class="text-end">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @php
-                    $i = 1;
-                    @endphp
-
-                    @foreach ($todays_photography_jobs as $job)
-                    <tr class="">
-                        <td scope="row">{{ $i++ }}</td>
-                        <td>{{ $job->service->service_name }}</td>
-                        <td>{{ $job->customer->name }}</td>
-                        <td class="text-end">{{ number_format($job->unit_cost, 2) }}</td>
-                        <td class="text-center">{{ $job->copies }}</td>
-                        <td class="text-end">{{ number_format($job->total, 2) }}</td>
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="5" class="text-end fw-600">Total</td>
-                        <td class="text-end fw-600">{{ number_format($todays_photography_jobs->sum('total'), 2) }}</td>
+                        <td colspan="6" class="text-end fw-600">Total</td>
+                        <td class="text-end fw-600">{{ number_format($allJobs->sum('total'), 2) }}</td>
                     </tr>
                 </tbody>
             </table>
