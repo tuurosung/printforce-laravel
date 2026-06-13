@@ -12,7 +12,7 @@ interface CustomerRepositoryInterface
     // CRUD Operations
     public function createCustomer(CustomerData $data): Customer;
     public function updateCustomer(Customer $customer, CustomerData $data): Customer;
-    public function deleteCustomer(Customer $customer): void;
+    public function deleteCustomer(Customer $customer): bool;
 
 
     // lifecycle
