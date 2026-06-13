@@ -28,7 +28,6 @@ class CustomerController extends Controller
      */
     public function index()
     {
-
         return view('app.customer.customers', $this->customerService->getIndexData());
     }
 
@@ -92,7 +91,12 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer): RedirectResponse
     {
-        $this->customers->deleteCustomer($customer);
+        try {
+            $this->customerService->deleteCustomer($customer);
+        } catch (\DomainException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 }
