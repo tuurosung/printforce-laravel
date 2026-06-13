@@ -7,6 +7,7 @@ use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
 use App\Facades\PrintServices;
 use App\Models\Customers\Customer;
 use App\Services\Accounting\AccountService;
+use App\Services\PrintServicesManager;
 use App\Traits\Cacheable;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -16,8 +17,21 @@ class CustomerService
 
     public function __construct(
         private readonly CustomerRepositoryInterface $customers,
+        private readonly PrintServicesManager $printServices,
         private AccountService $accountService
     ){}
+
+
+    public function deleteCustomer(Customer $customer): bool
+    {
+        if ($customer->balance > 0) {
+            throw new \DomainException(
+                'Cannot delete customer with balance'
+            );
+        }
+
+        return $this->customers->deleteCustomer($customer);
+    }
 
 
     public function getLatestCustomers(): Collection
@@ -55,11 +69,10 @@ class CustomerService
 
     public function getIndexData(): array
     {
+        $statistics = $this->getCustomerStatistics();
         return [
-            'total_customers' => $this->customers->getCustomerStatistics()['total_customers'],
-            'new_customers' => $this->countNewCustomers(),
-            'statistics' => $this->getCustomerStatistics(),
             'customers' => $this->getLatestCustomers(),
+            'statistics' => $statistics,
             'total_jobs' => 0,
             'total_payments' => 0,
             'total_balance' => 0,
@@ -72,11 +85,9 @@ class CustomerService
         return [
             'customer' => $customer,
             'payment_accounts' => $this->accountService->getAssetAccounts(),
-            'largeformat_services' => PrintServices::getLargeFormatServicesArray(),
-            'design_services' => PrintServices::getDesignServicesArray(),
-            'embroidery_services' => PrintServices::getEmbroideryServicesArray(),
-            'press_services' => PrintServices::getPressServicesArray(),
-            'photography_services' => PrintServices::getPhotographyServicesArray(),
+            'design_services' => $this->printServices->getDesignServicesArray(),
+            'press_services' => $this->printServices->getPressServicesArray(),
+            'photography_services' => $this->printServices->getPhotographyServicesArray(),
         ];
     }
 

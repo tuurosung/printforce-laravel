@@ -28,13 +28,18 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
 
     public function getCustomersArray(): array
     {
-        return Customer::all()->toArray();
+        return Customer::get(['customer_id', 'name'])
+            ->mapWithKeys(function ($customer) {
+                return [$customer->customer_id => $customer->name];
+            })
+            ->toArray();
     }
 
 
     public function getLatestCustomers(): Collection
     {
-        return Customer::latest()->take(100)->get();
+        return Customer::with(['invoices', 'payments'])
+            ->orderBy('created_at', 'desc')->take(100)->get();
     }
 
 
@@ -141,16 +146,10 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
     }
 
 
-    public function deleteCustomer(Customer $customer): void
+    public function deleteCustomer(Customer $customer): bool
     {
-        if ($customer->customerJobsCount > 0) {
-            throw new \DomainException(
-                'Customer cannot be deleted because they have associated jobs.'
-            );
-        }
-
-        $this->attempt(function () use ($customer) {
-            $customer->delete();
+        return $this->transaction(function () use ($customer) {
+            return $customer->delete();
         });
     }
 }
