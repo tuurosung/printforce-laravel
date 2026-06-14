@@ -2,10 +2,11 @@
 
 namespace App\Domain\Customers\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Models\Debtor;
 use App\Http\Controllers\Controller;
+use App\Models\Customers\Customer;
 use App\Services\DebtorService;
+use Illuminate\Http\Request;
 
 class ViewDebtorsController extends Controller
 {
@@ -14,7 +15,7 @@ class ViewDebtorsController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $debtors = DebtorService::getDebtorsListOptimized();
+        $debtors = Debtor::get();
 
         return view('app.customer.debtors', compact('debtors'));
     }
