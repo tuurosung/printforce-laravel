@@ -3,12 +3,12 @@
 namespace App\Domain\Payments\Http\Controllers;
 
 use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
-use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
 use App\Domain\Payments\Models\CustomerPayment;
+use App\Domain\Payments\Services\PaymentAlertService;
+use App\Domain\Payments\Services\PaymentService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\StoreNewPaymentRequest;
 use App\Services\Accounting\AccountService;
-use App\Services\Alerts\PaymentAlertService;
 use App\Traits\HandleResourceActions;
 
 class PaymentController extends Controller
@@ -20,7 +20,7 @@ class PaymentController extends Controller
      * Create a new controller instance.
      */
     public function __construct(
-        private PaymentRepositoryInterface $customerPaymentService,
+        private PaymentService $paymentService,
         private AccountService $accountService,
         private CustomerRepositoryInterface $customerService,
         private PaymentAlertService $paymentAlertService,
@@ -32,18 +32,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-
-        $customers = $this->customerService->getCustomersArray();
-
-        $data = [
-            'total' => 0,
-            'customers' => $customers,
-            'payments' => $this->customerPaymentService->getLatest(),
-            'statistics' => $this->customerPaymentService->getStatistics(),
-            'payment_accounts' => $this->accountService->getAssetAccounts()
-        ];
-
-        return view('app.payments.payments', $data);
+        return view('app.payments.payments', $this->paymentService->IndexData());
     }
 
     /**
@@ -58,26 +47,28 @@ class PaymentController extends Controller
      */
     public function store(StoreNewPaymentRequest $request)
     {
-        $data = $request->validated();
 
-        // create the payment record
-        $paymentCreated = CustomerPayment::create($data);
+        try {
 
-        if (!$paymentCreated) {
-            return redirect()->back()->with('error', 'Ooops! We are unable to process the payment at the moment');
+            $data = $request->validated();
+            $customerPayment = $this->paymentService->createPayment($data);
+
+            // send payment receipt to customer
+            $alertSent = $this->paymentAlertService->send(
+                $data['customer_id'],
+                (float) $data['amount_paid']
+            );
+
+            if ($alertSent) {
+                return redirect()->back()->with('success', 'Payment receipt sent to customer');
+            }
+
+            return redirect()->back()->with('Success', 'Bingo! The payment was successful, but we were unable to send a receipt to the customer at the moment');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
-        // send payment receipt to customer
-        $alertSent = $this->paymentAlertService->send(
-            $data['customer_id'],
-            (float) $data['amount_paid']
-        );
-
-        if ($alertSent) {
-            return redirect()->back()->with('success', 'Payment receipt sent to customer');
-        }
-
-        return redirect()->back()->with('error', 'Ooops! The payment was successful, but we were unable to send a receipt to the customer at the moment');
     }
 
 
@@ -109,7 +100,16 @@ class PaymentController extends Controller
      */
     public function update(StoreNewPaymentRequest $request, CustomerPayment $customerPayment)
     {
-       return $this->handleUpdate($request, $customerPayment);
+        try {
+
+            $data = $request->validated();
+            $this->paymentService->updatePayment($customerPayment, $data);
+
+            return redirect()->back()->with('success', 'Payment updated successfully');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 
@@ -118,7 +118,14 @@ class PaymentController extends Controller
      */
     public function destroy(CustomerPayment $customerPayment)
     {
-        return $this->handleDelete($customerPayment);
+        try {
+
+            $this->paymentService->deletePayment($customerPayment);
+            return redirect()->back()->with('success', 'Payment deleted successfully');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
 }

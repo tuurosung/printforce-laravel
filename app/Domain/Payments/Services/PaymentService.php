@@ -3,66 +3,60 @@
 namespace App\Domain\Payments\Services;
 
 
+use App\Domain\Customers\Services\CustomerService;
 use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
+use App\Domain\Payments\Models\CustomerPayment;
+use App\Services\Accounting\AccountService;
 use Illuminate\Database\Eloquent\Collection;
 
 class PaymentService
 {
     public function __construct(
-        private PaymentRepositoryInterface $paymentRepository
+        private PaymentRepositoryInterface $payments,
+        private CustomerService $customerService,
+        private AccountService $accountService
     ) {}
 
 
     public function getLatestPayments(): Collection
     {
-        return $this->paymentRepository->getLatest();
+        return $this->payments->getLatest();
     }
 
 
-    /**
-     * All five aggregates resolved in one DB round-trip.
-     *
-     * @return array{
-     *     todays_payment_total: float,
-     *     weeks_payment_total: float,
-     *     months_payment_total: float,
-     *     years_payment_total: float,
-     *     all_time_payment_total: float
-     * }
-     */
     public function getPaymentStatistics(): array
     {
-        return $this->paymentRepository->getStatistics();
+        return $this->payments->getStatistics();
     }
 
 
     public function getTodaysPaymentTotal(): float
     {
-        return $this->paymentRepository->getStatistics()['todays_payment_total'];
+        return $this->payments->getStatistics()['todays_payment_total'];
     }
 
 
     public function getWeeklyPaymentTotal(): float
     {
-        return $this->paymentRepository->getStatistics()['weeks_payment_total'];
+        return $this->payments->getStatistics()['weeks_payment_total'];
     }
 
 
     public function getMonthlyPaymentTotal(): float
     {
-        return $this->paymentRepository->getStatistics()['months_payment_total'];
+        return $this->payments->getStatistics()['months_payment_total'];
     }
 
 
     public function getYearlyPaymentTotal(): float
     {
-        return $this->paymentRepository->getStatistics()['years_payment_total'];
+        return $this->payments->getStatistics()['years_payment_total'];
     }
 
 
     public function getAllTimePaymentTotal(): float
     {
-        return $this->paymentRepository->getStatistics()['all_time_payment_total'];
+        return $this->payments->getStatistics()['all_time_payment_total'];
     }
 
 
@@ -73,7 +67,7 @@ class PaymentService
 
     public function getMonthyGraph(): Collection
     {
-        return $this->paymentRepository->getDailyTotalsForCurrentMonth();
+        return $this->payments->getDailyTotalsForCurrentMonth();
     }
 
 
@@ -82,6 +76,37 @@ class PaymentService
         string $endDate,
         ?string $customerId = null
     ): Collection {
-        return $this->paymentRepository->getByDateRange($startDate, $endDate, $customerId);
+        return $this->payments->getByDateRange($startDate, $endDate, $customerId);
+    }
+
+
+    // -------------------------------------------------------------------------------------
+    // CRUD
+    // -------------------------------------------------------------------------------------
+    public function createPayment(array $data): CustomerPayment
+    {
+        return $this->payments->create($data);
+    }
+
+    public function updatePayment(CustomerPayment $customerPayment, array $data): bool
+    {
+        return $this->payments->update($customerPayment, $data);
+    }
+
+    public function deletePayment(CustomerPayment $customerPayment): bool
+    {
+        return $this->payments->delete($customerPayment);
+    }
+
+
+    public function indexData(): array
+    {
+        return [
+            'total' => 0,
+            'customers' => $this->customerService->getCustomersArray(),
+            'payments' => $this->getLatestPayments(),
+            'statistics' => $this->getPaymentStatistics(),
+            'payment_accounts' => $this->accountService->getAssetAccounts()
+        ];
     }
 }

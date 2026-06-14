@@ -22,10 +22,6 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
     ){}
 
 
-    /**
-     * {@inheritDoc}
-     */
-    #[Override]
     public function getLatest(int $limit = 100): Collection
     {
         return $this->model->query()
@@ -35,11 +31,6 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
             ->get();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
-    #[Override]
     public function getStatistics(): array
     {
         $row = $this->model->query()
@@ -61,9 +52,6 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
         ];
     }
 
-
-
-    #[Override]
     public function getDailyTotalsForCurrentMonth(): Collection
     {
         return $this->model->query()
@@ -77,8 +65,6 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
             ->get();
     }
 
-
-    #[Override]
     public function sumByDateRange(string $startDate, string $endDate, ?string $customerId = null): float
     {
         return (float) $this->dateRangeQuery($startDate, $endDate, $customerId)
@@ -86,7 +72,6 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
     }
 
 
-    #[Override]
     public function getByDateRange(string $startDate, string $endDate, ?string $customerId = null): Collection
     {
         return $this->dateRangeQuery($startDate, $endDate, $customerId)
@@ -111,19 +96,19 @@ class PaymentRepository extends BaseService implements PaymentRepositoryInterfac
     }
 
 
-    // delegated to concrete class
+    // CRUD
     public function create(array $data): CustomerPayment
     {
         return $this->model->create($data);
     }
 
-
-    public function createPayment(array $data): CustomerPayment
+    public function update(CustomerPayment $customerPayment, array $data): bool
     {
-        return $this->transaction(function () use ($data): CustomerPayment {
-            $payment = $this->paymentRepository->create($data);
+        return $customerPayment->update($data);
+    }
 
-            return $payment;
-        });
+    public function delete(CustomerPayment $customerpayment): bool
+    {
+        return $customerpayment->delete();
     }
 }

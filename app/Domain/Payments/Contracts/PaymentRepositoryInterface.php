@@ -38,15 +38,15 @@ interface PaymentRepositoryInterface
      */
     public function sumByDateRange(string $startDate, string $endDate, ?string $customerId = null): float;
 
-
     public function getByDateRange(string $startDate, string $endDate, ?string $customerId = null): Collection;
 
 
-    /**
-     * Creates a new payment record
-     *
-     * @param array $data
-     */
+
+    // CRUD
     public function create(array $data): CustomerPayment;
+
+    public function update(CustomerPayment $customerPayment, array $data): bool;
+
+    public function delete(CustomerPayment $customerpayment): bool;
 
 }
