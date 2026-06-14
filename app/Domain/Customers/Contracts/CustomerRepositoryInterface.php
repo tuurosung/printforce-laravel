@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 interface CustomerRepositoryInterface
 {
 
+    public function findCustomer(string $customerId): Customer;
+
     // CRUD Operations
     public function createCustomer(CustomerData $data): Customer;
     public function updateCustomer(Customer $customer, CustomerData $data): Customer;

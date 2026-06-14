@@ -95,7 +95,7 @@ class CustomerController extends Controller
             $this->customerService->deleteCustomer($customer);
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
-        }
+        } 
 
         return redirect()->back()->with('success', 'Customer deleted successfully');
     }

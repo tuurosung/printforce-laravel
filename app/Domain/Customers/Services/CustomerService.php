@@ -22,6 +22,17 @@ class CustomerService
     ){}
 
 
+    public function findCustomer(string $customerId): Customer
+    {
+        return $this->customers->findCustomer($customerId);
+    }
+
+    public function getCustomersArray(): array
+    {
+        return $this->customers->getCustomersArray();
+    }
+
+
     public function deleteCustomer(Customer $customer): bool
     {
         if ($customer->hasBalance()) {

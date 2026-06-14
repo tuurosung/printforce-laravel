@@ -15,10 +15,20 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use Override;
 
 class CustomerRepository extends BaseService implements CustomerRepositoryInterface
 {
+
+    public function __construct(
+        private Customer $model
+    ){}
+
+
+    public function findCustomer(string $customerId): Customer
+    {
+        return $this->model->where('customer_id', $customerId)->firstOrFail();
+    }
+
 
     public function getAllCustomers(): Collection
     {
