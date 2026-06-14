@@ -24,7 +24,7 @@ class CustomerService
 
     public function deleteCustomer(Customer $customer): bool
     {
-        if ($customer->balance > 0) {
+        if ($customer->hasBalance()) {
             throw new \DomainException(
                 'Cannot delete customer with balance'
             );

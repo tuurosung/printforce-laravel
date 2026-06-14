@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait HasBalance
 {
-    public function debit(): Attribute
+    protected function debit(): Attribute
     {
         return Attribute::make(
             get: fn() => $this->jobs_total + $this->invoice_total
@@ -15,7 +15,7 @@ trait HasBalance
 
 
 
-    public function credit(): Attribute
+    protected function credit(): Attribute
     {
         return Attribute::make(
             get: fn() => $this->totalPaid
@@ -23,10 +23,18 @@ trait HasBalance
     }
 
 
-    public function balance(): Attribute
+    protected function balance(): Attribute
     {
         return Attribute::make(
             get: fn() => $this->debit - $this->credit
         );
     }
+
+
+    public function hasBalance(): bool
+    {
+        return $this->balance > 0;
+    }
+
+
 }

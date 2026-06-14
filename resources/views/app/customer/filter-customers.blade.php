@@ -1,65 +1,119 @@
-<table class="table table-sm datatable">
-    <thead class="">
+<table class="table w-full text-sm text-left rtl:text-right text-body">
+    <thead class="text-sm text-dark bg-neutral-secondary-medium border-b border-t border-default-medium">
         <tr>
-            <th>#</th>
-            <th>Date Created</th>
-            <th>Customer Name</th>
-            <th>Type</th>
-            <th>Phone Number</th>
-            <th class="text-end">Jobs</th>
-            <th class="text-end">Paid</th>
-            <th class="text-end">Balance</th>
-            <th class="text-end">Option</th>
+            <th scope="col" class="p-4">
+                #
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Date Created
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Customer Name
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Type
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Phone
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Jobs
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Paid
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Balance
+            </th>
+            <th scope="col" class="px-6 py-3 font-medium">
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
 
         @php
-        $i = 1;
-        $total_jobs = 0;
-        $total_payments = 0;
-        $total_balance = 0;
+$i = 1;
+$total_jobs = 0;
+$total_payments = 0;
+$total_balance = 0;
         @endphp
 
         @foreach ($customers as $customer)
-
-        <tr>
-            <td><?php echo $i++; ?></td>
-            <td>{{ $customer->created_at->format('M d, Y') }}</td>
-            <td class="text-capitalize" style="text-decoration: underline;">
-                <a href="{{ route('customers.customer.info', $customer) }}">
-
-                    {{ strtolower($customer->name) }}
-
-                </a>
-            </td>
-            <td>{{ $customer->customer_category_description }}</td>
-            <td><?php echo $customer['phone']; ?></td>
-            <td class="text-end">
-                <?php echo number_format($customer->customer_debit, 2); ?>
-            </td>
-            <td class="text-end"><?php echo number_format($customer->customer_credit, 2); ?></td>
-            <td class="text-end"><?php echo number_format($customer->customer_balance, 2); ?></td>
-            <td class="text-end">
-                <a href="javascript:void(0)" data-url="{{ route('customers.customer.edit', $customer) }}"
-                    class="text-primary edit  me-3">
-                    <i class="fas fa-pen text-primary "></i>
-                    Edit
-                </a>
-
-                @can('administrator')
-                <form method="POST" action="{{ route('customers.customer.delete', $customer) }}" class="d-inline-block">
-                    @csrf
-                    @method('delete')
-                    <a href="javascript:void(0)" class="text-danger delete">
-                        <i class="fas fa-trash-alt text-danger" aria-hidden="true"></i>
-                        Delete
+            <tr class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                <!-- <td class="w-4 p-4">
+                                                    <div class="flex items-center">
+                                                        <input id="table-checkbox-21" type="checkbox" value=""
+                                                            class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft">
+                                                        <label for="table-checkbox-21" class="sr-only">Table checkbox</label>
+                                                    </div>
+                                                </td> -->
+                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                    {{ $loop->iteration }}
+                </td>
+                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap ">
+                    {{ $customer->created_at->format('Y-m-d') }}
+                </td>
+                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap underline">
+                    <a href="{{ route('customers.customer.info', $customer) }}">
+                        {{ $customer->name }}
                     </a>
-                </form>
-                @endcan
-            </td>
-        </tr>
-
+                </td>
+                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                    {{ $customer->category }}
+                </td>
+                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                    {{ $customer->phone }}
+                </td>
+                <td class="px-6 py-4 text-dark text-end">
+                    {{ $customer->credit }}
+                </td>
+                <td class="px-6 py-4 text-dark text-end">
+                    {{ $customer->debit }}
+                </td>
+                <td class="px-6 py-4 text-dark text-end">
+                    {{ $customer->balance }}
+                </td>
+                <td class="px-6 py-4">
+                    <div class="hs-dropdown relative inline-flex">
+                        <a id="hs-dropdown-default" type="button"
+                            class="hs-dropdown-toggle inline-flex items-center gap-x-2 text-sm font-medium text-primary underline cursor-pointer">
+                            <span class="leading-tight">Options</span>
+                            <i
+                                class="fi fi-rr-angle-down text-base leading-tight font-medium hs-dropdown-open:rotate-180 text-sm"></i>
+                        </a>
+                        <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-md p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full z-10"
+                            aria-labelledby="hs-dropdown-default">
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
+                                href="#">
+                                <i class="fi fi-rr-bell text-lg leading-none"></i>
+                                Newsletter
+                            </a>
+                            <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800
+                                                                hover:bg-gray-100 focus:outline-none focus:bg-gray-100
+                                                                dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700 edit"
+                                href="#" data-url="{{ route('customers.customer.edit', $customer) }}">
+                                <i class="fi fi-rr-edit text-lg leading-none text-primary"></i>
+                                Edit
+                            </a>
+                            @can('administrator')
+                            <form method="POST" action="{{ route('customers.customer.delete', $customer) }}"
+                                class="d-inline">
+                                @csrf
+                                @method('delete')
+                                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800
+                                                                                hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400
+                                                                                dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700 delete"
+                                    href="javascript:void(0)">
+                                    <i class="fi fi-rr-trash text-lg leading-none text-danger"></i>
+                                    Delete
+                                </a>
+                            </form>
+                            @endcan
+                        </div>
+                    </div>
+                </td>
+            </tr>
         @endforeach
 
 

@@ -1,37 +1,21 @@
-<div
-    class="modal fade"
-    id="editCustomerModal"
-    tabindex="-1"
-
-    role="dialog"
-    aria-labelledby="modalTitleId"
-    aria-hidden="true">
+<div id="edit-customer-modal"
+    class="hs-overlay hs-overlay-open:opacity-100 hs-overlay-open:duration-500 hidden size-full fixed top-0 start-0 z-[80] opacity-0 overflow-x-hidden transition-all overflow-y-auto pointer-events-none">
     <div
-        class="modal-dialog"
-        role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                    Edit Customer Information
-                </h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-dismiss="modal"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
+        class="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
+        <div
+            class="flex flex-col bg-white border shadow-sm rounded-md pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+            <x-modals.modal-header  modalId="edit-customer-modal" modalTitle="Edit Customer"/>
             <form id="" autocomplete="off" method="POST" action="{{ route('customers.customer.update', $customer) }}">
                 @csrf
                 @method('patch')
 
-                <div class="modal-body py-4">
+                <div class="p-4 overflow-y-auto">
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Customer's Name</label>
+                    <div class="mb-8">
+                        <label for="name" class="form-label mb-3 block text-black text-sm">Customer's Name</label>
                         <input
                             type="text"
-                            class="form-control form-control-sm"
+                            class="form-control  py-2.5 px-4"
                             name="name"
                             id="name"
                             value="{{ $customer->name}}"
@@ -39,13 +23,13 @@
                             required />
                     </div>
 
-                    <div class="row">
+                    <div class="grid grid-cols-2 gap-6">
                         <div class="col">
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Phone</label>
                                 <input
                                     type="text"
-                                    class="form-control form-control-sm"
+                                    class="form-control   py-2.5 px-4""
                                     name="phone"
                                     id="phone"
                                     value="{{ $customer->phone}}"
@@ -56,14 +40,14 @@
                             <div class="mb-3">
                                 <label for="category" class="form-label">Customer Category</label>
                                 <select
-                                    class="form-select form-select-sm"
+                                    class="form-control form-select-sm"
                                     name="category"
                                     id="category"
                                     required>
 
                                     <option value="">--</option>
                                     @foreach (App\Helpers\CustomerHelper::$customerCategory as $key => $value)
-                                    <option value="{{ $key }}" {{ $customer->category == $key ? 'selected' : '' }}>{{ $value}}</option>
+                                    <option value="{{ $key }}" {{ $customer->category->value == $key ? 'selected' : '' }}>{{ $value}}</option>
                                     @endforeach
 
                                 </select>
@@ -72,19 +56,8 @@
                     </div>
 
                 </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                        data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check me-3"></i>
-                        Update Customer
-                    </button>
-                </div>
+                <x-modals.modal-footer btnLabel="Update Customer" modalId="edit-customer-modal" />
+
             </form>
 
         </div>

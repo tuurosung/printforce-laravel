@@ -148,8 +148,16 @@ class CustomerRepository extends BaseService implements CustomerRepositoryInterf
 
     public function deleteCustomer(Customer $customer): bool
     {
-        return $this->transaction(function () use ($customer) {
-            return $customer->delete();
+        DB::transaction(function () use ($customer) {
+
+            try {
+                $customer->delete();
+            } catch (\DomainException $e) {
+                throw new \DomainException('Failed to delete customer');
+            }
+
         });
+
+        return true;
     }
 }
