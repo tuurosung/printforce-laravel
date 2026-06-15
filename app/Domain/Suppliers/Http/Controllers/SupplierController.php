@@ -38,26 +38,24 @@ class SupplierController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StoreNewSupplierRequest $request)
     {
-        $supplier =  $this->suppliers->create($request->validated());
+        $supplier = $this->supplierService->createSupplier($request->validated());
+
+        if (! $supplier) {
+            return redirect()->back()->with('error', 'Supplier could not be created');
+        }
 
         return redirect()->back()->with('success', 'Supplier created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(Supplier $supplier)
     {
         $supplier->loadRelationships();
@@ -70,38 +68,30 @@ class SupplierController extends Controller
     }
 
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Supplier $supplier)
     {
         return view('app.suppliers.modals.edit-supplier', compact('supplier'));
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreNewSupplierRequest $request, Supplier $supplier)
     {
-        $supplier = $this->suppliers->update($supplier, $request->validated());
+        $isUpdated = $this->supplierService->updateSupplier($supplier, $request->validated());
+
+        if (! $isUpdated) {
+            return redirect()->back()->with('error', 'Supplier could not be updated');
+        }
 
         return redirect()->back()->with('success', 'Supplier updated successfully');
     }
 
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Supplier $supplier)
     {
-        // Prevent deletion of suppliers with supplies or payments
-        if ($supplier->hasPurchases() || $supplier->hasPayments()) {
-            return redirect()->back()->with('error', "Cannot delete supplier with existing supplies or payments.");
+        try {
+            $this->supplierService->deleteSupplier($supplier);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
-
-        return $this->handleDelete($supplier);
     }
 }

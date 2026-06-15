@@ -108,28 +108,28 @@
                         <div>
                             <div class="mb-3">
                                 <label for="" class="form-label">Description</label>
-                                <input type="text" class="form-control form-control-sm" name="description"
+                                <input type="text" class="form-control" name="description"
                                     id="description" required placeholder="eg: Printing of A4 Flyer" required />
                             </div>
                         </div>
                         <div>
                             <div class="mb-3 w-100px">
                                 <label for="" class="form-label">Unit Cost</label>
-                                <input type="number" class="form-control form-control-sm" name="unit_cost"
+                                <input type="number" class="form-control" name="unit_cost"
                                     id="unit_cost" value="" min="1" step="0.01" required placeholder="" required />
                             </div>
                         </div>
                         <div class="w-100px">
                             <div class="mb-3">
                                 <label for="" class="form-label">Qty</label>
-                                <input type="number" class="form-control form-control-sm" name="qty" id="qty" value="1"
+                                <input type="number" class="form-control" name="qty" id="qty" value="1"
                                     step="1" required />
                             </div>
                         </div>
                         <div class="w-100px">
                             <div class="mb-3">
                                 <label for="" class="form-label">Total</label>
-                                <input type="text" class="form-control form-control-sm" name="sub_total" id="total"
+                                <input type="text" class="form-control" name="sub_total" id="total"
                                     value="" readonly />
                             </div>
                         </div>
