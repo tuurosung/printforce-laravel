@@ -8,7 +8,6 @@ use App\Enums\Invoices\InvoiceTypeEnum;
 use App\Models\Customers\Customer;
 use App\Models\Invoices\CustomerInvoiceItem;
 use App\Models\Scopes\SubscriberScope;
-use App\Services\Invoices\CustomerInvoiceService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
@@ -16,8 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Enum;
 
 #[ScopedBy(SubscriberScope::class)]
 #[Fillable(['subscriber_id', 'customer_id', 'invoice_type', 'invoice_date', 'due_date', 'due_date', 'status', 'sub_total', 'total', 'paid_at'])]
@@ -25,6 +25,7 @@ class CustomerInvoice extends Model
 {
 
     use HasFactory;
+    use SoftDeletes;
 
     protected static function boot()
     {
@@ -79,9 +80,6 @@ class CustomerInvoice extends Model
     }
 
 
-    /**
-     * Relationships ------------------------------------------------------------------------------------
-     */
 
 
     public function customer()
@@ -99,9 +97,21 @@ class CustomerInvoice extends Model
     }
 
 
-    public function hasItem(string $serviceId): bool
+    public function hasServiceItems(): bool
     {
-        return $this->invoiceItems()->where('service_id', $serviceId)->exists();
+        return $this->invoiceItems()->exists();
+    }
+
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(CustomerInvoiceItem::class,'invoice_id', 'invoice_id');
+    }
+
+
+    public function isDraft(): bool
+    {
+        return $this->status == InvoiceStatusEnum::DRAFT;
     }
 
 }
