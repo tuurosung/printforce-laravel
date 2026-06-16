@@ -2,13 +2,13 @@
 
 namespace App\Domain\Suppliers\Http\Controllers;
 
-use App\Domain\Suppliers\Contracts\SupplierRepositoryInterface;
+use App\Domain\Suppliers\Http\Requests\StoreNewSupplierRequest;
+use App\Domain\Suppliers\Models\Supplier;
 use App\Domain\Suppliers\Services\SupplierService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Suppliers\StoreNewSupplierRequest;
-use App\Models\Suppliers\Supplier;
 use App\Services\Accounting\AccountService;
 use App\Traits\HandleResourceActions;
+use Illuminate\Support\Facades\Log;
 
 class SupplierController extends Controller
 {
@@ -19,12 +19,8 @@ class SupplierController extends Controller
      * Create a new controller instance.
      */
     public function __construct(
-        private readonly SupplierRepositoryInterface $suppliers,
         private readonly SupplierService $supplierService,
-        protected $model = new Supplier(),
-        private $modelName = "Supplier",
-        private $supplier = new Supplier(),
-        private $accountService = new AccountService()
+        private readonly AccountService $accountService
     ){}
 
 
@@ -34,7 +30,7 @@ class SupplierController extends Controller
     public function index()
     {
         return view('app.suppliers.suppliers', [
-            'suppliers' => $this->suppliers->getAllSuppliers()
+            'suppliers' => $this->supplierService->getSuppliers()
         ]);
     }
 
@@ -46,13 +42,20 @@ class SupplierController extends Controller
 
     public function store(StoreNewSupplierRequest $request)
     {
-        $supplier = $this->supplierService->createSupplier($request->validated());
+        try {
 
-        if (! $supplier) {
-            return redirect()->back()->with('error', 'Supplier could not be created');
+            $supplier = $this->supplierService->createSupplier(
+                $request->validated()
+            );
+
+            return redirect()->back()->with('success','Supplier created successfully');
+
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+
         }
-
-        return redirect()->back()->with('success', 'Supplier created successfully');
     }
 
 
@@ -89,9 +92,15 @@ class SupplierController extends Controller
     public function destroy(Supplier $supplier)
     {
         try {
+
             $this->supplierService->deleteSupplier($supplier);
+            return redirect()->back()->with('success','Supplier deleted successfully');
+
         } catch (\Exception $e) {
+
+            Log::error($e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
+
         }
     }
 }
