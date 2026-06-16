@@ -167,8 +167,6 @@
             <div id="jobs-content" class="hidden py-5" role="tabpanel" aria-labelledby="jobs-tab">
 
 
-
-
                 <h4 class="mb-5 text-2xl">Registered Jobs</h4>
 
                 <div
@@ -357,7 +355,7 @@
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
                                     {{ $customerInvoice->customer->name }}</td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ number_format($customerInvoice->sub_total, 2) }}</td>
+                                    {{ $customerInvoice->sub_total }}</td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
                                     {{ number_format($customerInvoice->vat_amount + $customerInvoice->nhil_amount + $customerInvoice->getfund_amount, 2) }}
                                 </td>
