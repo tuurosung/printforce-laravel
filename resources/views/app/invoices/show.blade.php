@@ -16,7 +16,7 @@
     <div class="card border-0 mx-auto" style="min-height:70vh;">
         <div class="card-body px-5">
 
-            <h2 class="cal-sans fw-500 mb-5">Customer Invoice</h2>
+            <h2 class="cal-sans fw-500 mb-5 text-{{ $customerInvoice->status->flag() }}">Customer Invoice {{ $customerInvoice->status->label() }}</h2>
 
 
             <div class="d-flex mb-5">
@@ -30,11 +30,11 @@
                 </div>
             </div>
 
-            <div class="row mb-4 d-none">
+            <div class="row mb-4 ">
                 <div class="col-2">
                     <div class="mb-3">
                         <label for="" class="form-label">Apply NHIL</label>
-                        <select class="form-select form-select-lg" name="" id="">
+                        <select class="form-control form-select-lg" name="" id="">
                             <option selected>Select one</option>
                             <option value="">New Delhi</option>
                             <option value="">Istanbul</option>
@@ -46,7 +46,7 @@
                 <div class="col-2">
                     <div class="mb-3">
                         <label for="" class="form-label">Apply GetFund</label>
-                        <select class="form-select form-select-lg" name="" id="">
+                        <select class="form-control form-select-lg" name="" id="">
                             <option selected>Select one</option>
                             <option value="">New Delhi</option>
                             <option value="">Istanbul</option>
@@ -85,14 +85,15 @@
                     </thead>
                     <tbody>
 
-                        @foreach ($customerInvoice->customerInvoiceItems as $customerInvoiceItem)
-                            <tr class=""></tr>
-                            <td scope="row">{{ $loop->iteration }}</td>
-                            <td>{{ $customerInvoiceItem->service->service_name }}</td>
-                            <td class="text-center">{{ $customerInvoiceItem->unit_cost }}</td>
-                            <td class="text-center">{{ $customerInvoiceItem->quantity }}</td>
-                            <td>{{ $customerInvoiceItem->details }}</td>
-                            <td class="text-end">{{ $customerInvoiceItem->total }}</td>
+                        @foreach ($customerInvoice->invoiceItems as $invoiceItems)
+
+                            <tr>
+                                <td scope="row">{{ $loop->iteration }}</td>
+                                <td>{{ $invoiceItems->service->service_name }}</td>
+                                <td class="text-center">{{ $invoiceItems->unit_cost }}</td>
+                                <td class="text-center">{{ $invoiceItems->quantity }}</td>
+                                <td>{{ $invoiceItems->details }}</td>
+                                <td class="text-end">{{ $invoiceItems->total }}</td>
                             </tr>
                         @endforeach
 
@@ -119,7 +120,7 @@
                         <tr>
                             <td colspan="4"></td>
                             <td class="text-end">Grand Total</td>
-                            <td class="text-end">{{ $customerInvoice->invoice_total }}</td>
+                            <td class="text-end">{{ $customerInvoice->total }}</td>
                         </tr>
 
                     </tbody>
@@ -129,7 +130,6 @@
         </div>
 
     </div>
-
 
 
 @endsection
