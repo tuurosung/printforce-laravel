@@ -3,18 +3,13 @@
 namespace App\Domain\Invoices\Contracts;
 
 use App\Models\Invoices\CustomerInvoice;
-use App\Models\Invoices\CustomerInvoiceItem;
 use Illuminate\Database\Eloquent\Collection;
 
 interface InvoiceRepositoryInterface
 {
 
     // CRUD Operations
-    public function getInvoices(array $filters = []): Collection;
-    public function createInvoice(array $data): CustomerInvoice;
-    public function addItem(CustomerInvoice $invoice, array $data): bool;
-    public function updateItem(int $itemId, array $data): bool;
-    public function removeItem(CustomerInvoiceItem $customerInvoiceItem): bool;
+    public function allInvoices(array $filters = []): Collection;
 
 
     // totals
