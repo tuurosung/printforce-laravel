@@ -17,64 +17,20 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
     ){}
 
 
-    public function getInvoices(array $filters = []): Collection
+    public function allInvoices(array $filters = []): Collection
     {
-        return CustomerInvoice::get();
+        return $this->model->orderBy('created_at', 'desc')->get();
     }
 
 
-    public function createInvoice(array $data): CustomerInvoice
-    {
-        return $this->transaction(function () use ($data) {
-            return $this->model->create($data);
-        });
-    }
-
-
-    public function addItem(CustomerInvoice $invoice, array $data): bool
-    {
-        $item = CustomerInvoiceItem::create([
-            'invoice_id' => $invoice->invoice_id,
-            ...$data
-        ]);
-
-        if ($item) {
-            $this->recalculateTotals($invoice);
-        }
-
-        return true;
-    }
-
-
-    public function updateItem(int $itemId, array $data): bool
-    {
-        return CustomerInvoiceItem::findOrFail('invoice_item_id', $itemId)
-            ->update($data);
-    }
-
-
-    #[Override]
-    public function removeItem(CustomerInvoiceItem $customerInvoiceItem): bool
-    {
-        return $customerInvoiceItem->delete();
-    }
-
-
-    /**
-     * Recalculate invoice totals
-     *
-     * @param CustomerInvoice $invoice
-     * @return void
-     */
-    #[Override]
     public function recalculateTotals(CustomerInvoice $invoice): void
     {
-        $subTotal = $invoice->customerInvoiceItems()
+        $subTotal = $invoice->invoiceItems()
             ->sum('total');
 
         $invoice->update([
             'sub_total' => $subTotal,
-            // 'total' => $this->applyCharges($subTotal, $invoice)
+            // 'total' => $this->applyCharges($subTotal, $invoice),
         ]);
     }
 
@@ -122,8 +78,6 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
 
 
     // Session Management
-
-    #[Override]
     public function setActiveInvoiceSession(CustomerInvoice $invoice): void
     {
         Session::put('active_customer_invoice', [
