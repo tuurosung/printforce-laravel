@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class CustomerPayment extends Model
 {
     use SoftDeletes;
+    
     use HasFactory;
     use ScopedActive;
     use ScopedToSubscriber;
