@@ -5,7 +5,6 @@ namespace App\Models\Jobs;
 use App\Domain\PrintServices\Models\PrintService;
 use App\Models\Customers\Customer;
 use App\Models\Scopes\SubscriberScope;
-use App\Models\Services\Service;
 use App\Models\User;
 use App\Traits\ScopedActive;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
