@@ -1,10 +1,10 @@
-@include('layout.partials.print-header')
+@include('layout.partials.header')
 
 <body class="">
-    <div class="app app-content-full-height" style="padding-top: 0px !important;">
+    <div class="container p-[30px]" >
 
 
-        <div class="app-content">
+        <div class="">
             @include('layout.partials.print-letterhead')
             @yield('content')
         </div>
