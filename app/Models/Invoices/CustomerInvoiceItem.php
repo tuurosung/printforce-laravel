@@ -3,8 +3,8 @@
 namespace App\Models\Invoices;
 
 use App\Casts\MoneyFormat;
+use App\Domain\PrintServices\Models\PrintService;
 use App\Models\Scopes\SubscriberScope;
-use App\Models\Services\PrintService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -45,7 +45,7 @@ class CustomerInvoiceItem extends Model
     public function details(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->builddetails(),
+            get: fn () => $this->buildDetails(),
         );
     }
 
@@ -59,7 +59,7 @@ class CustomerInvoiceItem extends Model
     }
 
 
-    public function builddetails()
+    public function buildDetails()
     {
         if ($this->service_category_id === '001') {
             return "{$this->width} x {$this->height} {$this->measuring_unit} ({$this->quantity} pcs)";
