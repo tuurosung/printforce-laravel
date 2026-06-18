@@ -2,28 +2,28 @@
 
 namespace App\Models\Jobs;
 
+use App\Domain\PrintServices\Models\PrintService;
+use App\Models\Customers\Customer;
+use App\Models\Scopes\SubscriberScope;
+use App\Models\Services\Service;
 use App\Models\User;
 use App\Traits\ScopedActive;
-use App\Models\Services\Service;
-use App\Models\Customers\Customer;
-use App\Traits\ScopedToSubscriber;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Services\PrintService;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
+#[ScopedBy([SubscriberScope::class])]
+#[Fillable(['subscriber_id', 'customer_id', 'job_id', 'service_id', 'unit_cost', 'qty', 'embroidery_cost', 'mat_supply', 'mat_unit_cost', 'purchase_cost',  'total', 'notes', 'date'])]
 class EmbroideryJob extends Model
 {
     use HasFactory;
     use ScopedActive;
-    use ScopedToSubscriber;
 
     protected static function boot()
     {
@@ -33,56 +33,25 @@ class EmbroideryJob extends Model
             $embroideryJob->job_id = generateDashedRandomNumber();
             $embroideryJob->subscriber_id = Auth::user()->subscriber_id;
         });
-
-        // self::tableInspector();
-        // self::updateCreatedAt();
     }
-
-
-
-
-
-
 
     protected $table = 'jobs_embroidery';
     protected $primaryKey = 'job_id';
     public $incrementing = false;
 
 
-    protected $fillable = [
-        'subscriber_id',
-        'customer_id',
-        'job_id',
-        'service_id',
-        'unit_cost',
-        'qty',
-        'embroidery_cost',
-        'mat_supply',
-        'mat_unit_cost',
-        'purchase_cost',
-        'total',
-        'notes',
-        'date',
-    ];
-
-
     #[Scope]
-    public function pending(Builder $query): void
+    protected function pending(Builder $query): void
     {
         $query->where('job_status', 'pending');
     }
 
 
     #[Scope]
-    public function completed(Builder $query): void
+    protected function completed(Builder $query): void
     {
         $query->where('job_status', 'completed');
     }
-
-
-    /**
-     * Attributes ----------------------------------------------------------------------
-     */
 
 
     public function jobStatusDefinition(): Attribute
@@ -94,28 +63,12 @@ class EmbroideryJob extends Model
 
 
 
-
-     /**
-      * Relationships ----------------------------------------------------------------------
-      */
-
-
-    /**
-     * Defines the relationship between EmbroideryJob and Customer.
-     *
-     * @return BelongsTo<Customer, EmbroideryJob>
-     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
 
-    /**
-     * Defines the relationship between EmbroideryJob and Service.
-     *
-     * @return BelongsTo<Service, EmbroideryJob>
-     */
     public function service(): BelongsTo
     {
         return $this->belongsTo(PrintService::class, 'service_id', 'service_id')
