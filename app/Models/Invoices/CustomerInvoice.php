@@ -49,7 +49,7 @@ class CustomerInvoice extends Model
         return [
             'invoice_type' => InvoiceTypeEnum::class,
             'invoice_date' => 'datetime',
-            'due_date' => 'timestamp',
+            'due_date' => 'datetime',
             'paid_at' => 'datetime',
             'sub_total' => MoneyFormat::class,
             'total' => 'decimal:2',
@@ -78,8 +78,6 @@ class CustomerInvoice extends Model
             get: fn () => $this->invoiceItems->sum('total')
         );
     }
-
-
 
 
     public function customer()
