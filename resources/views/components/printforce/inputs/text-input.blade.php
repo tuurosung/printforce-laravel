@@ -9,5 +9,6 @@
         value="{{ $value }}"
         {{ $readonly ? 'readonly' : '' }}
         {{ $required ? 'required' : '' }}
+        {{ $attributes }}
     />
 </div>

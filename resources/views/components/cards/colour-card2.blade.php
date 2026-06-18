@@ -1,13 +1,14 @@
-<div class="card {{ $colour }}-gradient">
-    <div class="card-body text-center px-9 pb-4">
+<div class="card {{ $colour }}-light">
+    <div class="card-body text-center px-9 py-9">
         <div
-            class="d-flex align-items-center justify-content-center round-48 rounded text-bg-{{ $colour }} flex-shrink-0 mb-3 mx-auto">
-            <i class="fi fi-sr-{{ $icon }} fs-7 text-white"></i>
+            class="flex items-center justify-center  rounded bg-{{ $colour }} shrink-0 mb-6 mx-auto w-13 h-13 p-4">
+            <i class="fi fi-sr-{{ $icon }} text-2xl text-white m-0 "></i>
         </div>
-        <h6 class="fw-normal fs-3 mb-1">{{ $title }}</h6>
-        <h4 class="mb-3 d-flex align-items-center justify-content-center gap-1">
+
+        <h4 class="flex items-center justify-center justify-content-center gap-1 font-normal text-2xl mb-0">
             {{ $value }}</h4>
-        <a href="javascript:void(0)" class="btn btn-white fs-2 fw-semibold text-nowrap">View
-            Details</a>
+        <!-- <a href="javascript:void(0)" class="btn btn-white fs-2 fw-semibold text-nowrap">View
+            Details</a> -->
+            <h6 class="font-bold fs-3 my-3">{{ $title }}</h6>
     </div>
 </div>
