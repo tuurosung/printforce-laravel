@@ -16,14 +16,14 @@
         <div class="col-2">
             <div class="form-group">
                 <label for="">Start Date</label>
-                <input type="text" class="form-control" id="start_date" name="start_date" value="<?php echo $week_start; ?>">
+                <input type="text" class="form-control" id="start_date" name="start_date" value="{{ now()->startOfWeek() }}">
             </div>
         </div>
 
         <div class="col-2">
             <div class="form-group">
                 <label for="">End Date</label>
-                <input type="text" class="form-control" id="end_date" name="end_date" value="<?php echo $week_end; ?>">
+                <input type="text" class="form-control" id="end_date" name="end_date" value="{{ now()->endOfWeek() }}">
             </div>
         </div>
 
@@ -34,9 +34,9 @@
                     <option value="all">All Customers</option>
                     <?php
                     $list = $customer->all();
-                    foreach ($list as $rows) {
+                    foreach ($list ?? [] as $rows) {
                     ?>
-                        <option value="<?php echo $rows['customer_id']; ?>"><?php echo $rows['name']; ?></option>
+                        <option value="<?php //echo $rows['customer_id']; ?>"><?php //echo $rows['name']; ?></option>
                     <?php
                     }
                     ?>
@@ -54,7 +54,9 @@
                     $list = $service->all();
                     foreach ($list as $rows) {
                     ?>
-                        <option value="<?php echo $rows['service_id']; ?> "><?php echo $rows['service_name']; ?> </option>
+                        <option value="<?php //echo $rows['service_id']; ?> ">
+                            <?php //echo $rows['service_name']; ?>
+                        </option>
                     <?php
                     }
                     ?>

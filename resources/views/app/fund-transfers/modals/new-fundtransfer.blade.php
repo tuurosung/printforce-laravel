@@ -35,7 +35,7 @@
                                     type="number"
                                     step="any"
                                     min="1"
-                                    class="form-control form-control-sm"
+                                    class="form-control
                                     name="amount"
                                     id="amount"
                                     value=""

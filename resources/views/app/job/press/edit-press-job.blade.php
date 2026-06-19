@@ -31,7 +31,7 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Cost</label>
-                                <input type="text" class="form-control form-control-sm" name="cost" id="press_cost"
+                                <input type="text" class="form-control" name="cost" id="press_cost"
                                     value="{{ $pressJob->cost }}" readonly>
                             </div>
 
@@ -45,7 +45,7 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Copies</label>
-                                <input type="text" class="form-control form-control-sm" name="copies" id="press_copies"
+                                <input type="text" class="form-control" name="copies" id="press_copies"
                                     value="{{ $pressJob->copies }}" required>
                             </div>
 
@@ -54,7 +54,7 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label">Total Cost</label>
-                                <input type="text" class="form-control form-control-sm" name="total" id="press_total"
+                                <input type="text" class="form-control" name="total" id="press_total"
                                     value="{{ $pressJob->total }}" readonly required>
                             </div>
 
@@ -64,7 +64,7 @@
 
                     <div class="mb-3">
                         <label for="" class="form-label">Notes (optional eg; Logo Design)</label>
-                        <input type="text" class="form-control form-control-sm" name="notes" id="press_notes" value="{{ $pressJob->notes }}"
+                        <input type="text" class="form-control" name="notes" id="press_notes" value="{{ $pressJob->notes }}"
                             placeholder="Enter any notes for this job">
                     </div>
 

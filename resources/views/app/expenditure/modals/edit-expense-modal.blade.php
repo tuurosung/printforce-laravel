@@ -36,7 +36,7 @@
                                 <label for="" class="form-label">Amount</label>
                                 <input
                                     type="number"
-                                    class="form-control form-control-sm"
+                                    class="form-control "
                                     step="any"
                                     min="0"
                                     name="amount"
@@ -59,7 +59,7 @@
                         <label for="" class="form-label">Description</label>
                         <input
                             type="text"
-                            class="form-control form-control-sm"
+                            class="form-control "
                             name="description"
                             id="description"
                             value="{{ $expenditure->description }}"

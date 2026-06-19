@@ -93,7 +93,7 @@
                                 <div class="col-6">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Material Purchase</label>
-                                        <select class="form-select form-select-sm" name="mat_supply" id="mat_supply">
+                                        <select class="form-control form-select-sm" name="mat_supply" id="mat_supply">
                                             <option value="">-- Who is buying the materials? --</option>
                                             @foreach(config('printforce.printServices.material_supply_options') as $key => $value)
                                             <option value="{{ $key }}"

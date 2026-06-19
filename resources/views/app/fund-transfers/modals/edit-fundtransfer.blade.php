@@ -42,7 +42,7 @@
                                     type="number"
                                     step="any"
                                     min="1"
-                                    class="form-control form-control-sm"
+                                    class="form-control "
                                     name="amount"
                                     id="amount"
                                     value="{{ $fundTransfer->amount }}"
@@ -55,7 +55,7 @@
                                 <label for="" class="form-label">Date</label>
                                 <input
                                     type="text"
-                                    class="form-control form-control-sm"
+                                    class="form-control "
                                     name="date"
                                     id="date"
                                     value="{{ $fundTransfer->date }}"
@@ -72,7 +72,7 @@
                             <div class="mb-3">
                                 <label for="" class="form-label">Transfer From</label>
                                 <select
-                                    class="form-select form-select-sm"
+                                    class="form-control form-select-sm"
                                     name="source_account"
                                     id="source_account"
                                     required>
@@ -104,7 +104,7 @@
                     </div>
 
                     <x-printforce.inputs.text-input label="Notes" name="notes" id="notes" :value="$fundTransfer->notes" required="true" />
-                   
+
                 </div>
                 <div class="modal-footer">
                     <button

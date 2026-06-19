@@ -34,7 +34,7 @@
                                 <label for="" class="form-label">Amount</label>
                                 <input
                                     type="number"
-                                    class="form-control form-control-sm"
+                                    class="form-control "
                                     step="any"
                                     min="0"
                                     name="amount"
