@@ -59,4 +59,10 @@ class PrintServicesHandler
         return $this->printServices->allServiceCategories();
     }
 
+
+    public function getServiceById(string $serviceId): PrintService
+    {
+        return $this->printServices->findById($serviceId);
+    }
+
 }
