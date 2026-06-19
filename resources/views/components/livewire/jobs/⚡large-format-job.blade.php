@@ -62,13 +62,11 @@ new class extends Component {
         $this->recalculate();
     }
 
-    
+
     public function updated(): void
     {
         $this->recalculate();
     }
-
-
 
 
     private function recalculate(): void
