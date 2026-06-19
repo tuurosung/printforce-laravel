@@ -39,7 +39,6 @@
     <div class="card border-0 mx-auto" style="min-height:70vh;">
         <div class="card-body px-5">
 
-            {{-- <h2 class="font-cal-sans-regular text-2xl ">Prepare Invoice</h2> --}}
 
             <div class="grid grid-cols-12 gap-6 mb-8">
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
