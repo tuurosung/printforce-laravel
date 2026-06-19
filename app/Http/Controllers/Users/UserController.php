@@ -2,23 +2,31 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Domain\Users\Services\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+
+    public function __construct(
+        private readonly UserService $userService
+    ){}
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::getRegisteredUsers();
-
-        return view('app.users.users', compact('users'));
+        return view('app.users.users', [
+            'users'=> $this->userService->getAllUsers()
+        ]);
     }
 
     /**
@@ -34,11 +42,20 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $is_created = User::create($request->getUserData());
+        try {
 
-        return $is_created
-            ? redirect()->back()->with('success', "Bingo! User created successfully")
-            : redirect()->back()->with('error', "Something went wrong");
+            $this->userService->createUser(
+                $request->getUserData(),
+            );
+
+            return redirect()->back()->with('success','Bingo! User created successfully');
+
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
+            
+        }
     }
 
     /**
