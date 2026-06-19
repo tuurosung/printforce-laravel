@@ -73,14 +73,6 @@ class LargeFormatJob extends Model
     }
 
 
-    public function jobStatusDefinition(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->getJobStatusDescription(),
-        );
-    }
-
-
     public function customer():BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id');
