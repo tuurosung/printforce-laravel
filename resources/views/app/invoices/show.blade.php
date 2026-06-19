@@ -2,77 +2,47 @@
 
 @section('content')
 
-    <div class="card">
-        <div class="card-body py-3 d-flex justify-content-between align-items-center border-r-1">
-            <p class="mb-0">You're currently viewing this invoice in read-only mode</p>
-            <button id="printInvoiceBtn" class="btn btn-primary" style="border-radius: 1px;" data-url="{{ route('invoices.print-invoice', $customerInvoice) }}">
+    <x-headers.page-header pageTitle="Invoice Preview" currentPage="Invoice Preview">
+        <button id="printInvoiceBtn" class="btn btn-primary" style="border-radius: 1px;" data-url="{{ route('invoices.print-invoice', $customerInvoice) }}">
                 <i class="fi fi-rr-print me-1"></i>
                 Print Invoice
             </button>
-        </div>
+    </x-headers.page-header>
+
+    <div class="bg-lightprimary border border-lightprimary text-sm text-primaryemphasis rounded-md p-4 dark:bg-darkprimary dark:border-darkprimary dark:text-primary mb-8"
+        role="alert">
+        <span class="font-bold">Please Note</span> You're currently viewing this invoice in read-only mode
     </div>
 
 
+
     <div class="card border-0 mx-auto" style="min-height:70vh;">
-        <div class="card-body px-5">
-
-            <h2 class="cal-sans fw-500 mb-5 text-{{ $customerInvoice->status->flag() }}">Customer Invoice {{ $customerInvoice->status->label() }}</h2>
+        <div class="card-body px-9">
 
 
-            <div class="d-flex mb-5">
-                <div>
-                    <h5>{{ $customerInvoice->customer->name }}</h5>
-                    <p class="mb-0">Customer Type : {{ $customerInvoice->customer->category }}</p>
+            <div class="grid grid-cols-12 gap-6 mb-8">
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                    <p>Invoice to</p>
+                    <h5 class="text-xl font-cal-sans-regular font-normal">
+                        {{ $customerInvoice->customer->name }}
+                    <span
+                        class="inline-flex fixed items-center gap-x-1.5 py-1 mt-1 font-inter-bold px-3 rounded-full  text-[10px] font-medium bg-amber-500 text-white ms-3">
+                        {{ $customerInvoice->customer->category->label() }}
+                    </span>
+
+                    </h5>
                     <p class="mb-0">{{ $customerInvoice->customer->phone }}</p>
                 </div>
-                <div>
-
-                </div>
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12"></div>
             </div>
 
-            <div class="row mb-4 ">
-                <div class="col-2">
-                    <div class="mb-3">
-                        <label for="" class="form-label">Apply NHIL</label>
-                        <select class="form-control form-select-lg" name="" id="">
-                            <option selected>Select one</option>
-                            <option value="">New Delhi</option>
-                            <option value="">Istanbul</option>
-                            <option value="">Jakarta</option>
-                        </select>
-                    </div>
 
-                </div>
-                <div class="col-2">
-                    <div class="mb-3">
-                        <label for="" class="form-label">Apply GetFund</label>
-                        <select class="form-control form-select-lg" name="" id="">
-                            <option selected>Select one</option>
-                            <option value="">New Delhi</option>
-                            <option value="">Istanbul</option>
-                            <option value="">Jakarta</option>
-                        </select>
-                    </div>
 
-                </div>
-                <div class="col-2">
-                    <div class="mb-3">
-                        <label for="" class="form-label">Apply VAT</label>
-                        <select class="form-select" name="" id="">
-                            <option selected>Select one</option>
-                            <option value="">New Delhi</option>
-                            <option value="">Istanbul</option>
-                            <option value="">Jakarta</option>
-                        </select>
-                    </div>
-
-                </div>
-            </div>
 
             <div>
 
 
-                <table class="table">
+                <table class="table w-full text-sm text-left rtl:text-right text-body">
                     <thead class="table-dark">
                         <tr>
                             <th scope="col">#</th>
@@ -100,19 +70,19 @@
                         <tr class="d-none">
                             <td colspan="4"></td>
                             <td class="text-end">Sub-Total</td>
-                            <td class="text-end">{{ $customerInvoice->sub_total }}</td>
+                            <td class="text-end">{{ number_format($customerInvoice->total_value, 2) }}</td>
                         </tr>
-                        <tr class="d-none">
+                        <tr class="hidden">
                             <td colspan="4"></td>
                             <td class="text-end">NHIL</td>
                             <td class="text-end">{{ $customerInvoice->nhil_amount }}</td>
                         </tr>
-                        <tr class="d-none">
+                        <tr class="hidden">
                             <td colspan="4"></td>
                             <td class="text-end">GetFund</td>
                             <td class="text-end">{{ $customerInvoice->getfund_amount }}</td>
                         </tr>
-                        <tr class="d-none">
+                        <tr class="hidden">
                             <td colspan="4"></td>
                             <td class="text-end">Value Added Tax </td>
                             <td class="text-end">{{ $customerInvoice->vat_amount     }}</td>
@@ -120,7 +90,7 @@
                         <tr>
                             <td colspan="4"></td>
                             <td class="text-end">Grand Total</td>
-                            <td class="text-end">{{ $customerInvoice->total }}</td>
+                            <td class="text-end">{{ number_format($customerInvoice->total_value, 2) }}</td>
                         </tr>
 
                     </tbody>
