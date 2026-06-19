@@ -1,7 +1,7 @@
 <?php
 
+use App\Domain\PrintServices\Services\PrintServicesHandler;
 use App\Models\Customers\Customer;
-use App\Models\Services\PrintService;
 use App\Services\PrintServicesManager;
 use Livewire\Component;
 
@@ -27,9 +27,9 @@ new class extends Component {
             return;
         }
 
-        $printService = PrintService::where('service_id', $value)->first();
+        $printService = app(PrintServicesHandler::class)->getServiceById($value);
+        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
 
-        $this->unitCost = app(PrintServicesManager::class)->getServiceCost($this->customer, $printService);
         $this->recalculate();
     }
 
