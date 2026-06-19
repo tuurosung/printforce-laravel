@@ -1,7 +1,8 @@
 <?php
 
+use App\Domain\PrintServices\Models\PrintService;
+use App\Domain\PrintServices\Services\PrintServicesHandler;
 use App\Models\Customers\Customer;
-use App\Models\Services\PrintService;
 use App\Services\PrintServicesManager;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -12,8 +13,8 @@ new class extends Component {
 
     // Form State
     public string $serviceId = '';
-    public ?float $width = 0;
-    public ?float $height = 0;
+    public ?float $width = 1;
+    public ?float $height = 1;
     public ?string $measuringUnit = '';
     public ?float $copies = 1;
     public ?float $discount = 0;
@@ -45,7 +46,8 @@ new class extends Component {
             return;
         }
 
-        $printService = PrintService::where('service_id', $value)->first();
+        // $printService = PrintService::where('service_id', $value)->first();
+        $printService = app(PrintServicesHandler::class)->getServiceById($value);
 
         if (!$this->customer instanceof Customer) {
             return;
@@ -55,48 +57,18 @@ new class extends Component {
             return;
         }
 
-        $this->unitCost = app(PrintServicesManager::class)->getServiceCost($this->customer, $printService);
+        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
 
         $this->recalculate();
     }
 
+    
+    public function updated(): void
+    {
+        $this->recalculate();
+    }
 
-    public function updatedWidth(): void
-    {
-        if (blank($this->width))
-            return;
-        $this->recalculate();
-    }
-    public function updatedHeight(): void
-    {
-        if (blank($this->height))
-            return;
-        $this->recalculate();
-    }
-    public function updatedMeasuringUnit(): void
-    {
-        if (blank($this->measuringUnit))
-            return;
-        $this->recalculate();
-    }
-    public function updatedCopies(): void
-    {
-        if (blank($this->copies))
-            return;
-        $this->recalculate();
-    }
-    public function updatedDiscount(): void
-    {
-        if (blank($this->discount))
-            return;
-        $this->recalculate();
-    }
-    public function updatedPremium(): void
-    {
-        if (blank($this->premium))
-            return;
-        $this->recalculate();
-    }
+
 
 
     private function recalculate(): void
