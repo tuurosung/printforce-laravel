@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\PrintServices\Services\PrintServicesHandler;
 use App\Models\Customers\Customer;
 use App\Models\Services\PrintService;
 use App\Services\PrintServicesManager;
@@ -34,49 +35,15 @@ new class extends Component {
             return;
         }
 
-        $printService = PrintService::where('service_id', $value)->first();
+        $printService = app(PrintServicesHandler::class)->getServiceById($value);
 
-        $this->unitCost = app(PrintServicesManager::class)->getServiceCost($this->customer, $printService);
+        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
         $this->recalculate();
     }
 
 
-    public function updatedQty(): void
+    public function updated(): void
     {
-        if (blank($this->qty))
-            return;
-        $this->recalculate();
-    }
-
-
-    public function updatedMatSupply(): void
-    {
-        if (blank($this->matSupply)) return;
-
-        $this->recalculate();
-    }
-
-
-    public function updatedMatUnitCost(): void
-    {
-        if (blank($this->matUnitCost))
-            return;
-        $this->recalculate();
-    }
-
-
-    public function updatedDiscount(): void
-    {
-        if (blank($this->discount))
-            return;
-        $this->recalculate();
-    }
-
-
-    public function updatedPremium(): void
-    {
-        if (blank($this->premium))
-            return;
         $this->recalculate();
     }
 
