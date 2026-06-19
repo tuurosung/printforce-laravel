@@ -1,48 +1,22 @@
-<!-- Modal trigger button -->
-<div
-    class="modal fade"
-    id="new_service_modal"
-    tabindex="-1"
+<x-modals.modal modalId="new-service-modal">
+    <x-modals.modal-header modalId="new-service-modal" modalTitle="Add New Service" />
 
-    role="dialog"
-    aria-labelledby="modalTitleId"
-    aria-hidden="true">
-    <div
-        class="modal-dialog"
-        role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">
-                    Add New Service
-                </h5>
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-dismiss="modal"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <form id="" autocomplete="off" method="POST" action="{{ route('configuration.print-services.store') }}">
-                @csrf
-                <div class="modal-body">
+    <form id="" autocomplete="off" method="POST" action="{{ route('print-services.store') }}">
+        @csrf
+        <div class="p-6">
 
-                    <div class="mb-3">
-                        <label for="" class="form-label">Service Name</label>
-                        <input
-                            type="text"
-                            class="form-control form-control-sm"
-                            name="service_name"
-                            id="service_name"
-                            value=""
-                            required />
-                    </div>
+            <div class="grid grid-cols-12 gap-6">
 
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                    <label for="" class="form-label">Service Name</label>
+                    <input type="text" class="form-control" name="service_name" id="service_name" value="" required />
+                </div>
+
+
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="mb-3">
                         <label for="" class="form-label">Category</label>
-                        <select
-                            class="form-select form-select-sm"
-                            name="category_id"
-                            id="service_category">
+                        <select class="form-control form-select-sm" name="category_id" id="service_category">
 
                             <option value="">--- Select Category ---</option>
 
@@ -53,64 +27,34 @@
 
                         </select>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Artist/Photo</label>
-                                <input
-                                    type="number"
-                                    step="any"
-                                    class="form-control form-control-sm"
-                                    name="artist"
-                                    id="artist"
-                                    value=""
-                                    required />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Individual</label>
-                                <input
-                                    type="number"
-                                    step="any"
-                                    class="form-control form-control-sm"
-                                    name="individual"
-                                    id="individual"
-                                    value=""
-                                    required />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="" class="form-label">Institution</label>
-                                <input
-                                    type="number"
-                                    step="any"
-                                    class="form-control form-control-sm"
-                                    name="institution"
-                                    id="institution"
-                                    value=""
-                                    required />
-                            </div>
-                        </div>
+                <div class="lg:col-span-4 md:col-span-4 sm:col-span-12 col-span-12">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Artist/Photo</label>
+                        <input type="number" step="any" class="form-control" name="artist" id="artist" value="" required />
                     </div>
+                </div>
+                <div class="lg:col-span-4 md:col-span-4 sm:col-span-12 col-span-12">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Individual</label>
+                        <input type="number" step="any" class="form-control" name="individual" id="individual" value=""
+                            required />
+                    </div>
+                </div>
+                <div class="lg:col-span-4 md:col-span-4 sm:col-span-12 col-span-12">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Institution</label>
+                        <input type="number" step="any" class="form-control" name="institution" id="institution" value=""
+                            required />
+                    </div>
+                </div>
 
-                </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                        data-bs-dismiss="modal">
-                        Close
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check me-3  "></i>
-                        Create Service
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+            </div>
+
+            </div>
+
+
+        <x-modals.modal-footer modalId="new-service-modal" btnLabel="Create Service" />
+    </form>
+</x-modals.modal>
