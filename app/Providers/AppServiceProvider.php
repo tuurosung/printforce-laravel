@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\Users\AccessLevelEnum;
 use Illuminate\Support\Number;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -30,13 +31,15 @@ class AppServiceProvider extends ServiceProvider
            return "<?php echo number_format($expression, 2); ?>";
        });
 
+
         $gates = [
-            'administrator' => 'administrator',
+            'administrator' => AccessLevelEnum::ADMINISTRATOR
         ];
+
 
         foreach ($gates as $gate => $allowed) {
             Gate::define($gate, function ($user) use ($allowed) {
-                return in_array($user->access_level, (array) $allowed);
+                return in_array($user->access_level->value, (array) $allowed);
             });
         }
 
