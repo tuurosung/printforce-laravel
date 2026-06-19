@@ -1,45 +1,20 @@
 <?php
 
-use App\Http\Controllers\Services\FetchServiceDetailController;
-use App\Http\Controllers\Services\FilterPrintServicesController;
-use App\Http\Controllers\Services\GetServiceCostController;
-use App\Http\Controllers\Services\PrintServiceController;
-use App\Http\Controllers\Services\PrintServiceCostController;
+use App\Domain\PrintServices\Http\Controllers\FilterPrintServicesController;
+use App\Domain\PrintServices\Http\Controllers\PrintServiceController;
+use App\Domain\PrintServices\Http\Controllers\PrintServiceCostController;
+use Illuminate\Support\Facades\Route;
 
-Route::prefix('configuration')
-    ->name('configuration.')
-    ->group(function (){
+Route::prefix('print-services')
+    ->name('print-services.')
+    ->group(function () {
 
-        Route::prefix('print-services')
-            ->name('print-services.')
-            ->controller(PrintServiceController::class)
-            ->group(function (){
-
-                Route::get('/', 'index')->name('index');
-                Route::get('/create', 'create')->name('create');
-                Route::post('/store', 'store')->name('store');
-                Route::get('/edit/{printService}', 'edit')->name('edit');
-                Route::post('/update/{printService}', 'update')->name('update');
-                Route::delete('/delete/{printService}', 'destroy')->name('delete');
-
-
-            });
-
-
-            Route::prefix('print-services')
-                ->name('print-services.')
-                ->group(function () {
-
-                    Route::controller(GetServiceCostController::class)
-                        ->group(function () {
-                            Route::get('/get-service-cost-with-customer-id', 'getServiceCostWithCustomerId')->name('get-service-cost-with-customer-id');
-                        });
-
-                    // Route::get('/get-service_cost-with-user-id', )
-                    Route::get('/get-service-cost/{serviceId}', PrintServiceCostController::class)->name('get-service-cost');
-                    Route::get('/fetch-service-detail', FetchServiceDetailController::class)->name('fetch-service-detail');
-                    Route::get('/filter/{searchTerm}', FilterPrintServicesController::class)->name('filter');
-
-                });
+        Route::get('{serviceId}/cost', PrintServiceCostController::class)->name("cost");
+        Route::get('{searchTerm}/filter', FilterPrintServicesController::class)->name('filter');
 
     });
+
+
+Route::resource('print-services', PrintServiceController::class)
+    ->parameter('print-services', 'printService');
+
