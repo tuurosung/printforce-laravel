@@ -1,17 +1,22 @@
 <?php
 
-use App\Domain\PrintServices\Services\PrintServicesHandler;
+
+use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
-use App\Models\Services\PrintService;
 use App\Services\PrintServicesManager;
+use App\Traits\UpdatedServiceIdTrait;
 use Livewire\Component;
 
+
 new class extends Component {
+
+    use UpdatedServiceIdTrait;
+
     public Customer $customer;
 
-    public string $serviceId = '';
+
     public ?int $qty = 1;
-    public ?float $unitCost = 0;
+    public ?float $cost = 0;
     public ?float $matUnitCost = 0;
     public ?string $matSupply = '';
 
@@ -26,20 +31,7 @@ new class extends Component {
     public ?float $subTotal = 0;
     public ?float $total = 0;
 
-
-    public function updatedServiceId(string $value): void
-    {
-        if (blank($this->serviceId)) {
-            $this->unitCost = 0;
-            $this->recalculate();
-            return;
-        }
-
-        $printService = app(PrintServicesHandler::class)->getServiceById($value);
-
-        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
-        $this->recalculate();
-    }
+    public array $embroideryServices = [];
 
 
     public function updated(): void
@@ -50,30 +42,18 @@ new class extends Component {
 
     private function recalculate(): void
     {
-        $unitCost = $this->getNumericValue($this->unitCost);
+        $cost = $this->getNumericValue($this->cost);
         $qty = $this->getNumericValue($this->qty);
         $matSupply = $this->matSupply ?? false;
         $matUnitCost = $this->getNumericValue($this->matUnitCost);
 
-        $this->embroideryCost = $this->calculateEmbroideryCost($unitCost, $qty);
-        $this->purchaseCost = $this->calculatePurchaseCost($matSupply, $matUnitCost, $qty);
+        $this->embroideryCost = (float) $cost * $qty;
+        $this->purchaseCost = $matSupply == "yes" ? (float) $matUnitCost * $qty : 1;
 
         $this->subTotal = $this->embroideryCost;
         $this->total = (int) ($this->embroideryCost + $this->purchaseCost);
     }
 
-
-    private function calculateEmbroideryCost(float $unitCost, int $qty): float
-    {
-        return (float) $unitCost * $qty;
-    }
-
-
-
-    private function calculatePurchaseCost(string $matSupply, float $matUnitCost, int $qty): float
-    {
-        return $matSupply == "yes" ? (float) $matUnitCost * $qty : 0;
-    }
 
     private function getNumericValue(float $value): float
     {
@@ -81,18 +61,9 @@ new class extends Component {
     }
 
 
-    public function embroideryServices(): array
+    public function mount(): void
     {
-        return app(PrintServicesManager::class)->getEmbroideryServicesArray();
-    }
-
-
-    public function with(): array
-    {
-        return [
-            'customer' => $this->customer,
-            'embroidery_services' => $this->embroideryServices(),
-        ];
+        $this->embroideryServices = ServiceCategoryEnum::EMBROIDERY->servicesArray();
     }
 };
 ?>
@@ -142,8 +113,8 @@ new class extends Component {
                                     <label for="service_id" class="form-label">Service Name</label>
                                     <select class="form-control" name="service_id" id="embroidery_service_id" wire:model.live="serviceId" required>
                                         <option value="">--- Select one ---</option>
-                                        @foreach ($embroidery_services as $key => $value)
-                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @foreach ($embroideryServices as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -152,12 +123,13 @@ new class extends Component {
                             </div>
                             <div class="col">
                                 <x-printforce.inputs.text-input name="unit_cost" id="embroidery_unit_cost"
-                                    label="Unit Cost" placeholder="0.00" value="{{ $unitCost }}" readonly="true" />
+                                    label="Unit Cost" placeholder="0.00" value="{{ $cost }}" readonly="true" />
                             </div>
                         </div>
 
 
                         <div class="grid grid-cols-4 gap-6 mb-5">
+
                             <div class="col">
                                 <x-printforce.inputs.text-input name="qty" id="qty" label="Quantity"
                                     value="{{ $qty }}" wire:model.live="qty" required />
@@ -181,15 +153,16 @@ new class extends Component {
                         <div class="grid grid-cols-4 gap-6 mb-5">
                             <div class="col">
                                 <x-printforce.inputs.text-input name="mat_unit_cost" id="mat_unit_cost"
-                                    label="Material Unit Cost" placeholder="0.00" wire:model.live="matUnitCost" required />
+                                    label="Material Unit Cost" placeholder="0.00" wire:model.live="matUnitCost" value="{{ $this->matUnitCost }}" required />
                             </div>
                             <div class="col">
+                                {{ $this->matSupply }}
                                 <x-printforce.inputs.text-input name="purchase_cost" id="embroidery_purchase_cost"
-                                    label="Material Purchase Cost" placeholder="0.00" wire:model.live="purchaseCost" readonly required />
+                                    label="Material Purchase Cost" placeholder="0.00" wire:model.live="purchaseCost" value="{{ $this->purchaseCost }}" readonly required />
                             </div>
                             <div class="col">
                                 <x-printforce.inputs.text-input name="total" id="embroidery_total" label="Overall Cost"
-                                    placeholder="0.00" wire:model.live="total" readonly />
+                                    placeholder="0.00" wire:model.live="total" value="{{ $this->total }}" readonly />
                             </div>
                         </div>
 
