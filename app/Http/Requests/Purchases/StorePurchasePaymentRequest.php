@@ -22,6 +22,7 @@ class StorePurchasePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'supplier_id' => 'required',
             'amount_paid' => 'required',
             'reference' => 'nullable|string|max:255',
             'date' => 'required|date_format:Y-m-d',
