@@ -2,17 +2,20 @@
 
 namespace App\Domain\Suppliers\Models;
 
-use App\Models\Purchases\Purchase;
-use App\Models\Purchases\PurchasePayment;
+use App\Domain\Purchases\Models\Purchase;
+use App\Domain\Purchases\Models\PurchasePayment;
 use App\Models\Scopes\SubscriberScope;
+use App\Observers\Suppliers\SupplierObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
+
+#[ObservedBy([SupplierObserver::class])]
 #[ScopedBy([SubscriberScope::class])]
 #[Fillable(['subscriber_id', 'supplier_id', 'supplier_name', 'supplier_address', 'supplier_phone'])]
 class Supplier extends Model
@@ -20,15 +23,6 @@ class Supplier extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($supplier) {
-            $supplier->supplier_id = generateRandomString();
-            $supplier->subscriber_id = Auth::user()->subscriber_id;
-        });
-    }
 
     protected $table = 'suppliers';
     protected $primaryKey = 'supplier_id';
