@@ -4,18 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Mail\LoginAlertMail;
 use App\Notifications\LoginNotification;
+use App\Services\Alerts\LoginAlertService;
+use App\Services\Alerts\MessagingService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
-use App\Services\Alerts\MessagingService;
-use App\Services\Alerts\LoginAlertService;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 use Resend;
 
 class LoginController extends Controller
 {
+
 
     public function __construct(
         private $loginAlertService = new LoginAlertService()
@@ -62,6 +64,8 @@ class LoginController extends Controller
             return redirect()->intended('dashboard');
         }
 
+        Log::error('Login failed');
+
         return back()->withErrors([
             'email' => 'Invalid email or password',
         ])->onlyInput('email');
@@ -76,6 +80,6 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
