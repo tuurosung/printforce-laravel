@@ -4,6 +4,7 @@ namespace App\Models\Customers;
 
 use App\Casts\MoneyFormat;
 use App\Enums\Customers\CustomerCategoryEnum;
+use App\Observers\CustomerObserver;
 use App\Traits\Customers\HasBalance;
 use App\Traits\Customers\HasCategories;
 use App\Traits\Customers\HasInvoices;
@@ -12,11 +13,13 @@ use App\Traits\Customers\HasPayments;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
+
+#[ObservedBy([CustomerObserver::class])]
 #[Fillable(['subscriber_id', 'customer_id', 'name', 'phone', 'category'])]
 class Customer extends Model
 {
@@ -31,18 +34,6 @@ class Customer extends Model
     use HasPayments;
     use HasInvoices;
     use HasBalance;
-
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($customer) {
-            $customer->subscriber_id = Auth::user()->subscriber_id;
-            $customer->customer_id = generateRandomString();
-        });
-
-    }
 
 
     protected $table = 'customers';
