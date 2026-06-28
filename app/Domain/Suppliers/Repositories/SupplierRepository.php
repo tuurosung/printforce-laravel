@@ -14,15 +14,18 @@ class SupplierRepository implements SupplierRepositoryInterface
         private Supplier $model
     ){}
 
+
     public function create(array $data): Supplier
     {
         return $this->model->create($data);
     }
 
+
     public function update(Supplier $supplier, array $data): bool
     {
         return $supplier->update($data);
     }
+
 
     public function delete(Supplier $supplier): bool
     {
@@ -32,6 +35,7 @@ class SupplierRepository implements SupplierRepositoryInterface
 
     public function allSuppliers(): Collection
     {
-        return $this->model->orderBy('supplier_name', 'asc')->get();
+        return $this->model->with(["purchases","payment"])
+            ->orderBy('supplier_name', 'asc')->get();
     }
 }

@@ -42,20 +42,11 @@ class SupplierController extends Controller
 
     public function store(StoreNewSupplierRequest $request)
     {
-        try {
+        $this->supplierService->createSupplier(
+            $request->validated()
+        );
 
-            $supplier = $this->supplierService->createSupplier(
-                $request->validated()
-            );
-
-            return redirect()->back()->with('success','Supplier created successfully');
-
-        } catch (\Exception $e) {
-
-            Log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
-
-        }
+        return redirect()->back()->with('success', 'Supplier created successfully');
     }
 
 
@@ -79,28 +70,14 @@ class SupplierController extends Controller
 
     public function update(StoreNewSupplierRequest $request, Supplier $supplier)
     {
-        $isUpdated = $this->supplierService->updateSupplier($supplier, $request->validated());
-
-        if (! $isUpdated) {
-            return redirect()->back()->with('error', 'Supplier could not be updated');
-        }
-
+        $this->supplierService->updateSupplier($supplier, $request->validated());
         return redirect()->back()->with('success', 'Supplier updated successfully');
     }
 
 
     public function destroy(Supplier $supplier)
     {
-        try {
-
-            $this->supplierService->deleteSupplier($supplier);
-            return redirect()->back()->with('success','Supplier deleted successfully');
-
-        } catch (\Exception $e) {
-
-            Log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
-
-        }
+        $this->supplierService->deleteSupplier($supplier);
+        return redirect()->back()->with('success', 'Supplier deleted successfully');
     }
 }

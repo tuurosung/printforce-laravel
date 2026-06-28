@@ -5,6 +5,7 @@ namespace App\Domain\Suppliers\Services;
 use App\Domain\Suppliers\Contracts\SupplierRepositoryInterface;
 use App\Domain\Suppliers\Models\Supplier;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class SupplierService
 {
@@ -21,24 +22,49 @@ class SupplierService
 
     public function createSupplier(array $data): Supplier
     {
-        return $this->suppliers->create($data);
+        $supplier = $this->suppliers->create($data);
+
+        if (! $supplier) {
+            $error = "Unable to create new supplier";
+            Log::error($error);
+            throw new \Exception($error);
+        }
+
+        return $supplier;
     }
 
 
     public function updateSupplier(Supplier $supplier, array $data): bool
     {
-        return $this->suppliers->update($supplier, $data);
+        $isUpdated = $this->suppliers->update($supplier, $data);
+
+        if (! $isUpdated) {
+            $error = "Unable to update supplier";
+            Log::error($error);
+            throw new \Exception($error);
+        }
+
+        return true;
     }
 
 
     public function deleteSupplier(Supplier $supplier): bool
     {
         if ($supplier->hasPurchases() || $supplier->hasPayments()) {
-            throw new \RuntimeException('Cannot delete supplier with existing supplies or payments.');
-            return false;
+            $error = 'Cannot delete supplier with existing supplies or payments.';
+            Log::error($error);
+            throw new \Exception($error);
         }
 
-        return $this->suppliers->delete($supplier);
+        $isDeleted = $this->suppliers->delete($supplier);
+
+        if (! $isDeleted) {
+            $error = 'Unable to delete ';
+            Log::error($error);
+            throw new \Exception($error);
+        }
+
+        return true;
     }
 
 }

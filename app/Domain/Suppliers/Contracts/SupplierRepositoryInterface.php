@@ -15,6 +15,7 @@ interface SupplierRepositoryInterface
     public function update(Supplier $supplier, array $data): bool;
     public function delete(Supplier $supplier): bool;
 
+    
     public function allSuppliers(): Collection;
 
 }
