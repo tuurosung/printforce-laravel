@@ -4,12 +4,12 @@ namespace App\Domain\Customers\Repositories;
 
 use App\Data\CustomerData;
 use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Domain\PrintJobs\Models\DesignJob;
+use App\Domain\PrintJobs\Models\EmbroideryJob;
+use App\Domain\PrintJobs\Models\LargeFormatJob;
+use App\Domain\PrintJobs\Models\PhotographyJob;
+use App\Domain\PrintJobs\Models\PressJob;
 use App\Models\Customers\Customer;
-use App\Models\Jobs\DesignJob;
-use App\Models\Jobs\EmbroideryJob;
-use App\Models\Jobs\LargeFormatJob;
-use App\Models\Jobs\PhotographyJob;
-use App\Models\Jobs\PressJob;
 use App\Services\BaseService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
