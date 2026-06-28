@@ -3,12 +3,14 @@
 namespace App\Enums\Services;
 
 use App\Domain\PrintServices\Models\PrintService;
+use App\Traits\Cacheable;
 use App\Traits\System\EnumTrait;
 use Illuminate\Support\Collection;
 
 enum ServiceCategoryEnum: string
 {
     use EnumTrait;
+    use Cacheable;
 
 
     case LARGE_FORMAT = '001';
@@ -21,7 +23,13 @@ enum ServiceCategoryEnum: string
 
     public function services(): Collection
     {
-        return PrintService::inCategory($this)->get();
+        // return PrintService::inCategory($this)->get();
+        return $this->rememberCache(
+            $this->name,
+            function () {
+                return PrintService::inCategory($this)->get();
+            }
+        );
     }
 
     public function servicesArray(): array
