@@ -1,11 +1,8 @@
 <?php
 
-use App\Domain\PrintServices\Models\PrintService;
-use App\Domain\PrintServices\Services\PrintServicesHandler;
+
 use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
-use App\Services\PrintServicesManager;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 use App\Traits\UpdatedServiceIdTrait;
 
@@ -27,7 +24,7 @@ new class extends Component {
     public string $notes = '';
 
 
-    // // Derived Values
+    // Derived Values
     public float $subTotal = 0;
     // public float $taxes = 0;
     public float $total = 0;

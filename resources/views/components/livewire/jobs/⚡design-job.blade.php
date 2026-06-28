@@ -1,16 +1,18 @@
 <?php
 
-use App\Domain\PrintServices\Services\PrintServicesHandler;
+use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
-use App\Models\Services\PrintService;
-use App\Services\PrintServicesManager;
 use Livewire\Component;
+use App\Traits\UpdatedServiceIdTrait;
 
 new class extends Component {
+
+    use UpdatedServiceIdTrait;
+
     public Customer $customer;
 
-    public ?string $serviceId = '';
-    public ?float $unitCost = 0;
+    // public ?string $serviceId = '';
+    public ?float $cost = 0;
     public ?int $qty = 1;
     public ?float $discount = 0;
     public ?float $premium = 0;
@@ -19,20 +21,8 @@ new class extends Component {
     public string $date = '';
     public string $notes = '';
 
+    public array $designServices = [];
 
-    public function updatedServiceId(string $value): void
-    {
-        if (blank($this->serviceId)) {
-            $this->unitCost = 0;
-            $this->recalculate();
-            return;
-        }
-
-        $printService = app(PrintServicesHandler::class)->getServiceById($value);
-        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
-
-        $this->recalculate();
-    }
 
 
     public function updated(): void
@@ -41,17 +31,15 @@ new class extends Component {
     }
 
 
-
     public function recalculate(): void
     {
         $qty = $this->getNumericValue($this->qty);
-        $unitCost = $this->getNumericValue($this->unitCost);
+        $cost = $this->getNumericValue($this->cost);
         $discount = $this->getNumericValue($this->discount);
         $premium = $this->getNumericValue($this->premium);
 
-        $this->subTotal = (float) $unitCost * $qty;
+        $this->subTotal = (float) $cost * $qty;
         $this->total = (float) round($this->subTotal - $discount + $premium);
-
     }
 
 
@@ -65,20 +53,12 @@ new class extends Component {
             is_float($value) => (float) $value,
             default => 0
         };
-
     }
 
-    public function designServices(): array
-    {
-        return app(PrintServicesManager::class)->getDesignServicesArray();
-    }
 
-    public function with(): array
+    public function mount(): void
     {
-        return [
-            'customer' => $this->customer,
-            'design_services' => $this->designServices(),
-        ];
+        $this->designServices = ServiceCategoryEnum::DESIGN->servicesArray();
     }
 };
 ?>
@@ -130,8 +110,8 @@ new class extends Component {
 
                                         <option value="" selected>Select one</option>
 
-                                        @foreach ($design_services as $key => $value)
-                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @foreach ($designServices as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
 
                                     </select>
@@ -141,7 +121,7 @@ new class extends Component {
                             </div>
                             <div class="col">
                                 <label for="" class="form-label">Cost</label>
-                                <input type="text" class="form-control" name="unit_cost" id="design_cost" wire:model.live="unitCost" value="{{ $unitCost }}" readonly
+                                <input type="text" class="form-control" name="unit_cost" id="design_cost" wire:model.live="cost" value="{{ $cost }}" readonly
                                     required>
                             </div>
                             <div class="col">
