@@ -2,17 +2,21 @@
 
 use App\Domain\PrintServices\Models\PrintService;
 use App\Domain\PrintServices\Services\PrintServicesHandler;
+use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
 use App\Services\PrintServicesManager;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Traits\UpdatedServiceIdTrait;
 
 new class extends Component {
+
+    use UpdatedServiceIdTrait;
+
     // Properties
     public Customer $customer;
 
     // Form State
-    public string $serviceId = '';
     public ?float $width = 1;
     public ?float $height = 1;
     public ?string $measuringUnit = '';
@@ -24,43 +28,12 @@ new class extends Component {
 
 
     // // Derived Values
-    public float $unitCost = 0;
     public float $subTotal = 0;
     // public float $taxes = 0;
     public float $total = 0;
 
     // Lifecycle Hooks
-
-    #[Computed]
-    public function largeFormatServices(): array
-    {
-        return app(PrintServicesManager::class)->getLargeFormatServicesArray();
-    }
-
-
-    public function updatedServiceId(string $value): void
-    {
-        if (blank($this->serviceId)) {
-            $this->unitCost = 0;
-            $this->recalculate();
-            return;
-        }
-
-        // $printService = PrintService::where('service_id', $value)->first();
-        $printService = app(PrintServicesHandler::class)->getServiceById($value);
-
-        if (!$this->customer instanceof Customer) {
-            return;
-        }
-
-        if (!$printService instanceof PrintService) {
-            return;
-        }
-
-        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customer, $printService);
-
-        $this->recalculate();
-    }
+    public array $largeFormatServices = [];
 
 
     public function updated(): void
@@ -74,20 +47,13 @@ new class extends Component {
         $width = $this->width ?? 0;
         $height = $this->height ?? 0;
         $copies = $this->copies ?? 0;
-        $discount = $this->discount ?? 0;
-        $premium = $this->premium ?? 0;
 
-        $area = $this->calculateArea($width, $height);
+        $area = (float) $width *  $height;
         $convertedArea = $this->convertArea($area, $this->measuringUnit);
 
-        $this->subTotal = (int) round($convertedArea * $this->unitCost * $this->copies);
+        $this->subTotal = (int) round($convertedArea * $this->cost * $this->copies);
 
         $this->total = $this->subTotal - $this->discount + $this->premium;
-    }
-
-    private function calculateArea(float $width, float $height): float
-    {
-        return $width * $height;
     }
 
     private function convertArea(float $area, string $measuringUnit): float
@@ -98,15 +64,11 @@ new class extends Component {
         };
     }
 
-
-
-    public function with(): array
+    public function mount(): void
     {
-        return [
-            'customer' => $this->customer,
-            'largeFormatServices' => $this->largeFormatServices(),
-        ];
+        $this->largeFormatServices = ServiceCategoryEnum::LARGE_FORMAT->servicesArray();
     }
+
 };
 ?>
 
@@ -179,7 +141,7 @@ new class extends Component {
                                 <div class="col">
                                     <div class="mb-3">
                                         <label for="cost" class="form-label">Unit Cost</label>
-                                        <input type="text" class="form-control py-2.5 px-4" name="cost" id="largeformat_cost" value="{{ $unitCost }}"
+                                        <input type="text" class="form-control py-2.5 px-4" name="cost" id="largeformat_cost" value="{{ $cost }}"
                                             readonly required />
                                     </div>
 
