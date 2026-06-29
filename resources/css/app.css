@@ -1,15 +1,244 @@
-@import './fontawesome/css/all.min.css';
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jost:ital,wght@0,100..900;1,100..900&family=Marcellus&family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
-@import './printforce/ui.css';
-@import './printforce/uix.css';
-@import '../plugins/datatables/datatables.css';
-@import './printforce/datepicker.css';
-@import './printforce/toastify.min.css';
-@import './printforce/lity.min.css';
-
-@import './matdash/owl.carousel.min.css';
-@import './matdash/style.css';
+@import url('https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css');
+@import url('https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-straight/css/uicons-solid-straight.css');
+@import url('https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css');
+@import url('https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css');
 
 
+@import "tailwindcss";
+@import './ui.css';
+@import './just-css.css';
 
-@import './printforce/customization.css';
+/* Preline UI */
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
+
+
+/* @source "../../node_mdules/@preline/select/*.js"; */
+/* Plugins */
+/* @plugin "@"; */
+/* Preline Themes */
+
+
+/* Custom Utilities */
+@import './utilities.css';
+
+
+
+@theme {
+    /* --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; */
+    --font-cal-sans-regular: 'Cal Sans', sans-serif;
+    --font-crimson-pro-regular: 'Crimson Pro', serif;
+    --font-crimson-pro-bold: 'Crimson Pro', serif;
+    --font-inter-regular: 'Inter', sans-serif;
+    --font-inter-bold: 'Inter', sans-serif;
+    --font-jost-regular: 'Jost', sans-serif;
+    --font-jost-bold: 'Jost', sans-serif;
+    --font-marcellus-regular: 'Marcellus', serif;
+    --font-open-sans-regular: 'Open Sans', sans-serif;
+    --font-open-sans-bold: 'Open Sans', sans-serif;
+    --font-urbanist-regular: 'Urbanist', sans-serif;
+    --font-urbanist-bold: 'Urbanist', sans-serif;
+    --font-sans: "Avante-Md", ui-sans-serif, system-ui, sans-serif;
+
+    --font-body: var(--font-sans);
+    --font-heading: var(--font-sans);
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-accent: var(--color-neutral-800);
+    --color-accent-content: var(--color-neutral-800);
+    --color-accent-foreground: var(--color-white);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-white);
+        --color-accent-content: var(--color-white);
+        --color-accent-foreground: var(--color-neutral-800);
+    }
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+\[:where(&)\]:size-4 {
+    @apply size-4;
+}
+
+
+
+@layer utilities {
+    .bg-info\/5 {
+        @supports (color:color-mix(in lab, red, red)) {
+                {
+                background-color: color-mix(in oklab, var(--color-info) 5%, transparent);
+            }
+        }
+    }
+}
+
+
+/* Custom Styling ------------------------------------------------------------ */
+
+
+/* Bootstrap row equivalent */
+.row {
+    @apply flex
+}
+
+.col-md-6 {
+    position: relative;
+    width: 50%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+
+i[class^="fi-rr-"]::before,
+i[class*=" fi-rr-"]::before,
+span[class^="fi-rr-"]::before,
+span[class*="fi-rr-"]::before,
+
+i[class^="fi-br-"]::before,
+i[class*=" fi-br-"]::before,
+span[class^="fi-br-"]::before,
+span[class*="fi-br-"]::before {
+    font-family: uicons-regular-rounded !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* align middle */
+    vertical-align: middle;
+    display: inline-block;
+}
+
+i[class^="fi-rr-"]::before,
+i[class*=" fi-rr-"]::before,
+span[class^="fi-rr-"]::before,
+span[class*="fi-rr-"]::before,
+
+i[class^="fi-br-"]::before,
+i[class*=" fi-br-"]::before,
+span[class^="fi-br-"]::before,
+span[class*="fi-br-"]::before {
+
+    line-height: 1 !important;
+    margin-top: -4px !important;
+
+}
+
+
+
+
+
+.fi,
+.fi::before {
+    line-height: 1.2 !important;
+}
+
+.form-control {
+    @apply py-2.5 px-4
+}
+
+
+.bg-pink {
+    background-color: oklch(59.2% 0.249 0.584);
+}
+
+
+.datepicker-picker {
+    background-color: #fff !important;;
+}
+
+.datepicker .selected {
+    background-color: var(--color-primary);
+}
+
+
+.tables {
+    @apply w-full text-sm text-left table
+}
+
+.table thead {
+    @apply text-sm text-white bg-gray-700 border-b border-t
+}
+
+.table tr {
+    @apply border-b
+}
+
+.table tr td {
+    @apply text-dark
+}
+
+.table thead th,
+.table tbody td {
+    @apply py-2 px-4 text-[13px]
+}
+
+/* .modal-close-btn {
+    padding-block: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 2);
+    @apply text-sm font-medium rounded-md border border-gray-200 bg-white text-gray-800 shadow-sm disabled: opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600
+} */
+
+@layer components {
+    .form-label {
+        display: block;
+        margin-bottom: calc(var(--spacing) * 2);
+        color: color-mix(in oklab, var(--text-base), 40%, #000000);
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+}
+
+
+@layer utilities {
+    .dropdown-item {
+        @apply flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100
+            focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700
+            dark:hover:text-gray-300 dark:focus:bg-gray-700
+    }
+
+
+}
