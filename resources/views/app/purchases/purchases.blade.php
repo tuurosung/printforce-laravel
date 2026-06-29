@@ -1,18 +1,14 @@
 @extends('layout.app')
 
-
 @section('content')
 
-<x-printforce.headers.page-header title="Purchases">
+<x-headers.page-header pageTitle="Purchases" currentPage="Purchases"></x-headers.page-header>
 
-</x-printforce.headers.page-header>
 
 
 
 <div class="card border-0">
     <div class="card-body">
-
-        <h4 class="montserrat font-weight-bold mb-5">Purchase Invoices</h4>
 
         <table class="table table-sm datatables">
             <thead class="elegant-color text-white">
@@ -51,7 +47,10 @@
                     <td class="text-end">{{ number_format($purchase->total_tax, 2) }}</td>
                     <td class="text-end">{{ number_format($purchase->total, 2) }}</td>
                     <td class="text-end">
-                        <a href="javascript:void(0)" class="text-danger">Delete</a>
+                        <form method="POST" action="{{ route('purchases.destroy', $purchase) }}">
+                            @method('DELETE')
+                            <a href="javascript:void(0)" class="text-danger delete">Delete</a>
+                        </form>
                     </td>
                 </tr>
                 @endforeach
@@ -65,5 +64,13 @@
 @endsection
 
 @section('js')
-
+<script type="text/javascript">
+    $(document).on('click', ".table tbody .delete", function() {
+        const $frm = $(this).closest('form');
+        swalConfirm(
+            () => $frm.submit(),
+            "Are you sure you want to to delete this purchase?",
+        )
+    })
+</script>
 @endsection
