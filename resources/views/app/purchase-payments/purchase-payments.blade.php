@@ -75,17 +75,19 @@
                         <td class="text-end">{{ number_format($payment->amount_paid, 2) }}</td>
                         <td class="text-end">
                             <div class="hs-dropdown relative inline-flex">
-                                <button id="hs-dropdown-default" type="button" class="hs-dropdown-toggle">
+                                <button id="hs-dropdown-default" type="button" class="hs-dropdown-toggle cursor-pointer ">
                                     <span class="leading-tight">Actions</span>
                                     <i class="fi fi-rr-angle-small-down text-base leading-tight font-medium hs-dropdown-open:rotate-180"></i>
                                 </button>
                                 <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-md p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full z-10" aria-labelledby="hs-dropdown-default">
-                                    <x-dropdowns.dropdown-item href="#" label="Edit" icon="edit" iconColour="blue-600" data-url="{{ route('purchase-payment.edit', $payment) }}" />
+                                    <x-dropdowns.dropdown-item class="edit" href="#" label="Edit" icon="edit" iconColour="blue-600" data-url="{{ route('purchase-payment.edit', $payment) }}" />
+
                                     <form method="POST" action="{{ route('purchase-payment.destroy', $payment) }}" class="d-inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <x-dropdowns.dropdown-item href="#" label="Delete" icon="trash" iconColour="danger" />
+                                        <x-dropdowns.dropdown-item class="delete" href="#" label="Delete" icon="trash" iconColour="danger" />
                                     </form>
+
                                 </div>
                             </div>
 
@@ -109,16 +111,18 @@
 
 @section('js')
 
-<script>
+<script type="text/javascript">
+
     $(document).on('click', '.table tbody .edit', function() {
 
         const url = $(this).data('url');
 
         $.get(url, function(response) {
             $('#modal_holder').html(response);
-            $('#edit_payment_modal').modal('show');
-            initializeSelect2()
-            initializeDatepickers()
+
+            const element = document.querySelector('#edit_payment_modal')
+            const modal = new HSOverlay(element);
+            modal.open();
         })
     });
 
@@ -127,11 +131,11 @@
 
         $form = $(this).closest('form');
 
-        bootbox.confirm("Are you sure you want to delete this payment?", function(result) {
-            if (result) {
-                $form.submit();
-            }
-        })
+        swalConfirm(
+            () => $form.submit(),
+            "Are you sure you want to delete this payment"
+        )
+
     });
 </script>
 @endsection
