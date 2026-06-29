@@ -2,10 +2,10 @@
 
 namespace App\Domain\Purchases\Http\Controllers;
 
+use App\Domain\Purchases\Models\PurchasePayment;
 use App\Domain\Purchases\Services\PurchasePaymentService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Purchases\StorePurchasePaymentRequest;
-use App\Models\Purchases\PurchasePayment;
 use App\Services\Accounting\AccountService;
 use App\Traits\HandleResourceActions;
 
@@ -77,7 +77,8 @@ class PurchasePaymentController extends Controller
      */
     public function update(StorePurchasePaymentRequest $request, PurchasePayment $purchasePayment)
     {
-        return $this->handleUpdate($request, $purchasePayment);
+        $this->purchasePaymentService->updatePayment($purchasePayment, $request->validated());
+        return redirect()->back()->with('success', 'Payment updated successfully');
     }
 
     /**
@@ -85,7 +86,8 @@ class PurchasePaymentController extends Controller
      */
     public function destroy(PurchasePayment $purchasePayment)
     {
-        return $this->handleDelete($purchasePayment);
+        $this->purchasePaymentService->deletePayment($purchasePayment);
+        return redirect()->back()->with('success','Payment deleted successfully');
     }
 
 }
