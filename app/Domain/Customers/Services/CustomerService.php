@@ -81,6 +81,7 @@ class CustomerService
     public function getIndexData(): array
     {
         $statistics = $this->getCustomerStatistics();
+
         return [
             'customers' => $this->getLatestCustomers(),
             'statistics' => $statistics,
@@ -96,9 +97,6 @@ class CustomerService
         return [
             'customer' => $customer,
             'payment_accounts' => $this->accountService->getAssetAccounts(),
-            'design_services' => $this->printServices->getDesignServicesArray(),
-            'press_services' => $this->printServices->getPressServicesArray(),
-            'photography_services' => $this->printServices->getPhotographyServicesArray(),
         ];
     }
 
