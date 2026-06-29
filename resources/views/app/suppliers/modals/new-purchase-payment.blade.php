@@ -2,12 +2,20 @@
 
     <x-modals.modal-header modalId="new_payment_modal" modalTitle="New Payment" />
 
-    <form id="" autocomplete="off" method="POST" action="" {{ route('purchases.payments.store', $supplier) }}">
+    <form autocomplete="off" method="POST" action="{{ route('purchase-payment.store') }}">
         @csrf
-
         <div class="p-6">
 
             <div class="grid grid-cols-12 gap-6">
+
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                    <div>
+                        <label class="form-label">Supplier Name</label>
+                        <select class="form-control" name="supplier_id" id="supplier_id" required>
+                            <option value="{{ $supplier->supplier_id }}">{{ $supplier->supplier_name }}</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
@@ -43,7 +51,6 @@
             </div>
 
         </div>
-
 
         <x-modals.modal-footer modalId="new_payment_modal" btnLabel="Record Payment" />
 
