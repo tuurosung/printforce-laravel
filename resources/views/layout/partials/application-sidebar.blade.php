@@ -52,7 +52,7 @@
                                             <x-sidebar.sidebar-item label="Purchases" icon="shopping-cart" href="{{ route('purchases.index') }}" />
 
                                             <li class="sidebar-item">
-                                                <a class="sidebar-link dark-sidebar-link flex align-middle" href="{{ route('dashboard') }}">
+                                                <a class="sidebar-link dark-sidebar-link flex align-middle" href="{{ route('purchase-payment.index') }}">
                                                     <i class="fi fi-rr-money-bill-transfer shrink-0"></i>
                                                     <span class="hide-menu shrink-0 my-0">Purchase Payments</span>
                                                 </a>
@@ -79,16 +79,10 @@
                                                     <span class="hide-menu shrink-0 my-0">Employees</span>
                                                 </a>
                                             </li>
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link dark-sidebar-link flex align-middle" href="{{ route('dashboard') }}">
-                                                    <i class="fi fi-rr-file-invoice-dollar shrink-0"></i>
-                                                    <span class="hide-menu shrink-0 my-0">Registered Users</span>
-                                                </a>
-                                            </li>
                                             <x-sidebar.sidebar-item label="Registered Users" icon="users" href="{{ route('hr.users.index') }}" />
                                             <x-sidebar.sidebar-item label="Services" icon="settings" href="{{ route('print-services.index') }}" />
 
-                                            <li class="sidebar-item mt-6">
+                                            <!-- <li class="sidebar-item mt-6">
                                                 <a class=" sidebar-link dark-sidebar-link " href="javascript:void(0)">
                                                     <i class="ti ti-award flex-shrink-0 text-xl"></i> <span
                                                         class="hide-menu">Chip</span>
@@ -105,7 +99,7 @@
                                                     <span
                                                         class="ms-auto text-primary outline outline-1 rounded-full outline-primary text-center px-2 text-xs py-1 hide-menu">outline</span>
                                                 </a>
-                                            </li>
+                                            </li> -->
 
                                         </ul>
                                     </nav>
@@ -135,7 +129,7 @@
                         alt="profile">
                     <div class="ml-4 rtl:mr-4 rtl:ml-0">
                         <h5 class="text-base font-semibold text-dark dark:text-white">{{ auth()->user()->name }}</h5>
-                        <p class="text-xs font-normal text-link dark:text-darklink ">Designer</p>
+                        <p class="text-xs font-normal text-link dark:text-darklink ">{{ auth()->user()->access_level->label() }}</p>
                     </div>
                     <div class="ms-auto hs-tooltip hs-tooltip-toggle">
                         <a href="javascript:void(0)"><i class="ti ti-power text-primary me-3 text-2xl "></i>
