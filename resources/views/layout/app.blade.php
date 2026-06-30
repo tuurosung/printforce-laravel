@@ -62,6 +62,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/core@1.7.5"></script>
     <script src="https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6"></script>
 
+    
     @livewireScripts
 </body>
 @include('layout.partials.footer')
