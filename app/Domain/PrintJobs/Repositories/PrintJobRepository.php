@@ -4,14 +4,22 @@ namespace App\Domain\PrintJobs\Repositories;
 
 use App\Domain\PrintJobs\Contracts\PrintJobRepositoryInterface;
 use App\Domain\PrintJobs\Models\OtherJob;
+use App\Domain\PrintJobs\Models\PrintforceJob;
 use App\Models\Jobs\DesignJob;
 use App\Models\Jobs\EmbroideryJob;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use App\Models\Jobs\PressJob;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Override;
 
 class PrintJobRepository implements PrintJobRepositoryInterface
 {
+    public function __construct(
+        private PrintforceJob $model
+    ){}
+
     public function findByIdAndType(string $jobId, string $jobType)
     {
         $model = $this->matchModel($jobType);
@@ -44,5 +52,18 @@ class PrintJobRepository implements PrintJobRepositoryInterface
             ]);
 
         return (bool) $result;
+    }
+
+    #[Override]
+    public function recentJobs(): Collection
+    {
+        return $this->baseQuery()->get();
+    }
+
+
+
+    private function baseQuery(): Builder
+    {
+        return $this->model->newQuery()->orderByDesc('created_at');
     }
 }
