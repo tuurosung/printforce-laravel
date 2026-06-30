@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" data-color-theme="Blue_Theme" class="light selected" data-layout="vertical"
+    data-boxed-layout="boxed" data-card="shadow">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PrintForce - Workflow Manager For Print Businesses </title>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- set favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}">
+    <title>PrintForce - Workflow Manager For Print Businesses</title>
+
+    <style type="text/css">
+        @font-face {
+            font-family: 'Avante-Md';
+            src: url("{{ asset('font/avante/avante-md.otf') }}") format('opentype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
-
-    <link rel='stylesheet'
-        href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-    <link rel='stylesheet'
-        href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
-    <link rel='stylesheet'
-        href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-chubby/css/uicons-regular-chubby.css'>
-
-    <style href="/resources/css/printforce/customization.css"></style>
-
-    <!-- Only load vite in local environment -->
-
-
-
+    @livewireStyles
 </head>
