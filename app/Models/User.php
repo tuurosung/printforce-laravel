@@ -6,11 +6,13 @@ namespace App\Models;
 
 use App\Enums\Users\AccessLevelEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 #[Fillable(['subscriber_id', 'name', 'email','password', 'access_level', 'first_name', 'last_name'])]
 class User extends Authenticatable
@@ -45,7 +47,11 @@ class User extends Authenticatable
         ];
     }
 
+    #[Scope]
+    public static function technicalUsers(): Builder
+    {
 
+    }
 
 
     public function company()
