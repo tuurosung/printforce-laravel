@@ -5,8 +5,10 @@ namespace App\Domain\PrintServices\Models;
 use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Customers\Customer;
 use App\Models\Scopes\SubscriberScope;
+use App\Observers\Services\PrintServiceObserver;
 use App\Traits\ScopedActive;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,9 +16,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 #[ScopedBy(SubscriberScope::class)]
+#[ObservedBy([PrintServiceObserver::class])]
 #[Fillable(['subscriber_id', 'service_id', 'service_name', 'category_id', 'individual', 'artist', 'institution'])]
 class PrintService extends Model
 {
@@ -24,30 +26,6 @@ class PrintService extends Model
     use HasFactory;
     use ScopedActive;
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($service) {
-            $service->service_id = generateRandomString();
-            $service->subscriber_id = Auth::user()->subscriber_id;
-        });
-    }
-
-    protected static function booted()
-    {
-        static::addGlobalScope('status', function ($builder) {
-            $builder->where('status', 'active');
-        });
-
-        static::updating(function ($service) {
-            $service->subscriber_id = Auth::user()->subscriber_id;
-        });
-
-        static::deleting(function ($service) {
-            $service->subscriber_id = Auth::user()->subscriber_id;
-        });
-    }
 
     protected $table = 'services';
     protected $primaryKey = 'service_id';
@@ -58,7 +36,7 @@ class PrintService extends Model
     protected function casts(): array
     {
         return [
-
+            'category_id'=> ServiceCategoryEnum::class,
         ];
     }
 
@@ -77,12 +55,6 @@ class PrintService extends Model
     }
 
 
-    public static function getAllServices()
-    {
-        return Cache::remember('all_services', 60 * 60 * 24, function () {
-            return PrintService::all();
-        });
-    }
 
     public static function generateServiceId()
     {
