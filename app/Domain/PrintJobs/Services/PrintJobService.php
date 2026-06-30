@@ -3,12 +3,14 @@
 namespace App\Domain\PrintJobs\Services;
 
 use App\Domain\PrintJobs\Contracts\PrintJobRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class PrintJobService
 {
     public function __construct(
         private readonly PrintJobRepositoryInterface $printJobRepository
     ){}
+    
 
     public function getJobByIdAndType(string $jobId, string $jobType)
     {
@@ -24,5 +26,10 @@ class PrintJobService
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function recentJobs(): Collection
+    {
+        return $this->printJobRepository->recentJobs();
     }
 }
