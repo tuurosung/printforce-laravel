@@ -1,10 +1,10 @@
 <?php
 
-use Livewire\Component;
+use App\Domain\PrintServices\Models\PrintService;
 use App\Domain\PrintServices\Services\PrintServicesHandler;
-use App\Models\Services\PrintService;
 use App\Models\Customers\Customer;
 use App\Models\Invoices\CustomerInvoice;
+use Livewire\Component;
 
 
 new class extends Component {
@@ -117,7 +117,7 @@ new class extends Component {
                     <div class="">
                         <label for="serviceId" class="form-label">Service</label>
                         <select class="form-control form-select-sm" name="service_id" id="serviceId" required
-                            data-fetch-url="{{ route('configuration.print-services.fetch-service-detail') }}" wire:model.live="serviceId">
+                            wire:model.live="serviceId">
                             <option value="" selected>--- Select Service ---</option>
                             @foreach ($printServices as $key => $value)
                                 <option value="{{ $key }}">{{ $value }}</option>
