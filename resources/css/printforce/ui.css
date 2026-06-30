@@ -31862,7 +31862,7 @@ body .note-modal-backdrop {
 }
 
 .profile .profile-header .profile-header-cover {
-    background: url(images/profile-cover.jpg);
+    /* background: url('../../images/profile-cover.jpg'); */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -32485,7 +32485,7 @@ body .note-modal-backdrop {
 
 @media (min-width:992px) {
     .app-with-bg {
-        background-image: url(images/bg.jpg);
+        background-image: url('../../images/bg.jpg');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;

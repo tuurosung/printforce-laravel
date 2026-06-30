@@ -31,7 +31,7 @@ const HandleLargeFormatJobs =  {
         this.elements.$document.on('click', '.table tbody .delete-button', this.handleDeleteJobClick.bind(this));
         this.elements.$document.on('click', '.table tbody .assign-job-button', this.handleAssignJobClick.bind(this));
         this.elements.$document.on('click', '.table tbody .update-jobstatus-button', this.handleUpdateJobStatusClick.bind(this));
-        this.elements.$serviceId.on('change', this.handleServiceChange.bind(this));
+        // this.elements.$serviceId.on('change', this.handleServiceChange.bind(this));
         this.elements.$jobsFilterFrm.on('submit', this.handleJobsFilter.bind(this));
 
         $(document).on('change', '#service_id', this.handleServiceChange.bind(this));

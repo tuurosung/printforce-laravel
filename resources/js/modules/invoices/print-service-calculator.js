@@ -26,6 +26,8 @@ const PrintServiceCalculator = {
         }
     },
 
+
+
     bindEvents() {
         this.elements.$serviceId.on('change', () => this.handleServiceChange());
         this.elements.$width.add(this.elements.$height).add(this.elements.$quantity).add(this.elements.$materialUnitCost)
@@ -52,7 +54,7 @@ const PrintServiceCalculator = {
 
             console.error('Error fetching service details:', error);
             this.showError('Failed to fetch service details.'); // Show an error message.
-            
+
         }
     },
 
