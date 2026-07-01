@@ -10,7 +10,7 @@ class PrintJobService
     public function __construct(
         private readonly PrintJobRepositoryInterface $printJobRepository
     ){}
-    
+
 
     public function getJobByIdAndType(string $jobId, string $jobType)
     {
@@ -31,5 +31,15 @@ class PrintJobService
     public function recentJobs(): Collection
     {
         return $this->printJobRepository->recentJobs();
+    }
+
+    public function filterJobs(?string $startDate, ?string $endDate, ?string $serviceId,  ?string $customerId): Collection
+    {
+        return $this->printJobRepository->filter(
+            $startDate,
+            $endDate,
+            $serviceId,
+            $customerId
+        );
     }
 }
