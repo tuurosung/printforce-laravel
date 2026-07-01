@@ -15,6 +15,16 @@ class PrintforceJob extends Model
 {
     protected $table = 'jobs_view';
 
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'=> 'datetime'
+        ];
+    }
+
+
+
     public function viewRoute(): Attribute
     {
         return Attribute::make(
