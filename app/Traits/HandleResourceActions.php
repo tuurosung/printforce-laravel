@@ -82,9 +82,6 @@ trait HandleResourceActions
                 ->where($this->model->getKeyName(), $model->{$this->model->getKeyName()})
                 ->delete();
 
-            // if (!$model->delete()) {
-            //     return $this->handleError('Oops! Sorry, unable to delete ' . $this->modelName());
-            // }
 
             return $this->handleSuccess('Bingo! '. $this->modelName() . ' deleted successfully');
 
