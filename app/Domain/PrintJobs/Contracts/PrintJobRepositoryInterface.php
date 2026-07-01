@@ -12,4 +12,5 @@ interface PrintJobRepositoryInterface
     public function assignJob(string $jobId, string $jobType, string $userId): bool;
 
     public function recentJobs() : Collection;
+    public function filter(?string $startDate, ?string $endDate, ?string $serviceId, ?string $customerId): Collection;
 }
