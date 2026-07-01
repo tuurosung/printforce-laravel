@@ -10,7 +10,7 @@ use App\Models\Jobs\EmbroideryJob;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
 use App\Models\Jobs\PressJob;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Override;
 
@@ -18,7 +18,7 @@ class PrintJobRepository implements PrintJobRepositoryInterface
 {
     public function __construct(
         private PrintforceJob $model
-    ){}
+    ) {}
 
     public function findByIdAndType(string $jobId, string $jobType)
     {
@@ -36,7 +36,7 @@ class PrintJobRepository implements PrintJobRepositoryInterface
             "Press" => new PressJob(),
             "Design" => new DesignJob(),
             "Photography" => new PhotographyJob(),
-            "Others" => new OtherJob(   )
+            "Others" => new OtherJob()
         };
     }
 
@@ -58,6 +58,34 @@ class PrintJobRepository implements PrintJobRepositoryInterface
     public function recentJobs(): Collection
     {
         return $this->baseQuery()->get();
+    }
+
+
+    public function filter(?string $startDate, ?string $endDate, ?string $serviceId, ?string $customerId): Collection
+    {
+        return $this->filteredQuery($startDate, $endDate, $serviceId, $customerId)->get();
+    }
+
+
+    private function filteredQuery(
+        ?string $startDate,
+        ?string $endDate,
+        ?string $serviceId,
+        ?string $customerId,
+    ): Builder {
+        return $this->baseQuery()
+            ->when(
+                filled($startDate) && filled($endDate),
+                fn (Builder $query) => $query->whereBetween('created_at', [$startDate, $endDate]),
+            )
+            ->when(
+                filled($serviceId),
+                fn (Builder $query) => $query->where('service_id', $serviceId),
+            )
+            ->when(
+                filled($customerId),
+                fn (Builder $query) => $query->where('customer_id', $customerId),
+            );
     }
 
 
