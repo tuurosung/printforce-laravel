@@ -5,6 +5,7 @@ namespace App\Traits\Customers;
 use App\DTOs\Customers\CustomerData;
 use App\Models\Customers\Customer;
 use DomainException;
+use Illuminate\Database\Eloquent\Collection;
 
 trait CustomerCRUD
 {
@@ -42,6 +43,13 @@ trait CustomerCRUD
 
         return true;
     }
+
+
+    public function allCustomers(): Collection
+    {
+        return $this->model->get();
+    }
+
 
     // Guards ------------------------------------------------------------------------------
     private function guardCustomerWithBalance(Customer $customer): void
