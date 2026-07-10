@@ -18,9 +18,8 @@ class CustomerController extends Controller
     use HandleResourceActions;
 
     public function __construct(
-        private readonly CustomerRepositoryInterface $customers,
         private readonly CustomerService $customerService,
-    ){}
+    ) {}
 
 
     /**
@@ -37,9 +36,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        // return view('customer.new-customer', [
-        //     'categories' => CustomerCategory::all(),
-        // ]);
+        //
     }
 
 
@@ -48,10 +45,9 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
-        $customer = $this->customers->createCustomer(
-            CustomerData::from($request)
-        );
+        $data = $request->toData();
 
+        $customer = $this->customerService->createCustomer($data);
         return redirect()->route('customers.customer.info', $customer);
     }
 
@@ -61,7 +57,8 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return view('app.customer.customer-info',
+        return view(
+            'app.customer.customer-info',
             $this->customerService->getShowData($customer)
         );
     }
@@ -81,8 +78,9 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
-       $this->customers->updateCustomer($customer, CustomerData::from($request));
-       return redirect()->back()->with('success', 'Customer updated successfully');
+        $data = $request->toData();
+        $this->customerService->updateCustomer($customer, $data);
+        return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
 
@@ -91,12 +89,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer): RedirectResponse
     {
-        try {
-            $this->customerService->deleteCustomer($customer);
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        } 
-
+        $this->customerService->deleteCustomer($customer);
         return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 }
