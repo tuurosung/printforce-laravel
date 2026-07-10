@@ -2,8 +2,6 @@
 
 namespace App\Domain\Customers\Http\Controllers;
 
-use App\Data\CustomerData;
-use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
 use App\Domain\Customers\Services\CustomerService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreCustomerRequest;
