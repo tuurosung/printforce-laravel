@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Customers;
 
-use Illuminate\Validation\Rule;
-use App\Models\Customers\Customer;
+
+use App\DTOs\Customers\CustomerData;
+use App\Enums\Customers\CustomerCategoryEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCustomerRequest extends FormRequest
@@ -23,12 +24,20 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
-       
         $rules = (new StoreCustomerRequest())->rules();
-
 
         return [
             ...$rules,
         ];
+    }
+
+
+    public function toData(): CustomerData
+    {
+        return new CustomerData(
+            name: $this->string('name'),
+            phone: $this->string('phone'),
+            category: CustomerCategoryEnum::from($this->string('category')),
+        );
     }
 }
