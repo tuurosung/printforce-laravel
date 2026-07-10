@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Customers;
 
-use Illuminate\Validation\Rule;
+use App\DTOs\Customers\CustomerData;
+use App\Enums\Customers\CustomerCategoryEnum;
 use App\Models\Customers\Customer;
+use App\Models\Customers\CustomerCategory;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCustomerRequest extends FormRequest
 {
@@ -43,5 +46,16 @@ class StoreCustomerRequest extends FormRequest
             ],
             'category' => 'required'
         ];
+    }
+
+
+
+    public function toData(): CustomerData
+    {
+        return new CustomerData(
+            name: $this->string('name'),
+            phone: $this->string('phone'),
+            category: CustomerCategoryEnum::from($this->string('category')),
+        );
     }
 }
