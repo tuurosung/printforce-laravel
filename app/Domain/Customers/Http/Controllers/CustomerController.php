@@ -2,11 +2,11 @@
 
 namespace App\Domain\Customers\Http\Controllers;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\Customers\Services\CustomerService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
-use App\Models\Customers\Customer;
 use App\Traits\HandleResourceActions;
 use Illuminate\Http\RedirectResponse;
 
