@@ -3,91 +3,59 @@
 namespace App\Domain\Customers\Services;
 
 
-use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
-use App\Facades\PrintServices;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Contracts\CustomerServiceInterface;
+use App\Domain\Customers\Models\Customer;
 use App\Services\Accounting\AccountService;
-use App\Services\PrintServicesManager;
 use App\Traits\Cacheable;
+use App\Traits\Customers\CustomerCRUD;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Session;
 
-class CustomerService
+class CustomerService implements CustomerServiceInterface
 {
     use Cacheable;
 
+    use CustomerCRUD;
+
     public function __construct(
-        private readonly CustomerRepositoryInterface $customers,
-        private readonly PrintServicesManager $printServices,
-        private AccountService $accountService
+        private Customer $model,
+        private AccountService $accountService,
+        private readonly CustomerStatistics $statistics
     ){}
 
 
-    public function findCustomer(string $customerId): Customer
+    public function findById(string $customerId): Customer
     {
-        return $this->customers->findCustomer($customerId);
+        return $this->model->where('customer_id', $customerId)->firstOrFail();
     }
+
 
     public function getCustomersArray(): array
     {
-        return $this->customers->getCustomersArray();
+        return $this->model->get(['customer_id', 'name'])
+            ->mapWithKeys(fn(Customer $customer) => [$customer->customer_id => $customer->name])
+            ->toArray();
     }
 
-
-    public function deleteCustomer(Customer $customer): bool
-    {
-        if ($customer->hasBalance()) {
-            throw new \DomainException(
-                'Cannot delete customer with balance'
-            );
-        }
-
-        return $this->customers->deleteCustomer($customer);
-    }
-
-
-    public function getLatestCustomers(): Collection
-    {
-        return $this->customers->getLatestCustomers();
-    }
-
-
-    public function getCustomerStatistics(): array
-    {
-        return $this->customers->getCustomerStatistics();
-    }
-
-
-    public function getCustomerRanking(): Collection
-    {
-        return $this->customers->getCustomerRanking();
-    }
 
 
     public function filterCustomers(string $searchTerm): Collection
     {
-        return $this->customers->filterCustomers($searchTerm);
-    }
-
-
-    // CRUD Operations------------------------------------------------------------------------------------
-
-
-    public function countNewCustomers()
-    {
-        return $this->customers->getCustomerStatistics()['new_customers'];
+        return $this->model->where(function ($query) use ($searchTerm) {
+            $query->whereLike('name', $searchTerm)
+                ->orWhereLike('phone', $searchTerm)
+                ->orWhereLike('category', $searchTerm);
+        })
+            ->limit(10)
+            ->get();
     }
 
 
     public function getIndexData(): array
     {
-        $statistics = $this->getCustomerStatistics();
-
         return [
             'customers' => $this->getLatestCustomers(),
-            'statistics' => $statistics,
-            'total_jobs' => 0,
-            'total_payments' => 0,
-            'total_balance' => 0,
+            'statistics' => $this->statistics->statistics(),
         ];
     }
 
@@ -98,6 +66,23 @@ class CustomerService
             'customer' => $customer,
             'payment_accounts' => $this->accountService->getAssetAccounts(),
         ];
+    }
+
+
+    public function setCustomerSession(Customer $customer): void
+    {
+        Session::put(['current_customer' => $customer->customer_id]);
+    }
+
+    public function getLatestCustomers(): Collection
+    {
+        return $this->baseQuery()->take(100)->get();
+    }
+
+
+    private function baseQuery()
+    {
+        return $this->model->orderBy('created_at','desc');
     }
 
 }
