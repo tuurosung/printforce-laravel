@@ -37,7 +37,7 @@ class StoreNewPrintServiceRequest extends FormRequest
     {
         return new ServiceData(
             serviceId: $this->string('service_id'),
-            serviceCategory: ServiceCategoryEnum::from($this->string('category_id')),
+            categoryId: ServiceCategoryEnum::from($this->string('category_id')),
             serviceName: $this->string('service_name'),
             individual: $this->float('individual'),
             artist: $this->float('artist'),
