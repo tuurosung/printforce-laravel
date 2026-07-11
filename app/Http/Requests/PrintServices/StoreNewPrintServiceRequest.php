@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\PrintServices;
 
+use App\DTOs\Services\ServiceData;
+use App\Enums\Services\ServiceCategoryEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreNewPrintServiceRequest extends FormRequest
@@ -28,5 +30,18 @@ class StoreNewPrintServiceRequest extends FormRequest
             'artist' => 'required|numeric',
             'institution' => 'required|numeric',
         ];
+    }
+
+
+    public function toData(): ServiceData
+    {
+        return new ServiceData(
+            serviceId: $this->string('service_id'),
+            serviceCategory: ServiceCategoryEnum::from($this->string('category_id')),
+            serviceName: $this->string('service_name'),
+            individual: $this->float('individual'),
+            artist: $this->float('artist'),
+            institution: $this->float('institution'),
+        );
     }
 }
