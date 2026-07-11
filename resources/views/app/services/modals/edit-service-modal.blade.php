@@ -38,7 +38,7 @@
                         <option value="">--- Select Category ---</option>
 
                         @foreach ($printServiceCategories as $serviceCategory)
-                        <option value="{{ $serviceCategory->category_id }}" {{ $serviceCategory->category_id === $printService->category_id ? 'selected' : '' }}>
+                        <option value="{{ $serviceCategory->category_id }}" {{ $serviceCategory->category_id == $printService->category_id->value ? 'selected' : '' }}>
                             {{ $serviceCategory->category_name }}
                         </option>
                         @endforeach
