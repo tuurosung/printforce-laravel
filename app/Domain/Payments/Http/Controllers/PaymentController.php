@@ -2,7 +2,7 @@
 
 namespace App\Domain\Payments\Http\Controllers;
 
-use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
+use App\Domain\Customers\Services\CustomerService;
 use App\Domain\Payments\Models\CustomerPayment;
 use App\Domain\Payments\Services\PaymentAlertService;
 use App\Domain\Payments\Services\PaymentService;
@@ -20,10 +20,10 @@ class PaymentController extends Controller
      * Create a new controller instance.
      */
     public function __construct(
-        private PaymentService $paymentService,
-        private AccountService $accountService,
-        private CustomerRepositoryInterface $customerService,
-        private PaymentAlertService $paymentAlertService,
+        private readonly PaymentService $paymentService,
+        private readonly AccountService $accountService,
+        private readonly PaymentAlertService $paymentAlertService,
+        private readonly CustomerService $customerService
     ){}
 
 
@@ -47,28 +47,9 @@ class PaymentController extends Controller
      */
     public function store(StoreNewPaymentRequest $request)
     {
-
-        try {
-
-            $data = $request->validated();
-            $customerPayment = $this->paymentService->createPayment($data);
-
-            // send payment receipt to customer
-            $alertSent = $this->paymentAlertService->send(
-                $data['customer_id'],
-                (float) $data['amount_paid']
-            );
-
-            if ($alertSent) {
-                return redirect()->back()->with('success', 'Payment receipt sent to customer');
-            }
-
-            return redirect()->back()->with('Success', 'Bingo! The payment was successful, but we were unable to send a receipt to the customer at the moment');
-
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
+        $data = $request->toData();
+        $this->paymentService->createPayment($data);
+        return redirect()->back()->with('success', 'Bingo! The payment was successful, but we were unable to send a receipt to the customer at the moment');
     }
 
 
@@ -86,7 +67,7 @@ class PaymentController extends Controller
     public function edit(CustomerPayment $customerPayment)
     {
         $data = [
-            'customers' => $this->customerService->getCustomersArray(),
+            'customers' => $this->customerService->optionsForSelect(),
             'payment_accounts' => $this->accountService->getAssetAccounts(),
             'customerPayment' => $customerPayment,
         ];
