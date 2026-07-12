@@ -2,39 +2,30 @@
 
 namespace App\Domain\Payments\Models;
 
-use Carbon\Carbon;
-use App\Traits\ScopedActive;
-use App\Models\Customers\Customer;
-use App\Traits\ScopedToSubscriber;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
+use App\Domain\Customers\Models\Customer;
 use App\Models\Accounting\OperatingAccount;
+use App\Models\Scopes\SubscriberScope;
+use App\Observers\CustomerPaymentObserver;
+use App\Traits\ScopedActive;
+use App\Traits\ScopedToSubscriber;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ScopedBy([SubscriberScope::class])]
+#[ObservedBy([CustomerPaymentObserver::class])]
 #[Fillable(['subscriber_id', 'customer_id', 'payment_id', 'amount_paid', 'account_number', 'payment_date'])]
 class CustomerPayment extends Model
 {
     use SoftDeletes;
-    
+
     use HasFactory;
     use ScopedActive;
-    use ScopedToSubscriber;
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($customerPayment) {
-            $customerPayment->payment_id = generateDashedRandomNumber();
-            $customerPayment->subscriber_id = Auth::user()->subscriber_id;
-        });
-
-    }
-
-
 
     protected $table = 'payments';
     protected $primaryKey = 'payment_id';
