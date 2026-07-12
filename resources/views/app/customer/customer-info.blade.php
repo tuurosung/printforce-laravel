@@ -30,6 +30,10 @@
                     href="#" data-hs-overlay="#press_job_modal">
                     Press Job
                 </a>
+                <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
+                    href="#" data-hs-overlay="#other_jobs_modal">
+                    Other Job
+                </a>
             </div>
         </div>
 
@@ -42,7 +46,7 @@
             <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-md p-2 mt-2 dark:bg-gray-800 dark:border dark:border-gray-700 dark:divide-gray-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full z-10"
                 aria-labelledby="hs-dropdown-default">
                 <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
-                    href="#" data-hs-overlay="#invoice_modal">
+                    href="#" data-hs-overlay="#new-invoice-modal">
                     New Invoice
                 </a>
                 <!-- <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700"
@@ -241,22 +245,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($customer->getCustomerJobs() as $job)
+                            @foreach ($customer->printfoceJobs() as $job)
                             <tr class="">
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $loop->iteration }}</td>
+                                    {{ $loop->iteration }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->date }}</td>
+                                    {{ $job->date }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->service?->service_name }}</td>
+                                    {{ $job->service?->service_name }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->details }}</td>
+                                    {{ $job->details }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ number_format($job->total, 2) }}</td>
+                                    {{ number_format($job->total, 2) }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->job_status_definition }}</td>
+                                    {{ $job->job_status_definition }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->assignedTo?->name }}</td>
+                                    {{ $job->assignedTo?->name }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
 
                                 </td>
@@ -278,11 +289,7 @@
                         <label for="input-group-1" class="sr-only">Search</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <!-- <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                                                                        height="24" fill="none" viewBox="0 0 24 24">
-                                                                                                                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                                                                                                                            d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                                                                                                                    </svg> -->
+
                                 <i class="fi fi-rr-search"></i>
                             </div>
                             <input type="text" id="input-group-1"
@@ -353,14 +360,17 @@
                                     <a href="#">{{ $customerInvoice->invoice_id }}</a>
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $customerInvoice->customer->name }}</td>
+                                    {{ $customerInvoice->customer->name }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $customerInvoice->sub_total }}</td>
+                                    {{ $customerInvoice->sub_total }}
+                                </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
                                     {{ number_format($customerInvoice->vat_amount + $customerInvoice->nhil_amount + $customerInvoice->getfund_amount, 2) }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
-                                    {{ number_format($customerInvoice->total, 2) }}</td>
+                                    {{ number_format($customerInvoice->total, 2) }}
+                                </td>
 
                             </tr>
 
@@ -474,6 +484,7 @@
     <livewire:livewire.jobs.embroidery-job :customer="$customer" />
     <livewire:livewire.jobs.design-job :customer="$customer" />
     <livewire:livewire.jobs.press-job :customer="$customer" />
+    <livewire:livewire.jobs.other-jobs :customer="$customer" />
 
     @include('app.payments.modals.new-payment-modal')
     @include('app.invoices.modals.create-invoice')

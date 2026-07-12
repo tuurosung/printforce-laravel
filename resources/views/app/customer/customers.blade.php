@@ -18,10 +18,10 @@
 
         <div class="grid grid-cols-12 gap-6 mb-6">
             <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
-                <x-printforce.cards.colour-card bgColour="primary" :value="$statistics['new_customers']" title="New Customers" valueType="number" />
+                <x-printforce.cards.colour-card bgColour="primary" :value="$statistics->newCustomers" title="New Customers" valueType="number" />
             </div>
             <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
-                <x-printforce.cards.colour-card bgColour="danger" :value="$statistics['total_customers']" title="All Customers" valueType="number" />
+                <x-printforce.cards.colour-card bgColour="danger" :value="$statistics->totalCustomers" title="All Customers" valueType="number" />
             </div>
             <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
                 <x-printforce.cards.colour-card bgColour="success" :value="0" title="Active Customers" valueType="number" />
