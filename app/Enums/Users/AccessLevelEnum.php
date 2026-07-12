@@ -19,16 +19,25 @@ enum AccessLevelEnum: string
     case SUBLIMATION_TECHNICIAN = "sublimation_technician";
 
 
-    
-    public static function technicalUsers(): array
+    public function isTechnical(): bool
     {
-        return [
+        return match ($this) {
             self::LARGE_FORMAT_TECHNICIAN,
             self::PRINT_TECHNICIAN,
             self::GRAPHIC_DESIGNER,
             self::DTF_TECHNICIAN,
-            self::SUBLIMATION_TECHNICIAN
-        ];
+            self::SUBLIMATION_TECHNICIAN => true,
+            default => false
+        };
     }
+
+
+    public static function technicalUsers(): array
+    {
+       return array_filter(self::cases(), function ($case) {
+        return $case->isTechnical();
+       });
+    }
+
 
 }

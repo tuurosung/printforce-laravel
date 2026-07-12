@@ -50,7 +50,8 @@ class User extends Authenticatable
     #[Scope]
     public static function technicalUsers(): Builder
     {
-
+        return self::where('subscriber_id', auth()->user()->subscriber_id)
+            ->whereIn('access_level', AccessLevelEnum::technicalUsers());
     }
 
 
