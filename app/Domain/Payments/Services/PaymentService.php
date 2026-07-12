@@ -6,16 +6,35 @@ namespace App\Domain\Payments\Services;
 use App\Domain\Customers\Services\CustomerService;
 use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
 use App\Domain\Payments\Models\CustomerPayment;
+use App\DTOs\Customers\CustomerData;
+use App\DTOs\Payments\PaymentData;
 use App\Services\Accounting\AccountService;
+use App\Services\BaseService;
+use DomainException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Override;
 
-class PaymentService
+class PaymentService extends BaseService
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
         private CustomerService $customerService,
-        private AccountService $accountService
+        private AccountService $accountService,
+        private readonly PaymentStatistics $paymentStatistics,
+        private PaymentAlertService $alertService
     ) {}
+
+
+    #[Override]
+    protected function modelClass(): string
+    {
+        return CustomerPayment::class;
+    }
+
+    protected string $selectOptionKey = "payment_id";
+    protected string $selectOptionValue = "";
 
 
     public function getLatestPayments(): Collection
@@ -24,34 +43,6 @@ class PaymentService
     }
 
 
-    public function getPaymentStatistics(): array
-    {
-        return $this->payments->getStatistics();
-    }
-
-
-    public function getTodaysPaymentTotal(): float
-    {
-        return $this->payments->getStatistics()['todays_payment_total'];
-    }
-
-
-    public function getWeeklyPaymentTotal(): float
-    {
-        return $this->payments->getStatistics()['weeks_payment_total'];
-    }
-
-
-    public function getMonthlyPaymentTotal(): float
-    {
-        return $this->payments->getStatistics()['months_payment_total'];
-    }
-
-
-    public function getYearlyPaymentTotal(): float
-    {
-        return $this->payments->getStatistics()['years_payment_total'];
-    }
 
 
     public function getAllTimePaymentTotal(): float
@@ -83,14 +74,29 @@ class PaymentService
     // -------------------------------------------------------------------------------------
     // CRUD
     // -------------------------------------------------------------------------------------
-    public function createPayment(array $data): CustomerPayment
+
+
+    public function createPayment(PaymentData $paymentData): CustomerPayment
     {
-        return $this->payments->create($data);
+        try {
+            $customerPayment = $this->payments->store($paymentData);
+            Log::info("payment sucessful", [$customerPayment]);
+
+            $sendAlert = $this->alertService->send(
+                $paymentData->customerId,
+                $paymentData->amountPaid
+            );
+        } catch (DomainException $exception) {
+            throw new DomainException("Error processing payment", $exception->getMessage());
+        }
+
+        return $customerPayment;
     }
 
-    public function updatePayment(CustomerPayment $customerPayment, array $data): bool
+
+    public function updatePayment(CustomerPayment $customerPayment, PaymentData $paymentData): bool
     {
-        return $this->payments->update($customerPayment, $data);
+        return $this->payments->update($customerPayment, $paymentData);
     }
 
     public function deletePayment(CustomerPayment $customerPayment): bool
@@ -103,9 +109,9 @@ class PaymentService
     {
         return [
             'total' => 0,
-            'customers' => $this->customerService->getCustomersArray(),
+            'customers' => $this->customerService->optionsForSelect(),
             'payments' => $this->getLatestPayments(),
-            'statistics' => $this->getPaymentStatistics(),
+            'statistics' => $this->paymentStatistics->getStatistics(),
             'payment_accounts' => $this->accountService->getAssetAccounts()
         ];
     }
