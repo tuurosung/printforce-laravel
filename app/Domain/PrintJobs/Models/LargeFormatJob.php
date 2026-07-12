@@ -3,9 +3,9 @@
 namespace App\Domain\PrintJobs\Models;
 
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintServices\Models\PrintService;
 use App\Enums\Jobs\JobStatusEnum;
-use App\Models\Customers\Customer;
 use App\Models\Scopes\SubscriberScope;
 use App\Models\User;
 use App\Observers\Jobs\LargeFormatJobObserver;

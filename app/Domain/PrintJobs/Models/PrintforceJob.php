@@ -2,8 +2,8 @@
 
 namespace App\Domain\PrintJobs\Models;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintServices\Models\PrintService;
-use App\Models\Customers\Customer;
 use App\Models\Scopes\SubscriberScope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[ScopedBy([SubscriberScope::class])]
 class PrintforceJob extends Model
 {
-    protected $table = 'jobs_view';
+    protected $table = 'printforce_jobs';
 
 
     protected function casts(): array

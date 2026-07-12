@@ -2,8 +2,8 @@
 
 namespace App\Domain\PrintJobs\Models;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintServices\Models\PrintService;
-use App\Models\Customers\Customer;
 use App\Observers\Jobs\OtherJobObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
