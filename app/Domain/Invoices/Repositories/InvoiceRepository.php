@@ -16,6 +16,12 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
         private readonly CustomerInvoice $model
     ){}
 
+    #[Override]
+    protected function modelClass(): string
+    {
+        return CustomerInvoice::class;
+    }
+
 
     public function allInvoices(array $filters = []): Collection
     {

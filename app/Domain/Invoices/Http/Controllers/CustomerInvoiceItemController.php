@@ -39,16 +39,8 @@ class CustomerInvoiceItemController extends Controller
      */
     public function store(StoreCustomerInvoiceItemRequest $request, CustomerInvoice $customerInvoice)
     {
-        try {
-
-            $this->invoiceItemService->addInvoiceItem($customerInvoice, $request->validated());
-            return redirect()->back()->with("success", "Invoice Item Added Successfully");
-
-        } catch (\Exception $e) {
-
-            Log::info($e->getMessage());
-            return redirect()->back()->with("error", $e->getMessage());
-        }
+        $this->invoiceItemService->addInvoiceItem($customerInvoice, $request->validated());
+        return redirect()->back()->with("success", "Invoice Item Added Successfully");
     }
 
     /**
@@ -72,7 +64,7 @@ class CustomerInvoiceItemController extends Controller
      */
     public function update(UpdateCustomerInvoiceItemRequest $request, CustomerInvoiceItem $customerInvoiceItem)
     {
-        // 
+        //
     }
 
     /**

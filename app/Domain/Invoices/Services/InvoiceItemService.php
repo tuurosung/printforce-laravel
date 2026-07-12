@@ -5,6 +5,7 @@ namespace App\Domain\Invoices\Services;
 use App\Domain\Invoices\Contracts\InvoiceItemRepositoryInterface;
 use App\Models\Invoices\CustomerInvoice;
 use App\Models\Invoices\CustomerInvoiceItem;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceItemService
 {
@@ -16,7 +17,16 @@ class InvoiceItemService
 
     public function addInvoiceItem(CustomerInvoice $customerInvoice, array $data): CustomerInvoiceItem
     {
-        return $this->invoiceItems->addItem($customerInvoice, $data);
+        $customerInvoiceItem = $this->invoiceItems->addItem($customerInvoice, $data);
+
+        if (! $customerInvoiceItem) {
+            $error = "Unable to add item to invoice";
+            Log::error($error);
+            throw new \Exception($error);
+        }
+
+        return $customerInvoiceItem;
+
     }
 
 
