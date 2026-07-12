@@ -1,5 +1,5 @@
 <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
-<x-cards.colour-card2 title="Monthly Revenue" colour="primary" icon="sack-dollar" :value="$monthly_payments"
+<x-cards.colour-card2 title="Monthly Revenue" colour="primary" icon="sack-dollar" :value="$payment_statistics->monthsTotalPayment"
     valueType="currency" />
 </div>
 <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
