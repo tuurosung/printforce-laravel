@@ -6,12 +6,14 @@ namespace App\Domain\Customers\Services;
 use App\Domain\Customers\Contracts\CustomerServiceInterface;
 use App\Domain\Customers\Models\Customer;
 use App\Services\Accounting\AccountService;
+use App\Services\BaseService;
 use App\Traits\Cacheable;
 use App\Traits\Customers\CustomerCRUD;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Session;
+use Override;
 
-class CustomerService implements CustomerServiceInterface
+class CustomerService extends BaseService implements CustomerServiceInterface
 {
     use Cacheable;
 
@@ -24,18 +26,21 @@ class CustomerService implements CustomerServiceInterface
     ){}
 
 
+    protected function modelClass(): string
+    {
+        return Customer::class;
+    }
+
+    protected string $selectOptionKey = "customer_id";
+    protected string $selectOptionValue = "name";
+
+
     public function findById(string $customerId): Customer
     {
         return $this->model->where('customer_id', $customerId)->firstOrFail();
     }
 
 
-    public function getCustomersArray(): array
-    {
-        return $this->model->get(['customer_id', 'name'])
-            ->mapWithKeys(fn(Customer $customer) => [$customer->customer_id => $customer->name])
-            ->toArray();
-    }
 
 
 

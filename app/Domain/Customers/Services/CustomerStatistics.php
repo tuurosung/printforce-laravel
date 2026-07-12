@@ -8,6 +8,7 @@ use App\Domain\Customers\Contracts\CustomerStatisticsInterface;
 use App\Domain\Customers\Models\Customer;
 use App\DTOs\Customers\CustomerStatisticsData;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\JoinClause;
 
 final class CustomerStatistics implements CustomerStatisticsInterface
 {
@@ -17,7 +18,10 @@ final class CustomerStatistics implements CustomerStatisticsInterface
         return Customer::query()
             ->select(['customers.customer_id', 'customers.name'])
             ->selectRaw('COUNT(jobs.job_id) as total_jobs')
-            ->join('printforce_jobs as jobs', 'jobs.customer_id', '=', 'customers.customer_id')
+            ->join('printforce_jobs as jobs', function (JoinClause $join) {
+                $join->on('jobs.customer_id', '=', 'customers.customer_id')
+                    ->whereNull('jobs.deleted_at');
+            })
             ->where('customers.status', 'active')
             ->groupBy('customers.customer_id', 'customers.name')
             ->orderByDesc('total_jobs')
