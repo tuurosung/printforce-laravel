@@ -22,7 +22,6 @@ class BackfillDesignJobs extends Command
     public function handle()
     {
 
-
             $this->info('Backfilling {$ype} from {$table}...');
 
             $count = DB::table(self::SOURCETABLE)->count();

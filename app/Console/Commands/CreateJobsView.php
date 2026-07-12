@@ -104,6 +104,22 @@ class CreateJobsView extends Command
                 'Photography' as job_type
             FROM jobs_photography
 
+            UNION ALL
+
+            SELECT
+                subscriber_id,
+                job_id,
+                customer_id,
+                service_id,
+                cost as unit_cost,
+                'Non Dimensional' as details,
+                qty,
+                total,
+                created_at,
+                'Others' as job_type
+            FROM jobs_other
+
+
             ORDER BY created_at DESC
         SQL;
     }
