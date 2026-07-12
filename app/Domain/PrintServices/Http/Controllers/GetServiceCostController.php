@@ -2,12 +2,12 @@
 
 namespace App\Domain\PrintServices\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Domain\Customers\Models\Customer;
+use App\Domain\PrintServices\Models\PrintService;
 use App\Facades\PrintServices;
-use App\Models\Customers\Customer;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Services\PrintService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class GetServiceCostController extends Controller
 {

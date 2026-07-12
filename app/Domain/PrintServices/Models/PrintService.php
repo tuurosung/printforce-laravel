@@ -2,8 +2,8 @@
 
 namespace App\Domain\PrintServices\Models;
 
+use App\Domain\Customers\Models\Customer;
 use App\Enums\Services\ServiceCategoryEnum;
-use App\Models\Customers\Customer;
 use App\Models\Scopes\SubscriberScope;
 use App\Observers\Services\PrintServiceObserver;
 use App\Traits\ScopedActive;
