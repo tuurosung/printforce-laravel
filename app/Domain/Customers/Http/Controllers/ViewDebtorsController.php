@@ -4,7 +4,6 @@ namespace App\Domain\Customers\Http\Controllers;
 
 use App\Domain\Customers\Models\Debtor;
 use App\Http\Controllers\Controller;
-use App\Models\Customers\Customer;
 use App\Services\DebtorService;
 use Illuminate\Http\Request;
 

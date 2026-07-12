@@ -3,7 +3,6 @@
 namespace App\Domain\Customers\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Customers\Customer;
 use App\Http\Controllers\Controller;
 use App\Services\DebtorService;
 

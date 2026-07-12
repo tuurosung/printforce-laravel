@@ -4,22 +4,17 @@ declare(strict_types= 1);
 
 namespace App\Domain\Customers\Contracts;
 
+use App\Contracts\BaseInterface;
 use App\Domain\Customers\Models\Customer;
 use App\DTOs\Customers\CustomerData;
 use Illuminate\Database\Eloquent\Collection;
 
-interface CustomerServiceInterface
+interface CustomerServiceInterface extends BaseInterface
 {
     /**
      * Find a customer by Id
      */
     public function findById(string $customerId): Customer;
-
-
-    /**
-     * Return customers list as an array
-     */
-    public function getCustomersArray(): array;
 
 
     /**

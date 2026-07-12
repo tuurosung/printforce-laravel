@@ -2,9 +2,9 @@
 
 namespace App\Domain\Customers\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Models\Customer;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class FilterCustomersController extends Controller
 {
