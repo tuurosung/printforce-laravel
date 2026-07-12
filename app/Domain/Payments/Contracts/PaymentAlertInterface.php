@@ -2,7 +2,8 @@
 
 namespace App\Domain\Payments\Contracts;
 
-use App\Models\Customers\Customer;
+use App\Contracts\BaseInterface;
+use App\Domain\Customers\Models\Customer;
 
 interface PaymentAlertInterface
 {
