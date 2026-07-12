@@ -2,9 +2,8 @@
 
 namespace App\Domain\PrintJobs\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\EmbroideryJob;
-use App\Http\Controllers\Jobs\JobController;
-use App\Models\Customers\Customer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

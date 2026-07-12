@@ -2,8 +2,8 @@
 
 namespace App\Domain\PrintJobs\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Contracts\OtherJobServiceInterface;
-use App\Models\Customers\Customer;
 use App\Domain\PrintJobs\Models\OtherJob;
 use Override;
 

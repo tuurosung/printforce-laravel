@@ -2,9 +2,9 @@
 
 namespace App\Domain\PrintJobs\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Contracts\LargeFormatJobServiceInterface;
 use App\Domain\PrintJobs\Models\LargeFormatJob;
-use App\Models\Customers\Customer;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 

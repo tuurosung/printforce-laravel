@@ -25,7 +25,7 @@ class CustomerJobService
     ){}
 
 
-    protected function jobModels()
+    protected static function jobModels()
     {
         [
             LargeFormatJob::class,

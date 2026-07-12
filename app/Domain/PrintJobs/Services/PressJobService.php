@@ -2,9 +2,9 @@
 
 namespace App\Domain\PrintJobs\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Contracts\PressJobServiceInterface;
 use App\Domain\PrintJobs\Models\PressJob;
-use App\Models\Customers\Customer;
 use Illuminate\Support\Facades\Log;
 
 class PressJobService implements PressJobServiceInterface

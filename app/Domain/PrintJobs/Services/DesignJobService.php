@@ -2,12 +2,11 @@
 
 namespace App\Domain\PrintJobs\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Contracts\DesignJobServiceInterface;
 use App\Domain\PrintJobs\Models\DesignJob;
-use App\Models\Customers\Customer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Override;
 
 class DesignJobService implements DesignJobServiceInterface
 {
