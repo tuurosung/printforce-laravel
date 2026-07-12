@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Customers;
 
+use App\Domain\Customers\Models\Customer;
 use App\DTOs\Customers\CustomerData;
 use App\Enums\Customers\CustomerCategoryEnum;
-use App\Models\Customers\Customer;
-use App\Models\Customers\CustomerCategory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 

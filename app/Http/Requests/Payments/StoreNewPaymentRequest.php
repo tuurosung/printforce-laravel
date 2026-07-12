@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Payments;
 
+use App\DTOs\Payments\PaymentData;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreNewPaymentRequest extends FormRequest
@@ -27,6 +28,17 @@ class StoreNewPaymentRequest extends FormRequest
             'account_number' => 'required',
             'payment_date' => 'required'
         ];
+    }
+
+
+    public function toData(): PaymentData
+    {
+        return new PaymentData(
+            customerId: $this->string('customer_id'),
+            amountPaid: $this->float('amount_paid'),
+            accountNumber: $this->string('account_number'),
+            paymentDate: $this->string('payment_date'),
+        );
     }
 
 
