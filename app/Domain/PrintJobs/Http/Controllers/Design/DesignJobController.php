@@ -2,12 +2,12 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers\Design;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\DesignJob;
 use App\Domain\PrintJobs\Services\DesignJobService;
 use App\Facades\PrintServices;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Jobs\StoreNewDesignRequest;
-use App\Models\Customers\Customer;
 use App\Traits\HandleResourceActions;
 
 class DesignJobController extends Controller

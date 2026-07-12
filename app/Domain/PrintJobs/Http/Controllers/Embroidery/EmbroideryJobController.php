@@ -2,12 +2,12 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers\Embroidery;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\EmbroideryJob;
 use App\Domain\PrintJobs\Services\EmbroideryJobService;
 use App\Facades\PrintServices;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Jobs\StoreEmbroideryJobRequest;
-use App\Models\Customers\Customer;
 use App\Traits\HandleResourceActions;
 
 class EmbroideryJobController extends Controller

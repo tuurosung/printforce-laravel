@@ -2,12 +2,12 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers\Press;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\PressJob;
 use App\Domain\PrintJobs\Services\PressJobService;
 use App\Facades\PrintServices;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Jobs\StoreNewPressJobRequest;
-use App\Models\Customers\Customer;
 
 class PressJobController extends Controller
 {

@@ -2,12 +2,12 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers\LargeFormat;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\LargeFormatJob;
 use App\Domain\PrintJobs\Services\LargeFormatJobService;
 use App\Facades\PrintServices;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Jobs\StoreLargeFormatJobRequest;
-use App\Models\Customers\Customer;
 use App\Services\UserService;
 use App\Traits\HandleResourceActions;
 

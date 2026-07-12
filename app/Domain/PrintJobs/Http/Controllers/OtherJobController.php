@@ -2,11 +2,11 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Http\Requests\StoreOtherJobRequest;
 use App\Domain\PrintJobs\Services\OtherJobService;
 use App\Domain\PrintJobs\Services\PrintJobService;
 use App\Http\Controllers\Controller;
-use App\Models\Customers\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
