@@ -27,7 +27,7 @@
                         <div class="mb-3">
                             <label for="" class="form-label">Account Type</label>
                             <select
-                                class="form-select form-select-sm"
+                                class="form-control form-select-sm"
                                 name="account_header"
                                 required>
 
@@ -51,7 +51,7 @@
                             <label for="" class="form-label">Account Name</label>
                             <input
                                 type="text"
-                                class="form-control form-control-sm"
+                                class="form-control "
                                 name="account_name"
                                 value=""
                                 required />
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="" class="form-label">Description</label>
                             <textarea
-                                class="form-control form-control-sm"
+                                class="form-control "
                                 name="description"
                                 rows="2"
                                 cols="80" required></textarea>

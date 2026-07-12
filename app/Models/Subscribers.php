@@ -45,8 +45,10 @@ class Subscribers extends Model
         'next_payment_date'
     ];
 
-
-
+    protected $casts = [
+        'last_payment_date' => 'datetime',
+        'next_payment_date' => 'datetime'
+    ];
 
 
     static function activeSubscriber()
@@ -64,19 +66,18 @@ class Subscribers extends Model
         return $daysRemaining . ' days remaining';
     }
 
+
+
     public function daysRemaining(): int
     {
         $expiryDate = Carbon::parse($this->next_payment_date);
         $currentDate = Carbon::now();
 
-        if ($expiryDate->isBefore($currentDate)) {
-            return 0; // Subscription has expired
+        if ($expiryDate->isPast()) {
+            return 0;
         }
 
-        $daysRemaining = $currentDate->diffInDays($expiryDate, true);
-
-        // return the absolute value of days remaining
-        return $daysRemaining;
+        return $currentDate->diffInDays($expiryDate);
     }
 
     public function isExpired(): bool

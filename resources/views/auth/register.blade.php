@@ -132,7 +132,7 @@
                                                 <input
                                                     type="email"
                                                     name="email"
-                                                    class="form-control form-control-sm"
+                                                    class="form-control"
                                                     placeholder="username@address.com"
                                                     required
                                                 />
@@ -146,7 +146,7 @@
                                                 </div>
 
                                                 <input type="password" name="password"
-                                                    class="form-control form-control-sm"
+                                                    class="form-control"
                                                     placeholder="Enter your password" required>
                                             </div>
                                             <button type="submit"

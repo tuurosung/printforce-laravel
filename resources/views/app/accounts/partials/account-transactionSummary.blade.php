@@ -11,7 +11,7 @@
                     <label for="start_date" class="form-label">Start Date</label>
                     <input
                         type="text"
-                        class="form-control form-control-sm"
+                        class="form-control "
                         name="start_date"
                         id="start_date"
                         value="{{ now()->format('Y-m-d') }}"
@@ -26,7 +26,7 @@
                     <label for="end_date" class="form-label">End Date</label>
                     <input
                         type="text"
-                        class="form-control form-control-sm"
+                        class="form-control "
                         name="end_date"
                         id="end_date"
                         value="{{ now()->format('Y-m-d') }}"

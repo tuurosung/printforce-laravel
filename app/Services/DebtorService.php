@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\Jobs\PressJob;
+use App\Domain\Customers\Models\Customer;
+use App\Domain\Payments\Models\CustomerPayment;
 use App\Models\Jobs\DesignJob;
-use App\Models\Customers\Customer;
 use App\Models\Jobs\EmbroideryJob;
-use Illuminate\Support\Facades\DB;
 use App\Models\Jobs\LargeFormatJob;
 use App\Models\Jobs\PhotographyJob;
-use App\Models\Customers\CustomerPayment;
+use App\Models\Jobs\PressJob;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\AssignOp\Coalesce;
 
 class DebtorService

@@ -24,7 +24,7 @@
     <link href="{{ asset('assets/css/toastify.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
 
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
     <style media="all">
@@ -137,7 +137,7 @@
             display: none;
         }
 
-        .form-select {
+        .form-control {
             padding: .575rem .75rem;
         }
 

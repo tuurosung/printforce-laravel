@@ -24,6 +24,8 @@ class CheckSubscriptionValidatity
         // Check if the user has a valid subscription
         $subscriber = Auth::user()->company;
 
+        // dd($subscriber);
+
         if (!$subscriber || $subscriber->isExpired()) {
             return redirect()->route('subscription');
         }

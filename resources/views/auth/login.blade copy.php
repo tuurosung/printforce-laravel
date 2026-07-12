@@ -23,7 +23,7 @@
                                 <input
                                     type="email"
                                     name="email"
-                                    class="form-control form-control-sm"
+                                    class="form-control"
                                     placeholder="username@address.com">
                             </div>
 
@@ -40,7 +40,7 @@
                                 <input
                                     type="password"
                                     name="password"
-                                    class="form-control form-control-sm"
+                                    class="form-control"
                                     placeholder="Enter your password">
                             </div>
                             <div class="mb-3">

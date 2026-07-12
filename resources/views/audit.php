@@ -463,7 +463,7 @@
                                     <label for="start_date" class="form-label">Start Date</label>
                                     <input
                                         type="text"
-                                        class="form-control form-control-sm"
+                                        class="form-control"
                                         name="start_date"
                                         id="start_date"
                                         value="2024-12-12" />
@@ -477,7 +477,7 @@
                                     <label for="end_date" class="form-label">End Date</label>
                                     <input
                                         type="text"
-                                        class="form-control form-control-sm"
+                                        class="form-control"
                                         name="end_date"
                                         id="end_date"
                                         value="2024-12-12" />

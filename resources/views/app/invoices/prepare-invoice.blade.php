@@ -9,7 +9,7 @@
         <div class="flex">
 
             <button class="btn btn-primary ms-auto me-2" data-bs-toggle="modal" data-toggle="modal" data-hs-overlay="#new-invoice-item-modal">
-                <i class="fas fa-plus me-2"></i> Add New Item
+                <i class="fi fi-rr-plus-small me"></i> Add New Item
             </button>
 
             <div class="hs-dropdown relative inline-flex">
@@ -181,8 +181,6 @@
         </div>
 
     </div>
-
-
 
     <livewire:livewire.invoices.new-invoice-item :customerInvoice="$customerInvoice" />
 

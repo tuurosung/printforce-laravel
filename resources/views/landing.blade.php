@@ -1,1194 +1,1353 @@
 <!DOCTYPE html>
-<html lang="en">
+<html data-hs-theme-switch lang="en" dir="ltr" data-color-theme="Blue_Theme" class="light selected"
+    data-layout="horizontal" data-boxed-layout="boxed" data-card="shadow">
 
 <head>
-    <meta charset="utf-8">
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"> -->
+    <!-- Core Css -->
+    <link rel="stylesheet" href="../assets/css/theme.css" />
     <title>PrintForce - Workflow Manager For Print Businesses</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <!-- <link rel="stylesheet" href="../assets/libs/owl.carousel/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="../assets/libs/aos/dist/aos.css" /> -->
 
-    <!-- ================== BEGIN core-css ================== -->
-    <link href="{{ asset('assets/css/vendor.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/fontawesome/css/all.css') }}" rel="stylesheet">
-    <!-- ================== END core-css ================== -->
-
-    <!-- ================== BEGIN page-css ================== -->
-    <link href="{{ asset('assets/css/lity.min.css') }}" rel="stylesheet">
-    <!-- ================== END page-css ================== -->
-
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
-
-
-    <style media="screen">
-        /* Load Google Fonts Locally */
-
-
-        @font-face {
-            font-family: 'Avante';
-            font-weight: 700;
-            src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-Bold.otf") }}');
-        }
-
-        @font-face {
-            font-family: 'Avante';
-            font-weight: 600;
-            src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-Demi.otf") }}');
-        }
-
-        @font-face {
-            font-family: 'Avante';
-            font-weight: 500;
-            src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-Md.otf") }}');
-        }
-
-        @font-face {
-            font-family: 'Avante';
-            font-weight: 400;
-            src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-Bk.otf") }}');
-        }
-
-        @font-face {
-            font-family: 'Avante';
-            font-weight: 300;
-            src: url('{{ asset("assets/font/Avante/ITCAvantGardePro-XLt.otf") }}');
-        }
-
-
-        .urbanist {
-            font-family: 'Urbanist', sans-serif;
-        }
-
-        .Avante {
-            font-family: 'Avante' !important;
-        }
-
-
-
-        a {
-            color: var(--bs-black);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .btn {
-            padding: 0.6rem 2.14rem;
-            font-size: 12px;
-        }
-
-        .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.765625rem;
-            border-radius: 3px;
-        }
-
-        .bootbox-body {
-            font-size: 18px;
-        }
-
-        .bootbox .modal-header {
-            display: none;
-        }
-
-        .form-select {
-            padding: .575rem .75rem;
-        }
-
-        .dropdown-item {
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        body {
-            font-family: 'Avante' !important;
-            font-weight: 500;
-            /* background-color: #fff; */
-        }
-
-        .profile .profile-header .profile-header-cover::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: none;
-        }
-
-        .table>thead>tr>th {
-            font-weight: 500;
-        }
-
-        .table>tbody>tr>td {
-            font-weight: 500;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: .35em .65em;
-            font-size: .75em;
-            font-weight: 700;
-            line-height: 1;
-            color: #fff;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: .25rem;
-        }
-
-        .glass {
-            filter: blur(9px) !important;
-        }
-
-        .form-control-sm {
-            padding: .6rem .5rem;
-        }
-
-
-        hr {
-            opacity: 1 !important;
-        }
-
-        .nav-pills .nav-link {
-            border-radius: 35px !important;
-        }
-    </style>
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <!-- BEGIN #app -->
-    <div id="app" class="app">
-        <!-- BEGIN #header -->
-        <div id="header" class="app-header navbar navbar-expand-lg p-0">
-            <div class="container-xxl px-3 px-lg-5">
-                <button class="navbar-toggler border-0 p-0 me-3 fs-24px shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span class="h-2px w-25px bg-gray-500 d-block mb-1"></span>
-                    <span class="h-2px w-25px bg-gray-500 d-block"></span>
-                </button>
-                <a class="navbar-brand d-flex align-items-center position-relative me-auto" href="index.html">
-                    <img src="{{ asset('images/logo.png') }}" class="invert-dark" alt="" height="29">
-                </a>
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <div class="navbar-nav ms-auto mb-2 mb-lg-0 fw-500">
-                        <div class="nav-item me-2">
-                            <a href="#home" class="nav-link">Home</a>
-                        </div>
-                        <div class="nav-item me-2">
-                            <a href="#about" class="nav-link">About</a>
-                        </div>
-                        <div class="nav-item me-2">
-                            <a href="#features" class="nav-link">Features</a>
-                        </div>
-                        <div class="nav-item me-2">
-                            <a href="#pricing" class="nav-link">Pricing</a>
-                        </div>
-                        <!-- <div class="nav-item me-2">
-                            <a href="#testimonials" class="nav-link">Testimonials</a>
-                        </div> -->
-                        <!-- <div class="nav-item me-2">
-                            <a href="#blog" class="nav-link">Blog</a>
-                        </div> -->
-                        <div class="nav-item me-2">
-                            <a href="#contact" class="nav-link">Contact</a>
-                        </div>
+<body class="DEFAULT_THEME bg-white dark:bg-dark">
+
+    <main>
+        <!--start the project-->
+        <div id="main-wrapper" class="flex frontend-page">
+
+            <div class="w-full" role="main">
+                <!-- Announcement Bar Start -->
+                <div id="announcement-bar"
+                    class="hidden flex items-center justify-center py-1 cursor-pointer relative before:absolute before:h-full before:w-[200px] before:bg-no-repeat before:bg-cover before:bg-[url('/assets/images/frontend-pages/background/transparent-elilpse.png')] lg:before:block before:hidden before:top-0 before:right-0 after:absolute after:bg-[url('/src/assets/images/frontend-pages/background/right-ellipse.png')] lg:after:block after:hidden after:h-full after:w-[325px] after:right-[21%] after:1top-1 after:end-1/2 overflow-hidden gap-4 bg-primary">
+                    <button
+                        class="text-xs font-semibold py-1.5 px-2.5 rounded-lg bg-white/15 text-white hover:bg-white hover:text-primary">New</button>
+                    <p class="text-13 text-white font-medium">
+                        Frontend Pages Added
+                    </p>
+                    <div class="absolute top-0 start-0 lg:block hidden">
+                        <img src="../assets/images/frontend-pages/background/left-ellipse.png" alt="ellipse" class="" />
+                    </div>
+                    <div id="close-btn"
+                        class="h-6 w-6 rounded-full bg-secondary absolute top-1/2 -translate-y-1/2 end-3 text-white flex items-center justify-center hover:bg-secondaryemphasis">
+                        <i class="ti ti-x  shrink-0 text-lg text-white"></i>
                     </div>
                 </div>
-                <div class="ms-3">
-                    <a href="{{ route('login') }}" class="btn btn-primary fw-bold rounded-pill px-3 py-2">
-                    <!-- <button data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-primary fw-bold rounded-pill px-3 py-2"> -->
-                        <i class="fa fa-unlock-keyhole me-2"></i>
-                        Sign In
-                    </a>
-                </div>
-            </div>
-        </div>
-        <!-- END #header -->
+                <!-- Announcement Bar End -->
+                <!--  Header Start -->
+                <header id='main-header'
+                    class="sticky top-header top-0 inset-x-0 z-5 flex flex-wrap md:justify-start md:flex-nowrap text-sm px-0 sm:py-6 py-3  bg-white custom-shadow sticky:bg-white dark:bg-darkprimary ">
+                    <div class="container flex items-center justify-between">
 
-        <!-- BEGIN #home -->
-        <div id="home" class="py-5 position-relative bg-gray-900" data-bs-theme="dark" style="background-image: url('{{ asset("images/hero-cover.png") }}'); background-repeat: no-repeat; background-position: top left; background-size: cover">
-            <!-- BEGIN container -->
-            <div class="container-xxl p-3 p-lg-5">
-                <!-- BEGIN div-hero-content -->
-                <div class="div-hero-content z-3 position-relative">
-                    <!-- BEGIN row -->
-                    <div class="row">
-                        <!-- BEGIN col-8 -->
-                        <div class="col-xl-8 offset-xl-2 text-center">
-                            <!-- BEGIN hero-title-desc -->
-                            <h1 class="display-2 fw-600 mb-2 mt-4 text-center">
-                                Workflow Manager For <span class="text-theme">Digital Print</span> Businesses
-                            </h1>
-                            <div class="fs-18px text-body text-opacity-75 mb-4 text-center">
-                                Join our many users nationwide who rely on PrintForce to manage<br>
-                                their Startups, Print Companies, Creative Studios, <br>
-                                and freelance graphic designers.
-                            </div>
-                            <!-- END hero-title-desc -->
-
-
-
-                            <div class="mb-2">
-                                <a href="{{ route('register') }}" class="btn btn-lg btn-theme px-3">Create Account <i class="fa fa-arrow-right ms-2 opacity-5"></i></a>
-                                <a href="{{ route('login') }}" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-lg btn-white px-3">
-                                    <i class="fa fa-lock me-2 opacity-5"></i>
-                                    Sign Into Your Account
+                        <div class="order-2">
+                            <div class="brand-logo flex  items-center ">
+                                <a href="../main/index.html" class="text-nowrap logo-img">
+                                    <img src="{{ asset('/images/logo.png') }}"
+                                        class="dark:hidden block rtl:hidden w-[70px]" alt="Logo-Dark" />
                                 </a>
                             </div>
 
-
-                            <hr class="my-4 opacity-1">
-
-                            <div class="d-flex justify-content-center">
-                                <div class="col-md-3 text-center">
-                                    <div class="d-flex align-items-center">
-                                        <div class="h1 text-body text-opacity-25 me-3"><iconify-icon icon="bi:download"></iconify-icon></div>
-                                        <div>
-                                            <div class="fw-500 mb-0 h3">47</div>
-                                            <div class="fw-500 text-body text-opacity-75">Companies</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 text-center">
-                                    <div class="d-flex align-items-center">
-                                        <div class="h1 text-body text-opacity-25 me-3"><iconify-icon icon="bi:bootstrap"></iconify-icon></div>
-                                        <div>
-                                            <div class="fw-500 mb-0 h3">3.0.3</div>
-                                            <div class="fw-500 text-body text-opacity-75">Version</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="h1 text-body text-opacity-25 me-3"><iconify-icon icon="bi:bootstrap"></iconify-icon></div>
-                                        <div>
-                                            <div class="fw-500 mb-0 h3">24/7</div>
-                                            <div class="fw-500 text-body text-opacity-75">Support</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-                        <!-- END col-8 -->
-                    </div>
-                    <!-- END row -->
-                </div>
-                <!-- END div-hero-content -->
-
-
-            </div>
-            <!-- END container -->
-        </div>
-        <!-- END #home -->
-        <div class="py-5 pt-md-12 d-flex justify-content-center align-items-center flex-wrap gap-5">
-            <a href="javascript:void(0)">
-                <img src="{{ asset('images/client-logos/agl.png') }}" alt="intel" class="img img-fluid" style="max-height: 100px">
-            </a>
-            <a href="javascript:void(0)">
-                <img src="{{ asset('images/client-logos/tumaprestige.png') }}" alt="oracle" class="img img-fluid" style="max-height: 70px;">
-            </a>
-            <a href="javascript:void(0)">
-                <img src="{{ asset('images/client-logos/newedge.png') }}" alt="dell" class="img img-fluid" style="max-width: 100px;">
-            </a>
-            <a href="javascript:void(0)">
-                <img src="{{ asset('images/client-logos/Saks-initiative.svg') }}" alt="samsung" class="img img-fluid w-100" style="max-width: 100px; height: 90px;">
-            </a>
-            <a href="javascript:void(0)">
-                <img src="../assets/images/frontend-pages/icon-infosys.svg" alt="infosys">
-            </a>
-            <a href="javascript:void(0)">
-                <img src="../assets/images/frontend-pages/icon-capgemini.svg" alt="capgemini">
-            </a>
-        </div>
-
-        <!-- BEGIN #about -->
-        <div id="about" class="py-5 bg-component">
-            <div class="container-xxl p-3 p-lg-5 text-center">
-                <h1 class="mb-3">About PrintForce</h1>
-                <p class="fs-16px text-body mb-5">
-                    PrintForce is a high-performance workflow manager for <br> creatives, designers and print studios, automating
-                    their operations and keeping records whilst they unleash thier creativity.
-                </p>
-                <div class="row text-start g-3 gx-lg-5 gy-lg-4">
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-blue bg-opacity-15 text-blue fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-mobile-screen-button"></i>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Responsive Design</h4>
-                            <p class="mb-0">
-                                Designed to provide a consistent and outstanding user experience across various devices and screen sizes.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-indigo bg-opacity-15 text-indigo fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-cog    "></i>
-                            <iconify-icon icon="solar:settings-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Customizable</h4>
-                            <p class="mb-0">
-                                Tailor the application to your needs with ease. Customize layouts, colors and more without requiring extensive coding knowledge.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-warning bg-opacity-15 text-warning fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-bolt"></i>
-                            <iconify-icon icon="solar:bolt-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>High Performance</h4>
-                            <p class="mb-0">
-                                Optimized for speed and performance, PrintForce ensures a seamless user experience, even with large datasets and high traffic.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-cyan bg-opacity-15 text-cyan fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-lock"></i>
-                            <iconify-icon icon="solar:lock-keyhole-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Secure</h4>
-                            <p class="mb-0">
-                                We take security seriously, so you can rest assured that your data is protected and your workflow is safeguarded.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-green bg-opacity-15 text-green fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-users"></i>
-                            <iconify-icon icon="solar:dialog-2-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Community Support</h4>
-                            <p class="mb-0">
-                                Be part of our active community of developers and designers, where we share knowledge, insights, and support one another.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-red bg-opacity-15 text-red fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-headset"></i>
-                            <iconify-icon icon="solar:help-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>24/7 Support</h4>
-                            <p class="mb-0">
-                                If you ever need help, our friendly support team is just a click away, ready to lend a hand with any questions or issues.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-pink bg-opacity-15 text-pink fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-shield-alt"></i>
-                            <iconify-icon icon="solar:tuning-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Scalable Infrastructure</h4>
-                            <p class="mb-0">
-                                PrintForce offers flexibility and scalability to meet diverse business needs with reliable performance.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6 d-flex">
-                        <div class="w-50px h-50px rounded-3 bg-gray-500 bg-opacity-15 text-gray-500 fs-32px d-flex align-items-center justify-content-center">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
-                        </div>
-                        <div class="flex-1 ps-3">
-                            <h4>Intuitive User Interface</h4>
-                            <p class="mb-0">
-                                Designed to boost your productivity and creativity, our intuitive interface is streamlined to make your workflow smoother.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="card border-0 bg-primary mt-5">
-                    <div class="card-body py-4">
-
-                        <div class="d-flex align-items-center justify-content-center">
-                            <h4 class="h3 m-0 text-white">Ready to get started?</h4>
-                            <div class="ms-3">
-                                <a href="{{ route('login') }}" class="btn btn-light fw-bold rounded-pill px-3 py-2">Create Account</a>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END #about -->
-
-        <!-- BEGIN #features -->
-        <div id="features" class="py-5 position-relative d-none" data-bs-theme="dark">
-            <div class="container-xxl p-3 p-lg-5 z-2 position-relative">
-                <div class="text-center mb-5">
-                    <h1 class="mb-3">Our Unique Features</h1>
-                    <p class="fs-16px text-body text-opacity-50 mb-5">
-                        Explore Studio Admin Template's standout features. <br>
-                        With advanced customization and seamless integration, create powerful and stunning <br>
-                        admin interfaces, enhancing productivity and user satisfaction.
-                    </p>
-                </div>
-                <div class="row g-3 g-lg-5">
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-1.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-1-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Theme Dashboard</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-2.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-2-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">POS System UI</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-3.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-3-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Email Inbox</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-4.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-4-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Pricing Page</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-5.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-5-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">User Profile</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-6.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-6-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Analytics Page</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-7.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-7-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Studio Widgets</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-8.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-8-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Kitchen Order Page</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-9.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-9-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Order Details Page</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-10.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-10-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Messenger</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-11.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-11-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Table Control Page</div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <a href="assets/img/landing/mockup-12.jpg" data-lity class="shadow d-block"><img src="assets/img/landing/mockup-12-thumb.jpg" alt="" class="mw-100"></a>
-                        <div class="text-center my-3 text-body fw-bold">Customer Order Page</div>
-                    </div>
-                </div>
-            </div>
-            <div class="position-absolute bg-size-cover bg-position-center bg-no-repeat top-0 start-0 w-100 h-100" style="background-image: url(assets/img/landing/content-cover.jpg);"></div>
-            <div class="position-absolute bg-gray-900 bg-opacity-80 top-0 start-0 w-100 h-100"></div>
-        </div>
-        <!-- END #features -->
-
-
-        <!-- BEGIN #pricing -->
-        <div id="pricing" class="py-5 bg-component">
-            <div class="container-xxl p-3 p-lg-5">
-                <h1 class="mb-3 text-center">Our Pricing Plans</h1>
-                <p class="fs-16px text-center mb-0">
-                    Our pricing plans are designed to be flexible and affordable, providing value for businesses of all sizes. <br>
-                    Whether you're just starting out or an established business, we have a plan that fits your needs.
-                </p>
-
-                <div class="row g-3 py-3 gx-lg-5 py-lg-5">
-                    <div class="col-xl-4 col-md-4 col-sm-6 py-xl-5">
-                        <div class="card border-0 rounded-4 h-100 bg-light">
-                            <div class="card-body fs-13px p-25px d-flex flex-column">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-1">
-                                        <div class="h6 ">Starter Plan</div>
-                                        <div class="h2 fw-bold mb-0">&cent;99 <small class="h6 text-body text-opacity-50">/month*</small></div>
-                                    </div>
-                                    <div>
-                                        <iconify-icon icon="solar:usb-bold-duotone" class="display-6 text-gray-500"></iconify-icon>
-                                    </div>
-                                </div>
-                                <hr class="my-3">
-                                <div class="mb-5 text-body text-opacity-75 flex-1">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">Customers:</span> <b class="text-body">50 Customers</b></div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">Job Registration:</span> <b class="text-body">70 Jobs</b></div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">SMS Bundle:</span> <b class="text-body">20 SMS</b></div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">Users:</span> <b class="text-body"> 2 User Accounts</b></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-times fa-lg text-body text-opacity-25"></i>
-                                        <div class="flex-1 ps-3"><span class="">Business Intelligence::</span> <b class="text-body"> No</b></div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-times fa-lg text-body text-opacity-25"></i>
-                                        <div class="flex-1 ps-3"><span class="">Data Analytics:</span> <b class="text-body"> No</b></div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-times fa-lg text-body text-opacity-25"></i>
-                                        <div class="flex-1 ps-3"><span class="">Image Uploads:</span> <b class="text-body"> No</b></div>
-                                    </div>
-                                </div>
-                                <div class="mx-n2">
-                                    <a href="#" class="btn btn-black btn-lg fs-16px w-100 border-0">
-                                        Get Started <i class="fa fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6 py-xl-0">
-                        <div class="card border-0 rounded-4 shadow bg-gradient-blue-indigo text-white h-100" data-bs-theme="dark">
-                            <div class="card-body fs-14px p-25px h-100 d-flex flex-column">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-1">
-                                        <div class="h6 ">Premium Plan</div>
-                                        <div class="h1 fw-bold mb-0">&cent; 150 <small class="h6 text-body text-opacity-50">/month*</small></div>
-                                    </div>
-                                    <div>
-                                        <iconify-icon icon="solar:cup-first-bold-duotone" class="display-5 text-white text-opacity-50"></iconify-icon>
-                                    </div>
-                                </div>
-                                <hr class="my-3">
-                                <div class="mb-5 text-body flex-1">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Customers:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Job Registration:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                SMS Bundle:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Users:</span> <b class="text-body"> Unlimited</b>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Business Intelligence::</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Data Analytics:</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-white"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Image Uploads:</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-white fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Email Accounts:</span> <b class="text-white">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-white fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                24/7 Support:</span> <b class="text-white">Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-white fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Backup:</span> <b class="text-white">Daily</b>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                                <a href="#" class="btn btn-light btn-lg fs-16px w-100 text-black ">Get Started <i class="fa fa-arrow-right ms-3 opacity-5"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-4 col-sm-6 py-xl-5">
-                        <div class="card border-0 rounded-4 h-100 bg-light">
-                            <div class="card-body fs-13px p-25px d-flex flex-column">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-1">
-                                        <div class="h6">Business Plan</div>
-                                        <div class="h2 fw-bold mb-0">
-                                            &cent; 200 <small class="h6 text-body text-opacity-50">/month*</small></div>
-                                    </div>
-                                    <div>
-                                        <iconify-icon icon="solar:buildings-bold-duotone" class="display-6 text-gray-500"></iconify-icon>
-                                    </div>
-                                </div>
-                                <hr class="my-3">
-                                <div class="mb-5 text-body text-opacity-75 flex-1">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Customers:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Job Registration:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                SMS Bundle:</span> <b class="text-body">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Users:</span> <b class="text-body"> Unlimited</b>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Business Intelligence::</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Data Analytics:</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check fa-lg text-black"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Image Uploads:</span> <b class="text-body"> Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Email Accounts:</span> <b class="text-black">Unlimited</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                24/7 Support:</span> <b class="text-black">Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                                Backup:</span> <b class="text-black">Daily</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">
-                                            AI Generated Summaries:</span> <b class="text-body">Yes</b>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">Customer Login Job Uploads</span></div>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <i class="fa fa-check text-black fa-lg"></i>
-                                        <div class="flex-1 ps-3"><span class="">5-Day Expiry Overlap</span></div>
-                                    </div>
-                                </div>
-                                <div class="mx-n2">
-                                    <a href="#" class="btn btn-black btn-lg fs-15px w-100 border-0">
-                                        Get Started <i class="fa fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END #pricing -->
-
-        <!-- BEGIN #testimonials -->
-        <div id="testimonials" class="py-5 d-none">
-            <div class="container-xxl p-3 p-lg-5">
-                <div class="text-center mb-5">
-                    <h1 class="mb-3 text-center">What Our Clients Say</h1>
-                    <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                        Read testimonials from our satisfied customers. <br>
-                        Discover how Studio Admin Template enhances productivity and exceeds expectations <br>
-                        with its ease of use, advanced features, and exceptional support.
-                    </p>
-                </div>
-                <div class="row g-3 g-lg-4 mb-4">
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card p-4 border-0 h-100 rounded-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="assets/img/user/user.jpg" class="rounded-circle me-3 w-50px" alt="Client 1">
-                                <div>
-                                    <h5 class="mb-0">John Doe</h5>
-                                    <small class="text-muted">CEO, Company</small>
-                                </div>
-                            </div>
-                            <div class="mb-4 d-flex">
-                                <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
-                                <div class="p-3">
-                                    <div class="text-warning d-flex mb-2">
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    </div>
-                                    Studio Admin Template transformed our workflow.
-                                    The customization options are unparalleled, and the support team is incredibly responsive.
-                                </div>
-                                <div class="d-flex align-items-end">
-                                    <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card p-4 border-0 h-100 rounded-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="assets/img/user/user-7.jpg" class="rounded-circle me-3 w-50px" alt="Client 1">
-                                <div>
-                                    <h5 class="mb-0">Michael Brown</h5>
-                                    <small class="text-muted">CTO, Innovate Corp</small>
-                                </div>
-                            </div>
-                            <div class="mb-4 d-flex">
-                                <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
-                                <div class="p-3">
-                                    <div class="text-warning d-flex mb-2">
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    </div>
-                                    Our productivity has soared since adopting this template.
-                                    The features are top-notch, and the user experience is outstanding.
-                                </div>
-                                <div class="d-flex align-items-end">
-                                    <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card p-4 border-0 h-100 rounded-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="assets/img/user/user-10.jpg" class="rounded-circle me-3 w-50px" alt="Client 1">
-                                <div>
-                                    <h5 class="mb-0">Emily Johnson</h5>
-                                    <small class="text-muted">Project Manager, Creative Agency</small>
-                                </div>
-                            </div>
-                            <div class="mb-4 d-flex">
-                                <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
-                                <div class="p-3">
-                                    <div class="text-warning d-flex mb-2">
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    </div>
-                                    This template is a game-changer.
-                                    It's intuitive, flexible, and the seamless integration
-                                    has made our projects run smoother than ever.
-                                </div>
-                                <div class="d-flex align-items-end">
-                                    <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 d-none d-xl-block"></div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card p-4 border-0 h-100 rounded-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="assets/img/user/user-8.jpg" class="rounded-circle me-3 w-50px" alt="Client 1">
-                                <div>
-                                    <h5 class="mb-0">David Lee</h5>
-                                    <small class="text-muted">Founder, Startup Hub</small>
-                                </div>
-                            </div>
-                            <div class="mb-4 d-flex">
-                                <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
-                                <div class="p-3">
-                                    <div class="text-warning d-flex mb-2">
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    </div>
-                                    Studio Admin Template has exceeded all our expectations.
-                                    The advanced features and excellent support make it a standout choice.
-                                </div>
-                                <div class="d-flex align-items-end">
-                                    <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card p-4 border-0 h-100 rounded-5">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="assets/img/user/user.jpg" class="rounded-circle me-3 w-50px" alt="Client 1">
-                                <div>
-                                    <h5 class="mb-0">John Doe</h5>
-                                    <small class="text-muted">CEO, Company</small>
-                                </div>
-                            </div>
-                            <div class="mb-4 d-flex">
-                                <i class="fa fa-quote-left fa-2x text-body text-opacity-15"></i>
-                                <div class="p-3">
-                                    <div class="text-warning d-flex mb-2">
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                        <iconify-icon icon="ic:baseline-star" class="fs-18px"></iconify-icon>
-                                    </div>
-                                    Studio Admin Template transformed our workflow.
-                                    The customization options are unparalleled, and the support team is incredibly responsive.
-                                </div>
-                                <div class="d-flex align-items-end">
-                                    <i class="fa fa-quote-right fa-2x text-body text-opacity-15"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END #testimonials -->
-
-        <!-- BEGIN #blog -->
-        <div id="blog" class="py-5 bg-component d-none">
-            <div class="container-xxl p-3 p-lg-5">
-                <div class="text-center mb-5">
-                    <h1 class="mb-3 text-center">Our Latest Insights</h1>
-                    <p class="fs-16px text-body text-opacity-50 text-center mb-0">
-                        Dive into our blog for the latest trends, tips, and updates <br>
-                        on web development, design, and industry best practices. Stay informed and inspired <br>
-                        with expert insights and valuable resources.
-                    </p>
-                </div>
-                <div class="row g-3 g-xl-4 mb-5">
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <div class="d-flex flex-column h-100 rounded-4 overflow-hidden shadow-lg mb-5 mb-lg-0">
-                            <div>
-                                <img src="assets/img/landing/blog-1.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-                            </div>
-                            <div class="flex-1 p-3 pb-0">
-                                <div class="mb-2">
-                                    <span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Web Design</span>
-                                </div>
-                                <h5>Mastering Responsive Design: A Guide for Beginners</h5>
-                                <p>Explore the fundamentals of responsive web design and learn essential tips to create websites that look great on any device.</p>
-                            </div>
-                            <div class="p-3 pt-0 text-body text-opacity-50">July 15, 2024</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <div class="d-flex flex-column h-100 rounded-4 overflow-hidden shadow-lg mb-5 mb-lg-0">
-                            <div>
-                                <img src="assets/img/landing/blog-2.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-                            </div>
-                            <div class="flex-1 p-3 pb-0">
-                                <div class="mb-2">
-                                    <span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">UXUI Design</span>
-                                </div>
-                                <h5>The Future of UI/UX Trends in 2024</h5>
-                                <p>Discover the latest trends shaping user interface and experience design in the digital landscape this year.</p>
-                            </div>
-                            <div class="p-3 pt-0 text-body text-opacity-50">July 11, 2024</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <div class="d-flex flex-column h-100 rounded-4 overflow-hidden shadow-lg mb-5 mb-lg-0">
-                            <div>
-                                <img src="assets/img/landing/blog-3.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-                            </div>
-                            <div class="flex-1 p-3 pb-0">
-                                <div class="mb-2">
-                                    <span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Search Engine</span>
-                                </div>
-                                <h5>Effective SEO Strategies for 2024</h5>
-                                <p>Dive into actionable SEO strategies and tips to boost your website’s visibility and drive organic traffic.</p>
-                            </div>
-                            <div class="p-3 pt-0 text-body text-opacity-50">June 29, 2024</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-6">
-                        <div class="d-flex flex-column h-100 rounded-4 overflow-hidden shadow-lg mb-5 mb-lg-0">
-                            <div>
-                                <img src="assets/img/landing/blog-4.jpg" alt="" class="object-fit-cover h-200px w-100 d-block">
-                            </div>
-                            <div class="flex-1 p-3 pb-0">
-                                <div class="mb-2">
-                                    <span class="bg-theme bg-opacity-15 text-theme px-2 py-1 rounded small fw-bold">Cyber Security</span>
-                                </div>
-                                <h5>Security Essentials: Protecting Your Website from Cyber Threats</h5>
-                                <p>Essential security measures and best practices to safeguard your website and user data from cyber threats.</p>
-                            </div>
-                            <div class="p-3 pt-0 text-body text-opacity-50">June 27, 2024</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <a href="#" class="text-decoration-none text-body text-opacity-50 h6">See More Company Stories <i class="fa fa-arrow-right ms-3"></i></a>
-                </div>
-            </div>
-        </div>
-        <!-- END #blog -->
-
-        <!-- BEGIN #contact -->
-        <div id="contact" class="py-5">
-            <div class="container-xl p-3 p-lg-5">
-                <div class="text-center mb-5">
-                    <h1 class="mb-3 text-center">Contact Us</h1>
-                    <p class="fs-16px text-black text-center mb-0">
-                        Ready to get started or have a question? Let's talk! <br>
-                        Reach out to us and our team will be happy to help with any <br>
-                        inquiries, support, or partnership opportunities.
-                    </p>
-                </div>
-                <div class="row gx-3 gx-lg-5">
-                    <div class="col-lg-6">
-                        <h4>Contact Us to Discuss Your Project</h4>
-                        <p>
-                            Do you have a project in mind? We’re eager to discuss it with you. Whether you’re looking for advice, have questions, or want to share your ideas, feel free to reach out.
-                        </p>
-                        <p>
-                            <span class="fw-bolder">Kindred Technologies</span><br>
-                            Office 06, Far-Habink Storey<br>
-                            Filling Point - Tamale, GH<br><br>
-
-                            Monday - Saturday: 9:00 AM - 6:00 PM<br>
-                            Sunday: Closed<br> <br>
-
-                            Phone: <a href="#" class="text-theme">(+233) 024 617 3282</a><br>
-                            International: <a href="#" class="text-theme">(+233) 020 698 2464</a><br>
-                            Email:
-                            <a href="mailto:info@kindredghtechnologies.com" class="text-theme">
-                                info@kindredghtechnologies.com
+                        <!---Lp Mobile Toggle Icons--->
+                        <div class="xl:hidden order-1">
+                            <a class="rounded-full icon-hover h-10 w-10 flex justify-center text-link dark:text-darklink items-center hover:text-primary  relative hover:bg-lightprimary dark:hover:bg-darkprimary "
+                                data-hs-overlay="#application-sidebar-lp">
+                                <i class="ti ti-menu-2 text-xl relative "></i>
                             </a>
-                        </p>
+                        </div>
+
+                        <!-- Menu-->
+                        <ul class="xl:flex hidden items-center gap-2 order-3">
+                            <li>
+                                <a href="../main/frontend-aboutpage.html"
+                                    class='text-[15px] py-[6px] px-4 text-link dark:text-darklink hover:text-primary font-medium'>About
+                                    Us</a>
+                            </li>
+                            <li>
+                                <a href="../main/frontend-blogpage.html"
+                                    class='text-[15px] py-[6px] px-4 text-link dark:text-darklink hover:text-primary font-medium'>Blog</a>
+                            </li>
+                            <li>
+                                <a href="../main/frontend-portfoliopage.html"
+                                    class='text-[15px] py-[6px] px-4 flex items-center text-link dark:text-darklink gap-2 hover:text-primary font-medium'>
+                                    Portfolio
+                                    <span
+                                        class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium bg-lightprimary dark:bg-darkprimary text-primary dark:text-primary">New</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../main/index.html"
+                                    class='text-[15px] py-[6px] px-4 text-link dark:text-darklink hover:text-primary font-medium'>Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="../main/frontend-pricingpage.html"
+                                    class='text-[15px] py-[6px] px-4 text-link dark:text-darklink hover:text-primary font-medium'>Pricing</a>
+                            </li>
+                            <li>
+                                <a href="../main/frontend-contactpage.html"
+                                    class='text-[15px] py-[6px] px-4 text-link dark:text-darklink hover:text-primary font-medium'>Contact</a>
+                            </li>
+
+                        </ul>
+                        <a href="{{ route('login') }}" class="btn order-4">Login</a>
                     </div>
-                    <div class="col-lg-6">
-                        <form action="" method="GET" name="form_contact_us">
-                            <div class="row gy-3 mb-3">
-                                <div class="col-6">
-                                    <label class="form-label">First Name <span class="text-theme">*</span></label>
-                                    <input type="text" class="form-control form-control-lg fs-15px">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Last Name <span class="text-theme">*</span></label>
-                                    <input type="text" class="form-control form-control-lg fs-15px">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Email <span class="text-theme">*</span></label>
-                                    <input type="text" class="form-control form-control-lg fs-15px">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">Phone <span class="text-theme">*</span></label>
-                                    <input type="text" class="form-control form-control-lg fs-15px">
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Message <span class="text-theme">*</span></label>
-                                    <textarea class="form-control form-control-lg fs-15px" rows="8"></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-theme btn-lg btn-block px-4 fs-15px">Send Message</button>
+                </header>
+
+                <!-- Main Content -->
+                <div class="max-w-full">
+
+                    <!-- Herosection start -->
+                    <div class="py-[80px] h-30vh bg-gray-900 custom-shadow  bg-[url('/public/images/hero-cover.png')]">
+                        <div class="container py-6 pb-0 px-4">
+                            <div class="flex w-full justify-center">
+                                <div class="md:w-8/12 w-full pt-8">
+                                    <h1
+                                        class="lg:text-[4.5rem] text-[4.5rem] lh-1.25 text-white text-center text-link dark:text-white">
+                                        Workflow Manager For
+                                    </h1>
+                                    <h1
+                                        class="lg:text-[4.5rem] text-[4.5rem] lh-1.25 text-white text-center text-link dark:text-white">
+                                        <span class="text-primary">Digital Print</span> Businesses
+                                    </h1>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END #contact -->
+                            <div class="w-full pt-5 pb-5">
+                                <div class="flex flex-wrap gap-6 items-center justify-center mx-auto mb-3">
+                                    <div class="text-lg text-white dark:text-darklink font-medium text-center">
+                                        18 Companies & Designers Use Our Software.</div>
+                                </div>
+                                <div class="w-full relative p-3 img-wrapper">
+                                    <div class="flex items-center justify-center gap-5 mx-auto">
+                                        <a href="../main/authentication-login.html" target="_blank"
+                                            class="btn">
 
-        <!-- BEGIN #footer -->
-        <div id="footer" class="py-5 bg-gray-800 text-body text-opacity-75" data-bs-theme="dark">
-            <div class="container-xxl px-3 px-lg-5">
-                <div class="row gx-lg-5 gx-3 gy-lg-4 gy-3">
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="mb-4">About Us</h5>
-                        <p class="mb-4">
-                            PrintForce is your go-to solution for creatives, designers and print studios. It's a stunning, responsive,
-                            and high-performance web application. Inspired By Design, Built For Work
+                                            Create
+                                        </a>
+                                        <a href="../main/authentication-login.html" target="_blank"
+                                            class="btn btn-md">
+                                            <i class="fi fi-sr-lock"></i>
+                                            Sign Into Your Account
+                                        </a>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Herosection end -->
+
+                    <!-- Demos Section Start -->
+                    <div class="container-md lg:py-24 py-12 px-4">
+                        <div class="flex justify-center w-full mb-12">
+                            <div class="lg:w-6/12 w-full">
+                                <p class="text-base text-lightmuted dark:text-darklink text-center">
+                                    PrintForce is a high-performance workflow manager for
+                                    creatives, designers and print studios, automating their operations and keeping records whilst they unleash thier
+                                    creativity.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex w-full lg:flex-nowrap flex-wrap gap-6">
+                            <div class="lg:w-[28%] w-full">
+                                <div
+                                    class=" py-12 px-6 justify-center rounded-base bg-lightwarning dark:bg-darkwarning mb-6">
+                                    <!-- <img src='../assets/images/svgs/icon-briefcase.svg' alt="image" class="mx-auto" /> -->
+                                    <h1 class="py-4 text-center font-bold text-link dark:text-white text-lg">Light &
+                                        Dark Color Schemes</h1>
+                                    <p class="text-lightmuted dark:text-darklink text-base font-normal text-center">
+                                        Choose your preferred visual style effortlessly.</p>
+                                </div>
+                                <div
+                                    class=" pt-12 px-6 justify-center rounded-base bg-lightsuccess dark:bg-darksuccess">
+                                    <h1 class="pb-4 text-center font-bold text-link dark:text-white text-lg px-3">12+
+                                        Ready to Use Application Designs</h1>
+                                    <p
+                                        class="text-lightmuted mb-5 dark:text-darklink text-base font-normal text-center">
+                                        Instantly deployable designs for your applications.</p>
+                                    <!-- <img src="../assets/images/frontend-pages/background/app-widget.png" alt="image"
+                                        class="mx-auto px-6" /> -->
+                                </div>
+                            </div>
+                            <div class="lg:w-5/12 w-full">
+                                <div
+                                    class=" py-12 px-6 justify-center rounded-base bg-lightprimary dark:bg-darkprimary">
+                                    <!-- <img src='../assets/images/logos/favicon.png' alt="image" class="mx-auto"
+                                        width='52' /> -->
+                                    <h1
+                                        class="py-4 pb-7 font-bold text-link dark:text-white text-center md:text-[40px] text-[32px] leading-normal">
+                                        New Demos</h1>
+                                    <p
+                                        class="text-lightmuted dark:text-darklink text-base font-normal text-center pb-6">
+                                        Brand new demos to help you build the perfect dashboard: <span
+                                            class="font-semibold">Dark</span> and <span
+                                            class="font-semibold">Right-to-Left</span>.</p>
+                                    <!-- <img src='../assets/images/frontend-pages/background/Scene.png'
+                                        class="xl:mt-4 lg:mt-20 mt-4 lg:px-6 px-0" alt="image" /> -->
+                                </div>
+                            </div>
+                            <div class="lg:w-[28%] w-full">
+                                <div
+                                    class=" py-12 px-6 justify-center rounded-base bg-lightsuccess dark:bg-darksuccess mb-6">
+                                    <!-- <img src='../assets/images/svgs/icon-speech-bubble.svg' alt="image"
+                                        class="mx-auto" /> -->
+                                    <h1 class="py-4 text-center font-bold text-link dark:text-white text-lg">Code
+                                        Improvements</h1>
+                                    <p class="text-lightmuted dark:text-darklink text-base font-normal text-center">
+                                        Benefit from continuous improvements and optimizations.</p>
+                                </div>
+                                <div class=" py-12 px-6 justify-center rounded-base bg-lighterror dark:bg-darkerror">
+                                    <!-- <img src='../assets/images/svgs/icon-favorites.svg' alt="image" class="mx-auto" /> -->
+                                    <h1 class="py-4 text-center font-bold text-link dark:text-white text-lg">50+ UI
+                                        Components</h1>
+                                    <p class="text-lightmuted dark:text-darklink text-base font-normal text-center">A
+                                        rich collection for seamless user experiences.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Demos Section End -->
+
+
+
+
+                    <!-- Features Start -->
+                    <div
+                        class="container lg:py-24 py-12 bg-lightprimary dark:bg-lightprimary rounded-base overflow-hidden hidden">
+                        <div class="flex justify-center w-full mb-16">
+                            <div class="lg:w-6/12 w-full">
+                                <h2
+                                    class="md:text-40 text-32 font-bold text-link dark:text-white leading-tight text-center">
+                                    Enjoy unparalleled features & exceptional flexibility.
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="marquee1-group flex gap-6">
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-wand text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        6 Theme Colors</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brightness text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dark & Light Sidebar</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-firebase text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        425+ Page Templates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-archive text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        150+ UI Components</p>
+                                </div>
+
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-tailwind text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Tailwindcss 4x</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-overline text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Preline UI</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-diamond text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        3400+ Font Icons</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-wand text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        6 Theme Colors</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brightness text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dark & Light Sidebar</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-firebase text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        425+ Page Templates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-archive text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        150+ UI Components</p>
+                                </div>
+
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-tailwind text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Tailwindcss 4x</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-overline text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Preline UI</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-diamond text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        3400+ Font Icons</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-wand text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        6 Theme Colors</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brightness text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dark & Light Sidebar</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-firebase text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        425+ Page Templates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-archive text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        150+ UI Components</p>
+                                </div>
+
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-tailwind text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Tailwindcss 4x</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-overline text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Preline UI</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-diamond text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        3400+ Font Icons</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-wand text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        6 Theme Colors</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brightness text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dark & Light Sidebar</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-firebase text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        425+ Page Templates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-archive text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        150+ UI Components</p>
+                                </div>
+
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-brand-tailwind text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Tailwindcss 4x</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-overline text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Preline UI</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-diamond text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        3400+ Font Icons</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="marquee2-group flex gap-6">
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6">
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-device-desktop text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Fully Responsive</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-arrows-shuffle text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Easy to Customize</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Tables</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="marquee1-group flex gap-6">
+
+                            <div class="flex gap-6 mb-6" key={index}>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Table Examples</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-refresh text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Regular Updates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-book text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Detailed Documentation</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-calendar text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Calendar Design</p>
+                                </div>
+
+                            </div>
+                            <div class="flex gap-6 mb-6" key={index}>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Table Examples</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-refresh text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Regular Updates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-book text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Detailed Documentation</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-calendar text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Calendar Design</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-user-screen text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dedicated Support</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6" key={index}>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Table Examples</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-refresh text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Regular Updates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-book text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Detailed Documentation</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-calendar text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Calendar Design</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-user-screen text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dedicated Support</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6 mb-6" key={index}>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-chart-pie text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Chart Options</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-layers-intersect text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Lots of Table Examples</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-refresh text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Regular Updates</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-book text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Detailed Documentation</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-calendar text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Calendar Design</p>
+                                </div>
+                                <div
+                                    class="py-6 px-8 rounded-base elevation-1 flex gap-3 items-center bg-white dark:bg-dark ">
+                                    <i class="ti ti-user-screen text-primary text-2xl shrink-0"></i>
+                                    <p class="text-[15px] font-semibold whitespace-nowrap text-link dark:text-darklink">
+                                        Dedicated Support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features End -->
+
+                    <!-- License Pricing Start -->
+                    <div class="container-md px-4 lg:py-24 py-12">
+                        <div class="flex w-full justify-center mb-12">
+                            <div class="lg:w-6/12 w-full">
+                                <div
+                                    class="md:text-40 text-32 font-bold leading-tight text-center text-link dark:text-white">
+                                    111,476+ Trusted developers & many tech giants as well
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-12 gap-6">
+                            <div class="xl:col-span-3 md:col-span-6 col-span-12">
+                                <div class="p-7 rounded-base border border-border dark:border-darkborder">
+                                    <div class="pb-8 border-b border-border dark:border-darkborder">
+                                        <h6
+                                            class="text-xl font-bold text-link dark:text-white mb-4 flex items-center gap-2">
+                                            Single Use
+                                        </h6>
+                                        <p class="text-lightmuted text-[13px] font-medium dark:text-darklink">Use for
+                                            single end product which end users can’t be charged for.</p>
+                                    </div>
+                                    <div class="flex gap-2 pt-8 ">
+                                        <div
+                                            class="md:text-40 text-32 leading-tight font-bold text-link dark:text-white">
+                                            $49</div>
+                                        <p
+                                            class="text-base self-end text-lightmuted dark:text-darklink font-normal relative -top-1">
+                                            /one time pay</p>
+                                    </div>
+                                    <div class="mt-8 flex flex-col gap-3.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Full source code</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Documentation</p>
+                                        </div>
+                                        <div class="flex items-center flex-nowrap gap-2">
+                                            <i
+                                                class="ti ti-circle-x text-xl text-link dark:text-darklink opacity-50"></i>
+                                            <p
+                                                class="text-sm text-link dark:text-darklink font-medium tracking-wide opacity-50">
+                                                Use in SaaS app</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                One Project</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Technical Support
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Free Updates
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8">
+                                        <button
+                                            class="btn bg-primary hover:bg-primaryemphasis text-base text-white btn-md py-2.5 px-4 w-full block">Purchase
+                                            Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="xl:col-span-3 md:col-span-6 col-span-12">
+                                <div class="p-7 rounded-base border border-border dark:border-darkborder">
+                                    <div class="pb-8 border-b border-border dark:border-darkborder">
+                                        <h6
+                                            class="text-xl font-bold text-link dark:text-white mb-4 flex items-center gap-2">
+                                            Multiple Use
+                                        </h6>
+                                        <p class="text-lightmuted text-[13px] font-medium dark:text-darklink">Use for
+                                            unlimited end products end users can’t be charged for.</p>
+                                    </div>
+                                    <div class="flex gap-2 pt-8 ">
+                                        <div
+                                            class="md:text-40 text-32 leading-tight font-bold text-link dark:text-white">
+                                            $89</div>
+                                        <p
+                                            class="text-base self-end text-lightmuted dark:text-darklink font-normal relative -top-1">
+                                            /one time pay</p>
+                                    </div>
+                                    <div class="mt-8 flex flex-col gap-3.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Full source code</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Documentation</p>
+                                        </div>
+                                        <div class="flex items-center flex-nowrap gap-2">
+                                            <i
+                                                class="ti ti-circle-x text-xl text-link dark:text-darklink opacity-50"></i>
+                                            <p
+                                                class="text-sm text-link dark:text-darklink font-medium tracking-wide opacity-50">
+                                                Use in SaaS app</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                One Project</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Technical Support
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Free Updates
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8">
+                                        <button
+                                            class="btn bg-primary hover:bg-primaryemphasis text-base text-white btn-md py-2.5 px-4 w-full block">Purchase
+                                            Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="xl:col-span-3 md:col-span-6 col-span-12">
+                                <div class="p-7 rounded-base border border-border dark:border-darkborder">
+                                    <div class="pb-8 border-b border-border dark:border-darkborder">
+                                        <h6
+                                            class="text-xl font-bold text-link dark:text-white mb-4 flex items-center gap-2">
+                                            Extended Use
+                                            <span
+                                                class="py-2 px-[10px] text-xs font-semibold text-primary bg-lightprimary rounded-md">Popular</span>
+                                        </h6>
+                                        <p class="text-lightmuted text-[13px] font-medium dark:text-darklink">Use for
+                                            unlimited end products end users can’t be charged for.</p>
+                                    </div>
+                                    <div class="flex gap-2 pt-8 ">
+                                        <div
+                                            class="md:text-40 text-32 leading-tight font-bold text-link dark:text-white">
+                                            $299</div>
+                                        <p
+                                            class="text-base self-end text-lightmuted dark:text-darklink font-normal relative -top-1">
+                                            /one time pay</p>
+                                    </div>
+                                    <div class="mt-8 flex flex-col gap-3.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Full source code</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Documentation</p>
+                                        </div>
+                                        <div class="flex items-center flex-nowrap gap-2">
+                                            <i
+                                                class="ti ti-circle-check text-xl text-secondary dark:text-secondary"></i>
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Use in SaaS app</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                One Project</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Technical Support
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Free Updates
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8">
+                                        <button
+                                            class="btn bg-primary hover:bg-primaryemphasis text-base text-white btn-md py-2.5 px-4 w-full block">Purchase
+                                            Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="xl:col-span-3 md:col-span-6 col-span-12">
+                                <div class="p-7 rounded-base border border-border dark:border-darkborder">
+                                    <div class="pb-8 border-b border-border dark:border-darkborder">
+                                        <h6
+                                            class="text-xl font-bold text-link dark:text-white mb-4 flex items-center gap-2">
+                                            Unlimited Use
+                                            <span
+                                                class="py-2 px-[10px] text-xs font-semibold text-primary bg-lightprimary rounded-md">Popular</span>
+                                        </h6>
+                                        <p class="text-lightmuted text-[13px] font-medium dark:text-darklink">Use in
+                                            unlimited end products end users can be charged for.</p>
+                                    </div>
+                                    <div class="flex gap-2 pt-8 ">
+                                        <div
+                                            class="md:text-40 text-32 leading-tight font-bold text-link dark:text-white">
+                                            $499</div>
+                                        <p
+                                            class="text-base self-end text-lightmuted dark:text-darklink font-normal relative -top-1">
+                                            /one time pay</p>
+                                    </div>
+                                    <div class="mt-8 flex flex-col gap-3.5">
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Full source code</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <Icon icon="tabler:circle-check" class="text-xl text-secondary" />
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Documentation</p>
+                                        </div>
+                                        <div class="flex items-center flex-nowrap gap-2">
+                                            <i
+                                                class="ti ti-circle-check text-xl text-secondary dark:text-secondary"></i>
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                Use in SaaS app</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                One Project</p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Technical Support
+                                            </p>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-sm text-link dark:text-darklink font-medium tracking-wide">
+                                                <span class="font-bold">One Year</span> Free Updates
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8">
+                                        <button
+                                            class="btn bg-primary hover:bg-primaryemphasis text-base text-white btn-md py-2.5 px-4 w-full block">Purchase
+                                            Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-4 pt-12">
+                            <p class="text-base font-medium text-lightmuted dark:text-darklink text-center mb-8">Secured
+                                payment with PayPal & Razorpay</p>
+                            <div class="flex items-center flex-wrap justify-center gap-12">
+                                <!-- <img src='../assets/images/frontend-pages/payments/visa.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/master.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/american-exp.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/discover.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/paypal.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/maesro.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/jcb.svg' alt="payment" />
+                                <img src='../assets/images/frontend-pages/payments/dinners-clb.svg' alt="payment" /> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- License Pricing End -->
+
+                    <!-- FAQ start -->
+                    <section class="max-w-[800px] mx-auto px-4 lg:pb-24 pb-20 pt-0">
+                        <h3
+                            class="md:text-40 text-32 font-bold text-link dark:text-white leading-tight text-center mb-14">
+                            Frequently asked questions</h3>
+                        <div class="hs-accordion-group">
+                            <div class="hs-accordion active border-border border  -mt-px first:rounded-t-md last:rounded-b-md rounded-t-md dark:border-darkborder"
+                                id="hs-bordered-heading-one">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary inline-flex items-center justify-between gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-one">
+                                    What is included with my purchase?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-one"
+                                    class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-one">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Tailor the dashboard to your exact needs. Customize layouts, color schemes,
+                                            and widgets effortlessly for a personalized user experience.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hs-accordion border-border border -mt-px first:rounded-t-md last:rounded-b-md dark:border-darkborder"
+                                id="hs-bordered-heading-two">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary justify-between inline-flex items-center gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-two">
+                                    Are there any recurring fees?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-two"
+                                    class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-two">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Unlock the true potential of your data with our advanced analytics tools.
+                                            Gain valuable insights and make data-driven decisions with ease.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="hs-accordion border-border border -mt-px first:rounded-t-md last:rounded-b-md dark:border-darkborder"
+                                id="hs-bordered-heading-three">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary justify-between inline-flex items-center gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-three">
+                                    Can I use the template on multiple projects?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-three"
+                                    class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-three">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Visualize complex data sets beautifully with our interactive graphs and
+                                            charts. Quickly grasp trends and patterns for smarter analysis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hs-accordion border-border border -mt-px first:rounded-t-md last:rounded-b-md dark:border-darkborder"
+                                id="hs-bordered-heading-four">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary justify-between inline-flex items-center gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-three">
+                                    Can I customize the admin dashboard template to match my brand?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-three"
+                                    class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-four">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Visualize complex data sets beautifully with our interactive graphs and
+                                            charts. Quickly grasp trends and patterns for smarter analysis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hs-accordion border-border border -mt-px first:rounded-t-md last:rounded-b-md dark:border-darkborder"
+                                id="hs-bordered-heading-five">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary justify-between inline-flex items-center gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-three">
+                                    Are there any restrictions on using the template?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-three"
+                                    class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-five">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Visualize complex data sets beautifully with our interactive graphs and
+                                            charts. Quickly grasp trends and patterns for smarter analysis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hs-accordion border-border border -mt-px first:rounded-t-md last:rounded-b-md dark:border-darkborder"
+                                id="hs-bordered-heading-six">
+                                <button
+                                    class="hs-accordion-toggle hs-accordion-active:text-primary justify-between inline-flex items-center gap-x-3 w-full font-semibold text-start text-dark py-5 px-6 hover:text-primary dark:text-white text-lg dark:hover:text-primary"
+                                    aria-controls="hs-basic-bordered-collapse-three">
+                                    How can I get support after purchase?
+                                    <svg class="hs-accordion-active:hidden block w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                        <path d="M12 5v14" />
+                                    </svg>
+                                    <svg class="hs-accordion-active:block hidden w-5 h-5 shrink-0"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14" />
+                                    </svg>
+
+                                </button>
+                                <div id="hs-basic-bordered-collapse-three"
+                                    class="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
+                                    aria-labelledby="hs-bordered-heading-six">
+                                    <div class="pb-4 px-5">
+                                        <p class="text-base">
+                                            Visualize complex data sets beautifully with our interactive graphs and
+                                            charts. Quickly grasp trends and patterns for smarter analysis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p
+                            class="mt-14 w-fit mx-auto py-1 px-2 rounded-md border-2 border-dashed border-border dark:border-darkborder text-sm font-medium justify-center text-lightmuted dark:text-darklink flex items-center flex-wrap gap-1">
+                            Still have a question?
+                            <Link href="https://discord.com/invite/XujgB8ww4n" class="underline hover:text-primary">Ask
+                            On Discord</Link> <span>or</span>
+                            <a href="https://adminmart.com/support/" class="underline hover:text-primary">Submit A
+                                Ticket</a>
                         </p>
-                        <h5>Follow Us</h5>
-                        <div class="d-flex">
-                            <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-facebook fa-fw"></i></a>
-                            <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-instagram fa-fw"></i></a>
-                            <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-twitter fa-fw"></i></a>
-                            <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-youtube fa-fw"></i></a>
-                            <a href="#" class="me-2 text-body text-opacity-50"><i class="fab fa-lg fa-linkedin fa-fw"></i></a>
+                    </section>
+                    <!-- FAQ end -->
+
+                    <!-- Feature Banner Start -->
+                    <div class="px-4 container">
+                        <div class=" bg-lightprimary rounded-base relative overflow-hidden">
+                            <div class="flex w-full">
+                                <div class="lg:w-6/12 w-full lg:p-24 py-12 px-4 lg:pe-10 pe-4">
+                                    <h3 class="md:text-40 text-32 font-bold leading-tight text-link dark:text-white">
+                                        Develop with feature-rich
+                                        Tailwind Dashboard</h3>
+                                    <div class="my-6 flex items-center gap-4">
+                                        <a href="../main/authentication-login.html" target="_blank"
+                                            class="btn bg-primary hover:bg-primaryemphasis text-white btn-md py-2.5 px-4 w-fit block">Login</a>
+                                        <a href="../main/authentication-register.html" target="_blank"
+                                            class="btn border border-primary bg-transparent text-primary hover:bg-primary dark:hover:bg-primary hover:text-white rounded-md btn-md py-2.5 px-4 w-fit block">Register</a>
+                                    </div>
+                                    <p class="text-base font-medium text-link dark:text-white">
+                                        <span class="font-semibold">One-time purchase</span> - no recurring fees.
+                                    </p>
+                                </div>
+                            </div>
+                            <Image src='../assets/images/frontend-pages/background/design-collection.png' alt="banner"
+                                class="absolute top-0 -end-[300px] rtl:-scale-x-100 lg:block hidden" />
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5>Quick Links</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Newsroom</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Company Info</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Careers</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">For Investors</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Brand Resources</a></li>
-                        </ul>
-                        <hr class="text-body text-opacity-50">
-                        <h5>Services</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Web Development</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">App Development</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">SEO</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Marketing</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5>Resources</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Documentation</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Support</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">FAQs</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Community</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Tutorials</a></li>
-                        </ul>
-                        <hr class="text-body text-opacity-50">
-                        <h5>Legal</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Privacy Policy</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Terms of Service</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Cookie Policy</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Compliance</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5>Help Center</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Contact Form</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Live Chat Support</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Portal Help Center</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Email Support</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Technical Documentation</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Service Updates</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Developer API</a></li>
-                            <li class="mb-3px"><a href="#" class="text-decoration-none text-body text-opacity-75">Knowledge Base</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr class="text-body text-opacity-50">
-                <div class="row">
-                    <div class="col-sm-6 mb-3 mb-lg-0">
-                        <div class="footer-copyright-text">&copy; {{ now()->format('Y') }} PrintForce All Rights Reserved</div>
-                    </div>
-                    <div class="col-sm-6 text-sm-end">
-                        <div class="dropdown me-4 d-inline">
-                            <a href="#" class="text-decoration-none dropdown-toggle text-body text-opacity-50" data-bs-toggle="dropdown">United States (English)</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" class="dropdown-item">United States (English)</a></li>
-                                <li><a href="#" class="dropdown-item">United Kingdom (English)</a></li>
-                                <li><a href="#" class="dropdown-item">China (简体中文)</a></li>
-                                <li><a href="#" class="dropdown-item">Brazil (Português)</a></li>
-                                <li><a href="#" class="dropdown-item">Germany (Deutsch)</a></li>
-                                <li><a href="#" class="dropdown-item">France (Français)</a></li>
-                                <li><a href="#" class="dropdown-item">Japan (日本語)</a></li>
-                                <li><a href="#" class="dropdown-item">Korea (한국어)</a></li>
-                                <li><a href="#" class="dropdown-item">Latin America (Español)</a></li>
-                                <li><a href="#" class="dropdown-item">Spain (Español)</a></li>
-                            </ul>
+                    <!-- Feature Banner End -->
+
+                    <!-- Footer Section -->
+                    <footer>
+                        <div class="container-md px-4 lg:py-24 md:py-20 py-12">
+                            <div class="grid grid-cols-12 gap-6">
+                                <div class="lg:col-span-3 sm:col-span-6 col-span-12">
+                                    <h4 class="text-lg text-link dark:text-white font-semibold mb-8">Company and team
+                                    </h4>
+                                    <div class="flex flex-col gap-4">
+                                        <a href='../main/ui-cards.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Cards</a>
+                                        <a href='../main/page-pricing.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Pricing</a>
+                                        <a href='../main/page-account-settings.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Account
+                                            Settings</a>
+                                        <a href='../main/page-faq.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">FAQ</a>
+                                        <a href='../main/page-user-profile.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">User
+                                            Profile</a>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-3 sm:col-span-6 col-span-12">
+                                    <h4 class="text-lg text-link dark:text-white font-semibold mb-8">Features</h4>
+                                    <div class="flex flex-col gap-4">
+                                        <a href='../main/widgets-banners.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Banners</a>
+                                        <a href='../main/widgets-charts.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Charts</a>
+                                        <a href='../main/widgets-data.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Data</a>
+                                        <a href='../main/widgets-feeds.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Feeds</a>
+                                        <a href='../main/ui-button.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Buttons</a>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-3 sm:col-span-6 col-span-12">
+                                    <h4 class="text-lg text-link dark:text-white font-semibold mb-8">Resources</h4>
+                                    <div class="flex flex-col gap-4">
+                                        <a href='../main/form-inputs.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Form
+                                            Input</a>
+                                        <a href='../main/table-basic.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Tables</a>
+                                        <a href='../main/table-miscellaneous.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Miscellaneous</a>
+                                        <a href='../main/form-input-grid.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Form
+                                            Grid</a>
+                                        <a href='../main/app-invoice.html'
+                                            class="text-sm font-medium text-lightmuted hover:text-primary dark:text-darklink block">Invoice
+                                            App</a>
+                                    </div>
+                                </div>
+                                <div class="lg:col-span-3 sm:col-span-6 col-span-12">
+                                    <h4 class="text-lg text-link dark:text-white font-semibold mb-8">Followers</h4>
+                                    <div class="flex items-center gap-5">
+                                        <div class="hs-tooltip inline-block">
+                                            <div class="hs-tooltip-toggle">
+                                                <img src='../assets/images/frontend-pages/svgs/facebook.svg'
+                                                    class="w-[22px] h-[22px]" alt="tech-icon" width="30" height="30" />
+                                                <span
+                                                    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+                                                    role="tooltip">
+                                                    Facebook
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="hs-tooltip inline-block">
+                                            <div class="hs-tooltip-toggle">
+                                                <img src='../assets/images/frontend-pages/svgs/twitter.svg'
+                                                    class="w-[22px] h-[22px]" alt="tech-icon" width="30" height="30" />
+                                                <span
+                                                    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+                                                    role="tooltip">
+                                                    Twitter
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="hs-tooltip inline-block">
+                                            <div class="hs-tooltip-toggle">
+                                                <img src='../assets/images/frontend-pages/svgs/instagram.svg'
+                                                    class="w-[22px] h-[22px]" alt="tech-icon" width="30" height="30" />
+                                                <span
+                                                    class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+                                                    role="tooltip">
+                                                    Instagram
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <a href="#" class="text-decoration-none text-body text-opacity-50">Sitemap</a>
-                    </div>
+                        <div class="container-md px-4 py-10 border-t border-border dark:border-darkborder">
+                            <div class="flex justify-between items-center flex-wrap">
+                                <div class="flex items-center gap-4">
+                                    <img src='{{ asset('/images/logo.png') }}' class="h-6" alt="logo" height="24" />
+                                    <p class="text-base text-lightmuted dark:text-darklink">All rights reserved
+                                        </p>
+                                </div>
+                                <p class="text-base text-lightmuted dark:text-darklink flex items-center gap-1">Produced
+                                    by
+
+                                </p>
+                            </div>
+                        </div>
+                    </footer>
+
+
+
                 </div>
+                <!-- Main Content End -->
             </div>
         </div>
-        <!-- END #footer -->
+        <!--end of project-->
+    </main>
 
-
-    </div>
-    <!-- END #app -->
-
-    @include('auth.login-modal')
-
-    <!-- ================== BEGIN core-js ================== -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script src="{{ asset('assets/js/vendor.min.js') }}" type="967f91c2a965fff459265cde-text/javascript"></script>
-    <script src="{{ asset('assets/js/app.min.js') }}" type="967f91c2a965fff459265cde-text/javascript"></script>
-    <script type="text/javascript" src={{ asset('assets/js/vendor.min.js') }}></script>
-    <script type="text/javascript" src="{{ asset('assets/js/app.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/email-decode.js') }}"></script>
-    <!-- ================== END core-js ================== -->
-
-    <!-- ================== BEGIN page-js ================== -->
-    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js" type="967f91c2a965fff459265cde-text/javascript"></script>
-    <script src="assets/plugins/lity/dist/lity.min.js" type="967f91c2a965fff459265cde-text/javascript"></script>
-    <!-- ================== END page-js ================== -->
-
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y3Q0VGQKY3" type="967f91c2a965fff459265cde-text/javascript"></script>
-    <script type="967f91c2a965fff459265cde-text/javascript">
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-Y3Q0VGQKY3');
-    </script>
-    <script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="967f91c2a965fff459265cde-|49" defer></script>
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"8f85ee484b84bd98","version":"2024.10.5","r":1,"token":"4db8c6ef997743fda032d4f73cfeff63","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
-</body>
 
 </html>

@@ -2,8 +2,8 @@
 
 namespace App\Domain\PrintJobs\Contracts;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintJobs\Models\LargeFormatJob;
-use App\Models\Customers\Customer;
 
 interface LargeFormatJobServiceInterface
 {

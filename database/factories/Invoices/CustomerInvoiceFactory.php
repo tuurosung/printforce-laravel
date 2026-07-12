@@ -2,8 +2,8 @@
 
 namespace Database\Factories\Invoices;
 
+use App\Domain\Customers\Models\Customer;
 use App\Enums\Invoices\InvoiceTypeEnum;
-use App\Models\Customers\Customer;
 use App\Models\Invoices\CustomerInvoice;
 use App\Models\Subscribers;
 use App\Services\Invoices\CustomerInvoiceService;

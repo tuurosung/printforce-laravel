@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Accounting;
 
+use App\Domain\Payments\Models\CustomerPayment;
+use App\Http\Controllers\Controller;
+use App\Models\Accounting\OperatingAccount;
+use App\Models\Accounting\OperatingAccountHeader;
+use App\Models\Accounting\OperatingAccountTypes;
 use App\Models\AddFunds;
 use App\Models\Expenditure;
-use App\Models\Subscribers;
 use App\Models\FundTransfer;
-use Illuminate\Http\Request;
 use App\Models\PurchasePayment;
-use App\Http\Controllers\Controller;
-use App\Models\Customers\CustomerPayment;
-use App\Models\Accounting\OperatingAccount;
-use App\Models\Accounting\OperatingAccountTypes;
-use App\Models\Accounting\OperatingAccountHeader;
+use App\Models\Subscribers;
+use Illuminate\Http\Request;
 
 class OperatingAccountController extends Controller
 {

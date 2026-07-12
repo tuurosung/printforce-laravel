@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Payments;
 
-use Illuminate\Http\Request;
+use App\Domain\Payments\Models\CustomerPayment;
 use App\Http\Controllers\Controller;
-use App\Models\Customers\CustomerPayment;
+use Illuminate\Http\Request;
 
 class PaymentsGraphController extends Controller
 {

@@ -44,6 +44,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function allUsers(): Collection
     {
-        return $this->model->orderBy("firstname", "desc")->get();
+        $subscriberId = auth()->user()->subscriber_id;
+
+        return $this->model->where('subscriber_id', $subscriberId)->orderBy("firstname", "desc")->get();
     }
 }

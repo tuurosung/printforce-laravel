@@ -9,16 +9,27 @@
                 <div class="grid grid-cols-2 gap-6 mb-5">
                     <div class="col">
                         <div class="mb-3">
-                            <label for="customer_id" class="form-label">Customer</label>
-                            <select class="form-control" name="customer_id" id="customerId" required>
-                                @if (isset($customer))
-                                <option value="{{ $customer->customer_id }}" selected>{{ $customer->name }}</option>
-                                @else
-                                @foreach ($customers as $customer)
-                                <option value="{{ $customer->customer_id }}">{{ $customer->name }}</option>
-                                @endforeach
-                                @endif
-                            </select>
+                            @php
+
+                            if (isset($customer)) {
+                            $customersArray = [
+                            $customer->customer_id => $customer->name
+                            ];
+                            } else {
+                                $customersArray = $customers->mapWithKeys(fn ($customer) => [ $customer->customer_id => $customer->name])->toArray();
+                            }
+
+                            // if (isset($customers)) {
+                            // $customersArray = $customers->mapWithKeys(fn ($customer) => [ $customer->customer_id => $customer->name])->toArray();
+                            // } else {
+                            // $customersArray = [
+                            // $customer->customer_id => $customer->name
+                            // ];
+                            // }
+
+                            @endphp
+                            <x-dropdowns.dropdown-with-search name="customer_id" label="Customer" :options="$customersArray" selected="{{ isset($customer) ? $customer->customer_id : '' }}" />
+
                         </div>
 
                     </div>

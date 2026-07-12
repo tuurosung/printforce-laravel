@@ -49,7 +49,7 @@
 
                             <div class="mb-3">
                                 <label for="service_id" class="form-label">Service Name</label>
-                                <select class="form-select form-select-lg" name="service_id" id="service_id"
+                                <select class="form-control form-select-lg" name="service_id" id="service_id"
                                     data-customer_id="{{ $largeFormatJob->customer_id }}"
                                     data-fetch-url="{{ route('configuration.print-services.get-service-cost-with-customer-id') }}">
                                     @foreach ($largeformat_services as $key => $value)
@@ -65,7 +65,7 @@
                         <div class="col">
                             <div class="mb-3">
                                 <label for="cost" class="form-label">Unit Cost</label>
-                                <input type="text" class="form-control form-control-sm" name="cost" id="edit_largeformat_cost"
+                                <input type="text" class="form-control " name="cost" id="edit_largeformat_cost"
                                     value="{{ $largeFormatJob->cost }}" readonly required />
                             </div>
 
@@ -85,7 +85,7 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Width</label>
-                                        <input type="number" step="any" class="form-control form-control-sm" name="width" id="edit_width"
+                                        <input type="number" step="any" class="form-control" name="width" id="edit_width"
                                             value="{{ $largeFormatJob->width }}" required />
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="" class="form-label">Height</label>
-                                        <input type="number" step="any" class="form-control form-control-sm" name="height" id="edit_height"
+                                        <input type="number" step="any" class="form-control" name="height" id="edit_height"
                                             value="{{ $largeFormatJob->height }}" required />
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                                     <div class="mb-3">
 
                                         <label for="" class="form-label">Unit Of Measurement</label>
-                                        <select class="form-select form-select-sm" name="measuring_unit" id="edit_measuring_unit" required>
+                                        <select class="form-control form-select-sm" name="measuring_unit" id="edit_measuring_unit" required>
 
                                             <option value="ft" {{ $largeFormatJob->measuring_unit == "ft" ? 'selected' : '' }}>Feet
                                             </option>
@@ -126,7 +126,7 @@
 
                                     <div class="mb-3">
                                         <label for="" class="form-label">Copies</label>
-                                        <input type="number" class="form-control form-control-sm" name="copies" id="edit_largeformat_copies"
+                                        <input type="number" class="form-control" name="copies" id="edit_largeformat_copies"
                                             placeholder="Number of Copies" min="1" value="{{ $largeFormatJob->copies }}" required />
                                     </div>
 
@@ -154,7 +154,7 @@
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="" class="form-label">Premium</label>
-                                    <input type="number" step="any" class="form-control form-control-sm" name="premium"
+                                    <input type="number" step="any" class="form-control" name="premium"
                                         id="edit_largeformat_premium" value="{{ $largeFormatJob->premium }}" required>
                                 </div>
                             </div>
@@ -164,14 +164,14 @@
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="" class="form-label">Discount</label>
-                                    <input type="number" step="any" class="form-control form-control-sm" name="discount"
+                                    <input type="number" step="any" class="form-control" name="discount"
                                         id="edit_largeformat_discount" value="{{ $largeFormatJob->discount }}" required>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="mb-3">
                                     <label for="" class="form-label">Total Cost</label>
-                                    <input type="text" class="form-control form-control-sm" name="total" id="edit_largeformat_total"
+                                    <input type="text" class="form-control" name="total" id="edit_largeformat_total"
                                         value="{{ $largeFormatJob->total }}" readonly required />
                                 </div>
                             </div>
@@ -185,7 +185,7 @@
                     <h5 class="mb-2">Additional Notes</h5>
                     <div class="mb-3">
                         <label for="" class="form-label">Notes (optional eg; USAID Banner)</label>
-                        <input type="text" class="form-control form-control-sm" name="notes" id="lf_notes" value="" />
+                        <input type="text" class="form-control" name="notes" id="lf_notes" value="" />
                     </div>
                 </section>
 

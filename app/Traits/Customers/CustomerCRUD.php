@@ -2,8 +2,8 @@
 
 namespace App\Traits\Customers;
 
+use App\Domain\Customers\Models\Customer;
 use App\DTOs\Customers\CustomerData;
-use App\Models\Customers\Customer;
 use DomainException;
 use Illuminate\Database\Eloquent\Collection;
 

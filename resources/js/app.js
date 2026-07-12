@@ -12,9 +12,9 @@ import Swal from 'sweetalert2'
 
 
 import "@preline/datepicker"
-import HSOverlay from "@preline/datepicker"
+import HSDatepicker from "@preline/datepicker"
 import HSSelect from '@preline/select';
-HSDatepicker.autoInit();
+// HSDatepicker.autoInit();
 
 
 

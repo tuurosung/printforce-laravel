@@ -23,3 +23,7 @@ _ide_helper.php
 zip.zip
 app/Logging/SimpleErrorFormatter.php
 storage/pail/6848856feba22.pail
+node_modules.zip
+public/assets.zip
+public/images.zip
+public/js.zip

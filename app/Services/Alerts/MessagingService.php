@@ -81,7 +81,7 @@ class MessagingService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('Failed to send message: '. $response->body());
+            throw new \DomainException('Failed to send message: '. $response->body());
         }
 
         return $response->json();
@@ -112,12 +112,12 @@ class MessagingService
 
         // if the phone number provided is neither 10 digits nor 12 digits
         if (strlen($phoneNumber) !== 10 && strlen($phoneNumber) !== 12) {
-            throw new \Exception('Invalid phone number');
+            throw new \DomainException('Invalid phone number');
         }
 
         // if the phone number neither starts with a zero or the country code
         if (!str_starts_with($phoneNumber, '0') && !str_starts_with($phoneNumber, self::GHANA_COUNTRY_CODE)) {
-            throw new \Exception('Invalid phone number');
+            throw new \DomainException('Invalid phone number');
         }
 
         // convert to 10 digits if its 12 digits
@@ -130,7 +130,7 @@ class MessagingService
 
             // extract the 3 digit prefix and check if it is valid
             if (!in_array(substr($phoneNumber, 0, 3), self::VALID_PREFIXES, true)) {
-                throw new \Exception('Invalid phone number');
+                throw new \DomainException('Invalid phone number');
             }
         }
     }

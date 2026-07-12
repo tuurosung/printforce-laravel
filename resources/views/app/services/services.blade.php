@@ -114,6 +114,7 @@
 
 @section('js')
 <script type="text/javascript">
+
     $(document).on('click', '.table tbody .edit', function(event) {
         event.preventDefault();
 
@@ -126,7 +127,6 @@
         })
     })
 
-
     $(document).on('click', '.table tbody .delete', function(event) {
         event.preventDefault();
 
@@ -134,5 +134,6 @@
 
         swalConfirm(() => $frm.submit(), "Do you want to delete this service?");
     })
+    
 </script>
 @endsection

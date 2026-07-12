@@ -2,14 +2,14 @@
 
 namespace App\Domain\Payments\Services;
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\Customers\Services\CustomerService;
 use App\Domain\Payments\Contracts\PaymentAlertInterface;
-use App\Models\Customers\Customer;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\MessagingController;
 use App\Services\Alerts\MessagingService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use function PHPUnit\Framework\isNan;
 use function PHPUnit\Framework\isNull;
@@ -29,7 +29,7 @@ class PaymentAlertService implements PaymentAlertInterface
     {
         try {
 
-            $customer = $this->customerService->findCustomer($customerId);
+            $customer = $this->customerService->findById($customerId);
             $message = $this->buildPaymentMessage($customer, $amountPaid);
 
             return $this->messagingService->send(

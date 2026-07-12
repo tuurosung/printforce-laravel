@@ -2,48 +2,44 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Throwable;
+use App\Contracts\BaseInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseService
+abstract class BaseService implements BaseInterface
 {
-    /**
-     * Execute a callable inside a DB transaction.
-     * Rolls back and re-throws on any exception — ACID compliance.
-     *
-     * @template T
-     * @param  callable(): T  $callback
-     * @return T
-     *
-     * @throws Throwable
-     */
-    protected function transaction(callable $callback): mixed
+    abstract protected function modelClass(): string;
+
+    protected string $selectOptionKey = "key";
+    protected string $selectOptionValue = "value";
+
+
+    public function getAll(): Collection
     {
-        return DB::transaction(function() use ($callback){
-            return $callback();
-        });
+        return $this->bQuery()->get();
     }
 
 
-    /**
-     * Execute a callable, catch and log any exception, and return null on failure.
-     * Use for non-critical side-effects (e.g. sending receipts).
-     *
-     * @template T
-     * @param  callable(): T  $callback
-     * @return T|null
-     */
-    protected function attempt(callable $callback): mixed
+    public function findById(string $id): ?Model
     {
-        try {
-            return $callback();
-        } catch (Throwable $e) {
-            Log::error(static::class . ' attempt failed:  ' . $e->getMessage(), [
-                'exception' => $e
-            ]);
+        return $this->bQuery()->findOrFail($id);
+    }
 
-            return null;
-        }
+
+    public function optionsForSelect(): array
+    {
+        $model = new($this->modelClass());
+
+        return $this->bQuery()
+            ->orderBy($this->selectOptionKey)
+            ->pluck($this->selectOptionValue, $this->selectOptionKey)
+            ->toArray();
+    }
+
+
+    protected function bQuery(): Builder
+    {
+        return $this->modelClass()::query();
     }
 }

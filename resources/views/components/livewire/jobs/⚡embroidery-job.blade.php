@@ -2,7 +2,7 @@
 
 
 use App\Enums\Services\ServiceCategoryEnum;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Models\Customer;
 use App\Services\PrintServicesManager;
 use App\Traits\UpdatedServiceIdTrait;
 use Livewire\Component;

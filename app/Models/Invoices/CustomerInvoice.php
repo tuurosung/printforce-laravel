@@ -3,9 +3,9 @@
 namespace App\Models\Invoices;
 
 use App\Casts\MoneyFormat;
+use App\Domain\Customers\Models\Customer;
 use App\Enums\Invoices\InvoiceStatusEnum;
 use App\Enums\Invoices\InvoiceTypeEnum;
-use App\Models\Customers\Customer;
 use App\Models\Invoices\CustomerInvoiceItem;
 use App\Models\Scopes\SubscriberScope;
 use Illuminate\Database\Eloquent\Attributes\Fillable;

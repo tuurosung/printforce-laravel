@@ -1,47 +1,59 @@
 <?php
 
+use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintServices\Models\PrintService;
-use App\Domain\PrintServices\Services\PrintServicesHandler;
-use App\Models\Customers\Customer;
+use App\Domain\PrintServices\Services\ServiceHandler;
+use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Invoices\CustomerInvoice;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 
 new class extends Component {
     public CustomerInvoice $customerInvoice;
 
-    // Form State
-    public ?string$serviceId = '';
+    protected ServiceHandler $serviceHandler;
+
+    public ?string $serviceId = null;
     public ?float $unitCost = 0;
     public ?float $width = 1;
     public ?float $height = 1;
-    public ?string $measuringUnit = '';
+    public ?string $measuringUnit = null;
     public ?int $quantity = 1;
-
     public ?float $materialUnitCost = 0;
     public bool $showEmbroidery = false;
 
-
-    // Derived Values
-    public ?float $materialTotalCost = 0;
-    public ?float $subTotal = 0;
-    public ?float $total = 0;
-
-    private function customer() {
-        return $this->customerInvoice->customer;
-    }
-
-
-    public function updated(): void
+    public function boot(ServiceHandler $serviceHandler): void
     {
-        $this->recalculate();
+        $this->serviceHandler = $serviceHandler;
     }
 
-    public function getPrintServices(): array
+    #[Computed]
+    public function printServices(): array
     {
-        return app(PrintServicesHandler::class)->getPrintServicesAsArray();
+        return $this->serviceHandler->optionsForSelect();
     }
 
+    #[Computed]
+    public function materialTotalCost(): float
+    {
+        return ($this->materialUnitCost ?? 0) * ($this->quantity ?? 0);
+    }
+
+    #[Computed]
+    public function subTotal(): float
+    {
+        $area = ($this->width ?? 0) * ($this->height ?? 0);
+        $convertedArea = $this->convertArea((float) $area, $this->measuringUnit ?? '');
+
+        return (int) round($convertedArea * ($this->unitCost ?? 0) * ($this->quantity ?? 0));
+    }
+
+    #[Computed]
+    public function total(): float
+    {
+        return $this->subTotal + $this->materialTotalCost;
+    }
 
     public function updatedServiceId(string $value): void
     {
@@ -52,51 +64,24 @@ new class extends Component {
             return;
         }
 
-        $this->showEmbroidery = $printService->category_id == "003";
+        $this->showEmbroidery = $printService->category_id === ServiceCategoryEnum::EMBROIDERY;
 
-        // find customer
-        $customer = $this->customer();
+        $customer = $this->customerInvoice->customer;
 
         if (!$customer instanceof Customer) {
             $this->unitCost = 0;
             return;
         }
 
-        $this->unitCost = app(PrintServicesHandler::class)->getServiceCost($this->customerInvoice->customer, $printService);
-        $this->recalculate();
+        $this->unitCost = $this->serviceHandler->getServiceCost($customer, $this->serviceId);
     }
 
-    public function recalculate(): void
-    {
-        $width = $this->width ?? 0;
-        $height = $this->height ?? 0;
-        $measuringUnit = $this->measuringUnit ?? '';
-        $quantity = $this->quantity ?? 0;
-        $materialUnitCost = $this->materialUnitCost ?? 0;
-        $this->materialTotalCost = $this->materialUnitCost * $quantity ?? 0;
-
-        $area = (float) $width * $height;
-        $convertedArea = $this->convertArea($area, $measuringUnit);
-
-        $this->subTotal = (int) round($convertedArea * $this->unitCost * $quantity);
-        $this->total = $this->subTotal + $this->materialTotalCost;
-        $this->materialUnitCost = $materialUnitCost;
-    }
-
-
-    public function convertArea(float $area, string $measuringUnit): float
+    private function convertArea(float $area, string $measuringUnit): float
     {
         return match ($measuringUnit) {
             'inch' => $area / 144,
-            default => $area
+            default => $area,
         };
-    }
-
-    public function with(): array
-    {
-        return [
-            'printServices' => $this->getPrintServices(),
-        ];
     }
 };
 ?>
@@ -115,14 +100,9 @@ new class extends Component {
 
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
-                        <label for="serviceId" class="form-label">Service</label>
-                        <select class="form-control form-select-sm" name="service_id" id="serviceId" required
-                            wire:model.live="serviceId">
-                            <option value="" selected>--- Select Service ---</option>
-                            @foreach ($printServices as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
-                            @endforeach
-                        </select>
+
+                        <x-dropdowns.dropdown-with-search label="Service" name="service_id" id="service_id" :options="$this->printServices" wire:model.live="serviceId" wire:ignore.self />
+
                     </div>
                 </div>
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
@@ -135,14 +115,14 @@ new class extends Component {
                 <div class="lg:col-span-3 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
                         <label for="" class="form-label">Width</label>
-                        <input type="number" step="any" class="form-control" name="width" id="width" value="{{ $width }}" wire:model.live="width" required />
+                        <input type="number" step="any" class="form-control" name="width" id="width" value="{{ $width }}" wire:model.live.blur="width" required />
                     </div>
                 </div>
 
                 <div class="lg:col-span-3 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
                         <label for="" class="form-label">Height</label>
-                        <input type="number" step="any" class="form-control " name="height" id="height" value="{{ $height }}" wire:model.live="height" required />
+                        <input type="number" step="any" class="form-control " name="height" id="height" value="{{ $height }}" wire:model.live.blur="height" required />
                     </div>
                 </div>
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
@@ -166,12 +146,11 @@ new class extends Component {
                     </div>
                 </div>
 
-
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="mb-3">
                         <label for="sub_total" class="form-label">Sub-Total</label>
                         <input type="number" class="form-control" name="sub_total" id="subTotal"
-                            aria-describedby="helpId" placeholder="" readonly value="{{ $subTotal }}" />
+                            aria-describedby="helpId" placeholder="" readonly value="{{ $this->subTotal }}" />
                     </div>
                 </div>
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12" wire:show="showEmbroidery">
@@ -181,17 +160,18 @@ new class extends Component {
                             aria-describedby="" placeholder="" value="{{ $materialUnitCost }}" wire:model.live="materialUnitCost" />
                     </div>
                 </div>
+
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12" wire:show="showEmbroidery">
                     <div class="mb-3">
                         <label for="material_total_cost" class="form-label">Material Total Cost</label>
                         <input type="number" class="form-control" name="material_total_cost" id="materialTotalCost"
-                            aria-describedby="" placeholder="" readonly value="{{ $materialTotalCost }}" />
+                            aria-describedby="" placeholder="" readonly value="{{ $this->materialTotalCost }}" />
                     </div>
                 </div>
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="mb-3">
                         <label for="" class="form-label">Total Cost</label>
-                        <input type="text" class="form-control" name="total" id="total" value="{{ $total }}" wire:model.live="total" readonly required />
+                        <input type="text" class="form-control" name="total" id="total" value="{{ $this->total }}" readonly required />
                     </div>
                 </div>
 

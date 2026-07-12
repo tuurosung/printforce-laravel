@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Models\Customer;
 
 class CustomerObserver
 {

@@ -6,6 +6,7 @@ use App\Casts\MoneyFormat;
 use App\Domain\PrintServices\Models\PrintService;
 use App\Enums\Services\ServiceCategoryEnum;
 use App\Models\Scopes\SubscriberScope;
+use App\Observers\Invoices\CustomerInvoiceItemObserver;
 use App\Observers\Invoices\CustomerInvoiceObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -16,14 +17,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[ObservedBy([CustomerInvoiceObserver::class])]
+#[ObservedBy([CustomerInvoiceItemObserver::class])]
 #[ScopedBy([SubscriberScope::class])]
 #[Fillable(['subscriber_id', 'invoice_id', 'service_id', 'service_category_id', 'unit_cost', 'width', 'height', 'measuring_unit', 'quantity', 'material_unit_cost', 'details'])]
 class CustomerInvoiceItem extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
 
     protected $table = 'invoice_items';
     protected $primaryKey = 'sn';
@@ -58,6 +59,6 @@ class CustomerInvoiceItem extends Model
 
     public function buildDetails()
     {
-        return $this->service->category_id->buildDetails($this);
+        return $this->service->category_id?->buildDetails($this);
     }
 }

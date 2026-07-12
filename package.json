@@ -6,17 +6,31 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tailwindcss/vite": "^4.3.1",
         "axios": "^1.6.4",
-        "laravel-vite-plugin": "^1.0",
-        "vite": "^5.4.20"
+        "laravel-vite-plugin": "^3.1.0",
+        "prettier-plugin-tailwindcss": "^0.8.0",
+        "vite": "^8.0.16"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.8",
+        "@preline/combobox": "^4.2.0",
+        "@preline/datepicker": "^4.2.0",
+        "@preline/overlay": "^4.2.0",
+        "@preline/select": "^4.2.0",
+        "@tanstack/table-core": "^8.21.3",
         "apexcharts": "^5.3.6",
         "bootstrap": "^5.3.8",
         "bootstrap-datepicker": "^1.10.1",
+        "datatables.net": "^2.3.5",
         "datatables.net-bs5": "^2.3.5",
+        "flowbite": "^4.0.2",
         "jquery": "^3.7.1",
-        "owl.carousel": "^2.3.4"
+        "lodash": "^4.18.1",
+        "owl.carousel": "^2.3.4",
+        "preline": "^4.2.0",
+        "sweetalert2": "^11.26.25",
+        "tailwindcss": "^4.3.0",
+        "vanilla-calendar-pro": "^3.1.0"
     }
 }

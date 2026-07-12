@@ -14,11 +14,18 @@ class SubscriberScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-       $builder->where('subscriber_id', Auth::user()->subscriber_id);
+        if (!Auth::check()) {
+            return;
+        }
+
+       $builder->where(
+            $model->qualifyColumn('subscriber_id'),
+            auth()->user()->subscriber_id
+        );
 
         // Automatically set subscriber_id when creating a new model instance
         $model->creating(function ($model) {
-            $model->subscriber_id = Auth::user()->subscriber_id;
+            $model->subscriber_id = auth()->user()->subscriber_id;
         });
     }
 }

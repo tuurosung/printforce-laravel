@@ -40,7 +40,7 @@ new class extends Component
     #[Computed]
     public function customers(): array
     {
-        return $this->customerService->getCustomersArray();
+        return $this->customerService->optionsForSelect();
     }
 
     #[Computed]

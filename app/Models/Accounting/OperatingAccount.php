@@ -2,17 +2,17 @@
 
 namespace App\Models\Accounting;
 
+use App\Domain\Payments\Models\CustomerPayment;
+use App\Models\Accounting\AddFunds;
+use App\Models\Accounting\OperatingAccountHeader;
+use App\Models\Purchases\PurchasePayment;
 use App\Models\Subscribers;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
-use App\Models\Accounting\AddFunds;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Customers\CustomerPayment;
-use App\Models\Purchases\PurchasePayment;
-use App\Models\Accounting\OperatingAccountHeader;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class OperatingAccount extends Model
 {

@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\Services\ServiceCategoryEnum;
-use App\Models\Customers\Customer;
+use App\Domain\Customers\Models\Customer;
 use Livewire\Component;
 use App\Traits\UpdatedServiceIdTrait;
 
