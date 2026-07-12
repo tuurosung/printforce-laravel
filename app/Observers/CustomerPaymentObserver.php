@@ -10,7 +10,7 @@ class CustomerPaymentObserver
     public function creating(CustomerPayment $customerPayment)
     {
             $customerPayment->payment_id = generateDashedRandomNumber();
-            // $customerPayment->subscriber_id = Auth::user()->subscriber_id;
+            $customerPayment->subscriber_id = auth()->user()->subscriber_id;
     }
 
 
