@@ -62,7 +62,7 @@
                         <td>{{ $invoiceItems->service->service_name }}</td>
                         <td class="text-center">{{ $invoiceItems->unit_cost }}</td>
                         <td class="text-center">{{ $invoiceItems->quantity }}</td>
-                        <td>{{ $invoiceItems->details }}</td>
+                        <td>{!! $invoiceItems->details !!}</td>
                         <td class="text-end">{{ $invoiceItems->total }}</td>
                     </tr>
                     @endforeach

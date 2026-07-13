@@ -63,6 +63,10 @@ class StoreCustomerInvoiceItemRequest extends FormRequest
                 'required',
                 'numeric',
             ],
+            'notes'=> [
+                'nullable',
+                'max:255',
+            ]
         ];
     }
 
