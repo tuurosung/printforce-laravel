@@ -129,7 +129,7 @@
                             <td>{{ $customerInvoiceItem->service->service_name }}</td>
                             <td class="text-center">{{ $customerInvoiceItem->unit_cost }}</td>
                             <td class="text-center">{{ $customerInvoiceItem->quantity }}</td>
-                            <td>{{ $customerInvoiceItem->details }}</td>
+                            <td>{!! $customerInvoiceItem->details !!}</td>
                             <td class="text-end">{{ $customerInvoiceItem->total }}</td>
                             <td class="text-end">
                                 <form action="{{ route('invoices.invoice-items.destroy', $customerInvoiceItem) }}" method="POST">

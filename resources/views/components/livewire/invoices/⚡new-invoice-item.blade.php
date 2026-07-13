@@ -22,6 +22,7 @@ new class extends Component {
     public ?int $quantity = 1;
     public ?float $materialUnitCost = 0;
     public bool $showEmbroidery = false;
+    public ?string $notes = '';
 
     public function boot(ServiceHandler $serviceHandler): void
     {
@@ -172,6 +173,12 @@ new class extends Component {
                     <div class="mb-3">
                         <label for="" class="form-label">Total Cost</label>
                         <input type="text" class="form-control" name="total" id="total" value="{{ $this->total }}" readonly required />
+                    </div>
+                </div>
+                <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
+                    <div class="mb-3">
+                        <label for="" class="form-label">File Name</label>
+                        <input type="text" class="form-control" name="notes" id="notes" value="{{ $this->notes }}" />
                     </div>
                 </div>
 

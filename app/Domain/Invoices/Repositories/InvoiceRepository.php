@@ -3,10 +3,12 @@
 namespace App\Domain\Invoices\Repositories;
 
 use App\Domain\Invoices\Contracts\InvoiceRepositoryInterface;
+use App\Enums\Invoices\InvoiceStatusEnum;
 use App\Models\Invoices\CustomerInvoice;
 use App\Models\Invoices\CustomerInvoiceItem;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Override;
 
@@ -52,10 +54,10 @@ class InvoiceRepository extends BaseService implements InvoiceRepositoryInterfac
     // Lifecycle
     public function checkout(CustomerInvoice $invoice): void
     {
-        $this->transaction(function () use ($invoice) {
-
+        DB::transaction(function () use ($invoice) {
+            
             $invoice->update([
-                'status' => 'active'
+                'status' => InvoiceStatusEnum::ACTIVE
             ]);
 
             $this->clearActiveInvoiceSession();

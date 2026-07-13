@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([CustomerInvoiceItemObserver::class])]
 #[ScopedBy([SubscriberScope::class])]
-#[Fillable(['subscriber_id', 'invoice_id', 'service_id', 'service_category_id', 'unit_cost', 'width', 'height', 'measuring_unit', 'quantity', 'material_unit_cost', 'details'])]
+#[Fillable(['subscriber_id', 'invoice_id', 'service_id', 'service_category_id', 'unit_cost', 'width', 'height', 'measuring_unit', 'quantity', 'notes', 'material_unit_cost', 'details'])]
 class CustomerInvoiceItem extends Model
 {
     use HasFactory;

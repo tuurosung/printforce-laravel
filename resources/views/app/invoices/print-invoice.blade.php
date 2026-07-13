@@ -53,7 +53,7 @@
                                 <td>{{ $customerInvoiceItem->service->service_name }}</td>
                                 <td class="text-center">{{ $customerInvoiceItem->unit_cost }}</td>
                                 <td class="text-center">{{ $customerInvoiceItem->quantity }}</td>
-                                <td>{{ $customerInvoiceItem->details }}</td>
+                                <td>{!! $customerInvoiceItem->details !!}</td>
                                 <td class="text-end">{{ number_format($customerInvoiceItem->total, 2) }}</td>
                             </tr>
                         @endforeach
