@@ -37,6 +37,18 @@ enum JobTypeEnum: string
         };
     }
 
+    public static function fromCode(string $code)
+    {
+        return match($code) {
+            "001" => self::LargeFormat,
+            "002" => self::Design,
+            "003" => self::Embroidery,
+            "004" => self::Press,
+            "005" => self::Photography,
+            "006" => self::Others
+        };
+    }
+
     public function label(): string
     {
         return match ($this) {
