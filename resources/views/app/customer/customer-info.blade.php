@@ -6,6 +6,9 @@
 
     <div class="ms-3 flex gap-3">
 
+        <button class="btn btn-primary" data-hs-overlay="#new-job-modal">
+            New Job
+        </button>
         <div class="hs-dropdown relative inline-flex">
             <button id="hs-dropdown-default" type="button"
                 class="hs-dropdown-toggle btn btn-primary py-2 px-4 inline-flex items-center gap-x-2 text-sm">
@@ -245,7 +248,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($customer->printfoceJobs() as $job)
+                            @foreach ($customer->printfoceJobs as $job)
                             <tr class="">
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
                                     {{ $loop->iteration }}
@@ -480,6 +483,7 @@
 
 
     <!-- Include new service request and payment modals -->
+    <livewire:jobs.new-job :customer="$customer" />
     <livewire:livewire.jobs.large-format-job :customer="$customer" />
     <livewire:livewire.jobs.embroidery-job :customer="$customer" />
     <livewire:livewire.jobs.design-job :customer="$customer" />
