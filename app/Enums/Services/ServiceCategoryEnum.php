@@ -43,11 +43,11 @@ enum ServiceCategoryEnum: string
     public function buildDetails(mixed $context): string
     {
         $prefix = match ($this) {
-            self::LARGE_FORMAT => "{$context->width} x {$context->height} {$context->measuring_unit} ({$context->quantity} pcs)",
-            self::EMBROIDERY   => "Materials {$context->material_unit_cost} x ({$context->quantity} pcs)",
+            self::LARGE_FORMAT => "{$context->width} x {$context->height} {$context->measuring_unit} ({$context->quantity} {$context->qty} pcs)",
+            self::EMBROIDERY   => "Materials {$context->material_unit_cost} x ({$context->quantity} {$context->qty} pcs)",
             self::DESIGN,
             self::PRESS,
-            self::OTHERS       => "{$context->quantity} pcs",
+            self::OTHERS       => "{$context->quantity} {$context->qty} pcs",
         };
 
         $notes = $context->notes ?? '';
