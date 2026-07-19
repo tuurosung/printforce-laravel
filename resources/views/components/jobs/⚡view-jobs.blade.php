@@ -193,7 +193,7 @@ new class extends Component
                             <td class="text-end">{{ number_format($job->total, 2) }}</td>
                             <td class="text-end">
                                 <a
-                                    href="{{ route('jobs.view-job', [$job->job_id, $job->job_type]) }}"
+                                    href="{{ route('jobs.view-job', [$job]) }}"
                                     class="underline text-blue-600">
                                     View
                                 </a>
