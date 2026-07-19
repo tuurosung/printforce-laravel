@@ -1,31 +1,3 @@
-<script>
-    // check the loaded jquery version
-    console.log('JQuery version loaded in footer: ' + $.fn.jquery);
-</script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js" type="text/javascript"></script>
-<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
-
-<script type="text/javascript">
-    window.routes = {
-        'getServiceCost' : "{{  route('print-services.cost', ':serviceId') }}",
-        'filterDesignJobs' : "{{ route('jobs.design.filter') }}",
-        'filterLargeFormatJobs' : "{{ route('jobs.largeformat.filter') }}",
-        'filterEmbroideryJobs' : "{{ route('jobs.embroidery.filter') }}",
-        'filterPressJobs' : "{{ route('jobs.press.filter') }}",
-
-        'filterCustomers' : "{{ route('customers.filter') }}", //filter the customer list
-        'filterCustomersJson' : "{{ route('customers.filter-json') }}", //filter the customer list as json
-
-        'getLargeFormatJobs' : "{{ route('jobs.largeformat.get-data') }}", //filter Large Format Jobs
-        'getEmbroideryJobs' : "{{ route('jobs.embroidery.get-data') }}", //filter Embroidery Jobs
-    }
-</script>
-
-
-
 <script type="text/javascript">
 
     function swalAlert(message, options = {}) {
