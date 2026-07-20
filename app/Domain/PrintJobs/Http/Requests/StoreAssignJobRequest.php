@@ -24,7 +24,6 @@ class StoreAssignJobRequest extends FormRequest
     {
         return [
             'job_id' => 'required',
-            'job_type' => 'required',
             'user_id' => 'required'
         ];
     }
