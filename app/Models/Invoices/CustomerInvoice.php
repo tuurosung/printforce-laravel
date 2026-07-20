@@ -71,6 +71,14 @@ class CustomerInvoice extends Model
         $query->where('status', 'draft');
     }
 
+    public function subTotalValue(): Attribute
+    {
+        return Attribute::make(
+            get: fn(): float => (float) $this->invoice_items_sum_subtotal
+                ?? $this->invoiceItems->sum('total')
+        )->shouldCache();
+    }
+
 
     public function totalValue(): Attribute
     {

@@ -80,40 +80,50 @@
         <div class="card">
             <div class="card-body">
 
-                <h3 class="font-normal text-4xl font-cal-sans-regular mb-8">{{ $customer->name }}</h3>
+                <div class="w-full h-[200px] bg-primary rounded-xl flex justify-center items-center text-5xl text-white mb-4">
+                    <i class="fi fi-sr-comment-user"></i>
+                </div>
+
+                <h3 class="font-normal text-2xl font-cal-sans-regular mb-8">{{ $customer->name }}</h3>
+
+                <div class="flex gap-3 items-center mb-5">
+
+                    <div class="">
+                        <i class="fi fi-sr-briefcase text-xl text-gray-800"></i>
+                    </div>
+                    <div class="">
+                        <p class="text-[12px] text-dark">Category</p>
+                        <p class="text-sm text-dark">{{ $customer->category->label() }}</p>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 items-center mb-5">
+
+                    <div>
+                        <i class="fi fi-sr-phone-call text-xl text-warning"></i>
+                    </div>
+                    <div>
+                        <p class="text-[12px] text-dark"> Phone</p>
+                        <p class="text-sm text-dark">{{ $customer->phone }}</p>
+                    </div>
+
+                </div>
+
+                <div class="col flex gap-3 items-center">
+                    <div>
+                        <i class="fi fi-sr-calendar-clock text-xl text-primary"></i>
+                    </div>
+                    <div>
+                        <p class="text-[12px] text-dark">Date Registered</p>
+                        <p class="text-sm text-dark">{{ $customer->created_at->format('Y-m-d') }}</p>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="col flex gap-3 items-center border-r me-5">
 
-                        <div class="">
-                            <i class="fi fi-sr-briefcase text-2xl text-gray-800"></i>
-                        </div>
-                        <div class="">
-                            <p class="text-sm text-dark">Category</p>
-                            <p class="text-sm text-dark">{{ $customer->category->label() }}</p>
-                        </div>
 
-                    </div>
-                    <div class="col flex gap-3 items-center border-r me-5">
 
-                        <div>
-                            <i class="fi fi-sr-phone-call text-2xl text-warning"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-dark"> Phone</p>
-                            <p class="text-sm text-dark">{{ $customer->phone }}</p>
-                        </div>
-
-                    </div>
-                    <div class="col flex gap-3 items-center">
-                        <div>
-                            <i class="fi fi-sr-calendar-clock text-2xl text-primary"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm text-dark">Date Registered</p>
-                            <p class="text-sm text-dark">{{ $customer->created_at->format('Y-m-d') }}</p>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -123,18 +133,18 @@
     <!-- main -->
     <div class="col-span-9">
 
-        <div class="grid grid-cols-6 gap-6 mb-5">
-            <div class="col">
+        <div class="grid grid-cols-12 gap-6 mb-5">
+            <div class="col-span-3">
                 <x-printforce.cards.colour-card title="Jobs" />
             </div>
-            <div class="col">
+            <div class="col-span-3">
                 <x-printforce.cards.colour-card bgColour="danger" title="Debit" :value="$customer->debit" />
             </div>
-            <div class="col">
+            <div class="col-span-3">
                 <x-printforce.cards.colour-card bgColour="warning" title="Credit" :value="$customer->credit" />
             </div>
-            <div class="col">
-                <x-printforce.cards.colour-card bgColour="success" title="Balance" />
+            <div class="col-span-3">
+                <x-printforce.cards.colour-card bgColour="success" title="Balance" :value="$customer->balance" />
             </div>
         </div>
 
@@ -171,10 +181,7 @@
                                 <th scope="col" class="px-6 py-3 font-medium">
                                     Status
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
-                                    Assigned To
-                                </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="px-6 py-3 font-medium text-end">
                                     Action
                                 </th>
                             </tr>
@@ -186,25 +193,22 @@
                                     {{ $loop->iteration }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->date }}
+                                    {{ $job->created_at }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
                                     {{ $job->service?->service_name }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->details }}
+                                    {!! $job->details !!}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
                                     {{ number_format($job->total, 2) }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->job_status_definition }}
+                                    {{ $job->job_status->label() }}
                                 </td>
-                                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $job->assignedTo?->name }}
-                                </td>
-                                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-
+                                <td scope="row" class="px-6 py-4 font-medium text-primary whitespace-nowrap text-end ">
+                                    <a href="{{ route('jobs.view-job', $job) }}" class="underline text-blue-600">View</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -257,13 +261,13 @@
                                     {{ $customerInvoice->customer->name }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $customerInvoice->sub_total }}
+                                    {{ $customerInvoice->sub_total_value }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
                                     {{ number_format($customerInvoice->vat_amount + $customerInvoice->nhil_amount + $customerInvoice->getfund_amount, 2) }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
-                                    {{ number_format($customerInvoice->total, 2) }}
+                                    {{ number_format($customerInvoice->total_value, 2) }}
                                 </td>
 
                             </tr>

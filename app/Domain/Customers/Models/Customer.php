@@ -102,7 +102,7 @@ class Customer extends Model
     {
         return Attribute::make(
             get: fn(): float => (float) ($this->active_invoices_sum_total
-                ?? $this->activeInvoices->sum('total')),
+                ?? $this->activeInvoices->sum('total_value')),
         )->shouldCache();
     }
 

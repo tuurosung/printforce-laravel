@@ -4,6 +4,7 @@ namespace App\Domain\PrintJobs\Models;
 
 use App\Domain\Customers\Models\Customer;
 use App\Domain\PrintServices\Models\PrintService;
+use App\Enums\Jobs\JobStatusEnum;
 use App\Models\Scopes\SubscriberScope;
 use App\Models\User;
 use App\Observers\Jobs\PrintforceJobObserver;
@@ -32,6 +33,7 @@ class PrintforceJob extends Model
     protected function casts(): array
     {
         return [
+            'job_status' => JobStatusEnum::class,
             'created_at'=> 'datetime',
         ];
     }
@@ -41,13 +43,6 @@ class PrintforceJob extends Model
     {
         return Attribute::make(
             get: fn()=> $this->buildReference()
-        );
-    }
-
-    public function viewRoute(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->buildViewRoute(),
         );
     }
 
