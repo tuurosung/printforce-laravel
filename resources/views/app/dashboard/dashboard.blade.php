@@ -51,6 +51,39 @@
             </div>
         </div>
 
+
+        <div class="grid grid-cols-12 gap-6 mb-6">
+            <div class="col-span-6">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="text-lg">Service Performance </h4>
+
+                        <!-- List Group -->
+                        <ul class="mt-3 flex flex-col">
+                            <li class="inline-flex items-center gap-x-2 py-3 px-4 text-sm border border-gray-800 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:border-gray-700 dark:text-gray-200">
+                                <div class="flex items-center justify-between w-full">
+                                    <span>Service Name</span>
+                                    <span>Jobs</span>
+                                </div>
+                            </li>
+                            @foreach ($service_performance as $row)
+                            <li class="inline-flex items-center gap-x-2 py-2 px-4 text-sm font-semibold bg-gray-50 border border-gray-800 text-gray-800 -mt-px first:rounded-t-lg first:mt-0 last:rounded-b-lg dark:bg-slate-800 dark:border-gray-700 dark:text-gray-200">
+                                <div class="flex items-center justify-between w-full">
+                                    <span>{{ $row['service_name'] }}</span>
+                                    <span>{{ $row['total'] }}</span>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                        <!-- End List Group -->
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-6"></div>
+        </div>
+
         <div class="row gap-6">
             <div class="col-md-6 px-0!">
                 <div class="card border-0 h-100 rounded-1">
@@ -77,16 +110,7 @@
             </div>
         </div>
         <div class="grid grid-cols-12 gap-6">
-
-
-
-
-
-
             @include('app.dashboard.new-partials.tabbed-data')
-
-
-
         </div>
     </div>
 

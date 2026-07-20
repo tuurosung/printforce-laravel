@@ -3,9 +3,10 @@
 namespace App\Domain\PrintJobs\Http\Controllers;
 
 use App\Domain\PrintJobs\Http\Requests\StoreAssignJobRequest;
+use App\Domain\PrintJobs\Models\PrintforceJob;
 use App\Domain\PrintJobs\Services\PrintJobService;
+use App\Domain\Users\Services\UserService;
 use App\Http\Controllers\Controller;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class AssignJobController extends Controller
@@ -28,11 +29,12 @@ class AssignJobController extends Controller
     }
 
 
-    public function assign(StoreAssignJobRequest $request)
+    public function assign(StoreAssignJobRequest $request, PrintforceJob $printforceJob)
     {
         $data = $request->validated();
+        $userId = $data['user_id'];
 
-        $result = $this->printJobService->assignJob($data['job_id'], $data['job_type'], $data['user_id']);
+        $result = $this->printJobService->assignJob($printforceJob, $userId);
 
         if (!$result) {
             return redirect()->back()->with('error', 'Failed to assign job');

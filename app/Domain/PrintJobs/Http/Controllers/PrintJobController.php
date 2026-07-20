@@ -2,18 +2,17 @@
 
 namespace App\Domain\PrintJobs\Http\Controllers;
 
-use App\Domain\Customers\Models\Customer;
-use App\Domain\PrintJobs\Http\Requests\StoreOtherJobRequest;
-use App\Domain\PrintJobs\Services\OtherJobService;
+use App\Domain\PrintJobs\Http\Requests\StorePrintJobRequest;
+use App\Domain\PrintJobs\Models\PrintforceJob;
 use App\Domain\PrintJobs\Services\PrintJobService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
-class OtherJobController extends Controller
+class PrintJobController extends Controller
 {
+
     public function __construct(
-        private readonly OtherJobService $otherJobService
+        private readonly PrintJobService $printjobService
     ){}
 
     /**
@@ -35,18 +34,11 @@ class OtherJobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOtherJobRequest $request, Customer $customer)
+    public function store(StorePrintJobRequest $request)
     {
-        $otherJob = $this->otherJobService->createJob(
-            $customer, $request->validated()
-        );
-
-        if (! $otherJob) {
-            Log::error("Unable to create job");
-            return redirect()->back()->with("error","Error recording job");
-        }
-
-        return redirect()->back()->with("success","Job Created Successfully");
+        // dd($request->toData()->toArray());
+        $this->printjobService->createNewJob($request->toData());
+        return redirect()->back()->with("success", "Job Registered Successfully");
     }
 
     /**
@@ -76,8 +68,9 @@ class OtherJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(PrintforceJob $printforceJob)
     {
-        //
+        $this->printjobService->deleteJob($printforceJob);
+        return to_route('jobs.today')->with("success", "Job Deleted Successfully");
     }
 }

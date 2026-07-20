@@ -7,7 +7,7 @@
                                 border-transparent bg-primary text-white
                                 hover:bg-primaryemphasis disabled:opacity-50 disabled:pointer-events-none
                                 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-            data-hs-overlay="#hs-basic-modal">
+            data-hs-overlay="#new-customer-modal">
             <i class="fi fi-br-plus me-3"></i>
             New Customer
         </button>

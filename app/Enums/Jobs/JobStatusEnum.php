@@ -10,6 +10,7 @@ enum JobStatusEnum: string
 
     case PENDING = "pending";
     case PROCESSING = "processing";
+    case ON_HOLD = "on_hold";
     case IN_PROGRESS = "in_progress";
     case COMPLETED = "completed";
     case CANCELED = "cancelled";

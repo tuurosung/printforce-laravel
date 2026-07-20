@@ -4,11 +4,11 @@
         <div
             class="flex flex-col bg-white border shadow-sm rounded-md pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
             <x-modals.modal-header modalId="assign-job-modal" modalTitle="Assign Job" />
-            <form method="POST" id="assignJobFrm" action="{{ route('jobs.assign-job.assign-to-user') }}">
+            <form method="POST" id="assignJobFrm" action="{{ route('jobs.assign-job.assign-to-user', [$job]) }}">
                 @csrf
                 <div class="p-6">
 
-                    <input type="hidden" name="job_type" id="job_type" value="{{ $jobType }}" required readonly/>
+                    <input type="hidden" name="job_type" id="job_type" value="" required readonly/>
 
                     <div class="grid grid-cols-12 gap-6">
 

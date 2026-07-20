@@ -42,55 +42,8 @@
                                             </li>
                                             <x-sidebar.sidebar-item label="Customers" icon="users" href="{{ route('customers.customer.index') }}" />
 
-                                            <li class="hs-accordion sidebar-item" id="blog-accordion">
-                                                <a class="hs-accordion-toggle sidebar-link dropdown-menu-link">
-                                                    <i class="fi fi-rr-briefcase flex-shrink-0"></i> <span class="hide-menu">Jobs</span>
-                                                    <span class="hide-menu ms-auto">
-                                                        <i class="fi fi-rr-angle-small-down ms-auto  hs-accordion-active:hidden hs-accordion-active:rotate-180"></i>
-                                                    </span>
-                                                </a>
-
-                                                <div id="blog-accordion" class="hs-accordion-content bg-gray-100 py-2" style="display: none;">
-                                                    <ul class="">
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link {{ request()->routeIs('jobs.today') ? 'active' : '' }}" href="{{ route('jobs.today') }}">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">All Jobs</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link " href="javascript:void(0))">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">Large Format</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link " href="javascript:void(0)">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">Embroidery Jobs</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link " href="javascript:void(0)">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">Press Jobs</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link " href="javascript:void(0)">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">Design Jobs</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="pl-4 pr-3">
-                                                            <a class="dropdown-submenu-link " href="javascript:void(0)">
-                                                                <i class="ti ti-circle flex-shrink-0 text-xs me-3 "></i>
-                                                                <span class="hide-menu">Other Jobs</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </li>
+                                         
+                                            <x-sidebar.sidebar-item label="Jobs" icon="briefcase" href="{{ route('jobs.today') }}" />
 
                                             <x-sidebar.sidebar-item label="Debtors" icon="sack-dollar" href="{{ route('customers.debtors.view') }}" />
 

@@ -77,9 +77,9 @@ final readonly class PrintForceJobData
 
             jobStatus: JobStatusEnum::from($row->job_status ?? 'pending'),
             jobAssignedTo: ($row->job_assigned_to ?? null),
-            jobAssignedAt: self::toImmutable($row->job_assigned_at),
-            jobCompletedAt: self::toImmutable($row->job_completed_at),
-            jobCompletedBy: $row->job_completed_by,
+            jobAssignedAt: self::toImmutable($row->job_assigned_at ?? null),
+            jobCompletedAt: self::toImmutable($row->job_completed_at ?? null),
+            jobCompletedBy: ($row->job_completed_by ?? null),
 
             date: CarbonImmutable::parse($row->date),
             notes: ($row->notes ?? null),
@@ -126,6 +126,8 @@ final readonly class PrintForceJobData
 
     private static function toImmutable(?string $value): ?CarbonImmutable
     {
-        return $value === null ? null : CarbonImmutable::parse($value);
+        return $value !== null && $value !== ''
+            ? CarbonImmutable::parse($value)
+            : null;
     }
 }
