@@ -2,44 +2,105 @@
 
 namespace App\Domain\PrintJobs\Services;
 
-use App\Domain\PrintJobs\Contracts\PrintJobRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 
-class PrintJobService
+use App\Domain\PrintJobs\Contracts\PrintJobsInterface;
+use App\Domain\PrintJobs\Models\PrintforceJob;
+use App\DTOs\Jobs\NewPrintJobData;
+use App\Services\BaseService;
+use DomainException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Override;
+
+class PrintJobService extends BaseService implements PrintJobsInterface
 {
     public function __construct(
-        private readonly PrintJobRepositoryInterface $printJobRepository
+        private PrintforceJob $model
     ){}
 
 
-    public function getJobByIdAndType(string $jobId, string $jobType)
+    public function modelClass(): string
     {
-        return $this->printJobRepository->findByIdAndType($jobId, $jobType);
+        return PrintforceJob::class;
     }
 
 
-    public function assignJob(string $jobId, string $jobType, string $userId)
+    public function createNewJob(NewPrintJobData $jobData): PrintforceJob
+    {
+        $printforceJob = $this->model->create($jobData->toArray());
+
+        if (! $printforceJob) {
+            throw new DomainException("Unable to create new job");
+        }
+
+        return $printforceJob;
+    }
+
+
+    public function deleteJob(PrintforceJob $printforceJob): bool
+    {
+        if (! $printforceJob->delete()) {
+            throw new DomainException("Unable to delete job, try again");
+        }
+
+        return true;
+    }
+
+
+    public function assignJob(PrintforceJob $printforceJob, string $userId): bool
     {
         try {
-            $this->printJobRepository->assignJob($jobId, $jobType, $userId);
-            return true;
-        } catch (\Throwable $th) {
-            throw $th;
+
+            $printforceJob
+                ->update([
+                    'job_assigned_to' => $userId,
+                    'job_assigned_at' => now()
+                ]);
+
+        } catch (\Exception $e) {
+            throw new DomainException("Unable to assign job");
         }
+
+        return true;
     }
+
 
     public function recentJobs(): Collection
     {
-        return $this->printJobRepository->recentJobs();
+        return $this->baseQuery()->get();
     }
 
-    public function filterJobs(?string $startDate, ?string $endDate, ?string $serviceId,  ?string $customerId): Collection
+
+    public function filter(?string $startDate, ?string $endDate, ?string $serviceId, ?string $customerId): Collection
     {
-        return $this->printJobRepository->filter(
-            $startDate,
-            $endDate,
-            $serviceId,
-            $customerId
-        );
+        return $this->filteredQuery($startDate, $endDate, $serviceId, $customerId)->get();
+    }
+
+
+    private function filteredQuery(
+        ?string $startDate,
+        ?string $endDate,
+        ?string $serviceId,
+        ?string $customerId,
+    ): Builder {
+        return $this->baseQuery()
+            ->when(
+                filled($startDate) && filled($endDate),
+                fn(Builder $query) => $query->whereBetween('created_at', [$startDate, $endDate]),
+            )
+            ->when(
+                filled($serviceId),
+                fn(Builder $query) => $query->where('service_id', $serviceId),
+            )
+            ->when(
+                filled($customerId),
+                fn(Builder $query) => $query->where('customer_id', $customerId),
+            );
+    }
+
+
+    private function baseQuery(): Builder
+    {
+        return $this->model->newQuery()->orderByDesc('created_at');
     }
 }
