@@ -22,11 +22,12 @@ new class extends Component
         $this->customerService = $customerService;
     }
 
+
     #[Computed]
     public function jobs(): Collection
     {
         if ($this->startDate || $this->endDate || $this->serviceId || $this->customerId) {
-            return $this->printJobService->filterJobs(
+            return $this->printJobService->filter(
                 $this->startDate,
                 $this->endDate,
                 $this->serviceId,
@@ -37,11 +38,13 @@ new class extends Component
         return $this->printJobService->recentJobs();
     }
 
+
     #[Computed]
     public function customers(): array
     {
         return $this->customerService->optionsForSelect();
     }
+
 
     #[Computed]
     public function statistics(): array
@@ -51,6 +54,7 @@ new class extends Component
             'todays_jobs_total' => $this->jobs->filter(fn($job) => $job->created_at?->isToday())->count(),
         ];
     }
+    
 
     public function updated(): void
     {
@@ -182,13 +186,13 @@ new class extends Component
                             <td scope="row">{{ $loop->iteration }}</td>
                             <td>{{ $job->created_at }}</td>
                             <td>
-                                <p>{{ $job->job_type }}</p>
+                                <p>{{ $job->service?->category_id?->label() }}</p>
                             </td>
                             <td>
                                 <p>{{ $job->service?->service_name }}</p>
                             </td>
                             <td>{{ $job->customer?->name }}</td>
-                            <td>{{ $job->details }}</td>
+                            <td>{!! $job->details !!}</td>
                             <td class="text-center">{{ $job->unit_cost ?? $job->qty }}</td>
                             <td class="text-end">{{ number_format($job->total, 2) }}</td>
                             <td class="text-end">

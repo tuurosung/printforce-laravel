@@ -7,6 +7,7 @@ use App\Domain\Customers\Models\CustomerCategory;
 use App\Domain\Payments\Models\CustomerPayment;
 use App\Domain\PrintJobs\Models\PrintforceJob;
 use App\Enums\Customers\CustomerCategoryEnum;
+use App\Enums\Invoices\InvoiceStatusEnum;
 use App\Models\Invoices\CustomerInvoice;
 use App\Models\Scopes\SubscriberScope;
 use App\Observers\CustomerObserver;
@@ -51,97 +52,92 @@ class Customer extends Model
         ];
     }
 
+
+    // -----------Relations---------------------------------------------------------------------
+
     public function customerCategory(): BelongsTo
     {
         return $this->belongsTo(CustomerCategory::class, 'category', 'category_id');
     }
-
 
     public function printforceJobs(): HasMany
     {
         return $this->hasMany(PrintforceJob::class, 'customer_id', 'customer_id');
     }
 
-
-    public function printfoceJobs(): HasMany
-    {
-        return $this->hasMany(PrintforceJob::class, 'customer_id', 'customer_id');
-    }
-
-
     public function payments(): HasMany
     {
         return $this->hasMany(CustomerPayment::class, 'customer_id');
     }
 
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(CustomerInvoice::class, 'customer_id');
+    }
 
-    public function totalPaid(): Attribute
+    public function activeInvoices(): HasMany
+    {
+        return $this->invoices()->where('status', InvoiceStatusEnum::ACTIVE);
+    }
+
+    // ---------- Aggregates ----------
+
+    protected function totalPaid(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->payments->sum('amount_paid') ?? 0.00
-        );
+            get: fn(): float => (float) ($this->payments_sum_amount_paid
+                ?? $this->payments->sum('amount_paid')),
+        )->shouldCache();
+    }
+
+    protected function jobsTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn(): float => (float) ($this->printforce_jobs_sum_total
+                ?? $this->printforceJobs->sum('total')),
+        )->shouldCache();
+    }
+
+    protected function invoiceTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn(): float => (float) ($this->active_invoices_sum_total
+                ?? $this->activeInvoices->sum('total')),
+        )->shouldCache();
+    }
+
+    protected function invoiceCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn(): int => (int) ($this->active_invoices_count
+                ?? $this->activeInvoices->count()),
+        )->shouldCache();
     }
 
     protected function debit(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->jobs_total + $this->invoice_total
-        );
+            get: fn(): float => $this->jobs_total + $this->invoice_total,
+        )->shouldCache();
     }
-
 
     protected function credit(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->totalPaid
-        );
+            get: fn(): float => $this->total_paid,
+        )->shouldCache();
     }
-
 
     protected function balance(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->debit - $this->credit
-        );
+            get: fn(): float => $this->debit - $this->credit,
+        )->shouldCache();
     }
-
 
     public function hasBalance(): bool
     {
         return $this->balance > 0;
     }
 
-
-    public function jobsTotal(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->printfoceJobs->sum("total")
-        );
-    }
-
-
-    /**
-     * Defines a belongs-to relationship with the CustomerInvoices model.
-     */
-    public function invoices(): HasMany
-    {
-        return $this->hasMany(CustomerInvoice::class, 'customer_id')
-            ->where('status', 'active');
-    }
-
-
-    public function invoiceCount(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->invoices->count()
-        );
-    }
-
-
-    public function invoiceTotal(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->invoices->sum('total') ?? 0.00
-        );
-    }
 }

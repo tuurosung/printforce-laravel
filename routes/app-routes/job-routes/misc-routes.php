@@ -11,15 +11,15 @@ Route::get('/all', AllJobsController::class)->name('all');
 Route::get('/today', TodaysJobsController::class)->name('today');
 
 // View Job
-Route::get('/view-job/{jobId}/{jobType}', ViewJobController::class)->name('view-job');
+Route::get('/view-job/{printforceJob}', ViewJobController::class)->name('view-job');
 
 Route::prefix('assign-job')
     ->name('assign-job.')
     ->controller(AssignJobController::class)
     ->group(function () {
 
-        Route::get('/load-assign-job/{job_id}/{category_id}', 'load')->name('load');
-        Route::post('/assign-job-to-user', 'assign')->name('assign-to-user');
+        Route::get('/load-assign-job/{printforceJob}', 'load')->name('load');
+        Route::post('/assign-job-to-user/{printforceJob}', 'assign')->name('assign-to-user');
 
     });
 
