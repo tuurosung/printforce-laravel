@@ -148,7 +148,7 @@
                                     {{ $customer->debit }}
                                 </td>
                                 <td class="px-6 py-4 text-dark text-end">
-                                    {{ $customer->balance }}
+                                    {{ $customer->balance < 0 ? "(". (abs($customer->balance)) . ")" : $customer->balance }}
                                 </td>
                                 <td class="px-6 py-4 text-end">
                                     <div class="hs-dropdown relative inline-flex">
