@@ -10,6 +10,7 @@ use App\Domain\Payments\Models\CustomerPayment;
 use App\Domain\Payments\Services\PaymentStatistics;
 use App\Domain\PrintJobs\Http\Controllers\JobController;
 use App\Domain\PrintJobs\Services\CustomerJobService;
+use App\Domain\PrintJobs\Services\JobStatisticsService;
 use App\Http\Controllers\Controller;
 use App\Services\Accounting\AccountService;
 use App\Services\ExpenditureService;
@@ -21,6 +22,7 @@ class DashboardController extends Controller
     public function __construct(
         private readonly CustomerService $customerService,
         private readonly CustomerStatistics $customerStatistics,
+        private readonly JobStatisticsService $jobStatisticsService,
         private readonly PaymentRepositoryInterface $paymentService,
         private readonly PaymentStatistics $paymentStatistics,
         private ExpenditureService $expenditureService,
@@ -33,10 +35,8 @@ class DashboardController extends Controller
     public function __invoke(Request $request)
     {
         $statistics = $this->customerStatistics->statistics();
+
         $payment_statistics = $this->paymentStatistics->getStatistics();
-
-
-        $service_performance = JobController::servicePerformanceAnalytics();
 
         $payment_graph = CustomerPayment::paymentGraph();
 
@@ -48,7 +48,7 @@ class DashboardController extends Controller
             'monthly_expenditure' => $expenditure_statistics['monthly_expenditure'],
             'countNewCustomers' => $statistics->newCustomers,
             'customer_rankings' => $this->customerStatistics->getCustomerRanking(),
-            'service_performance' => $service_performance,
+            'service_performance' => $this->jobStatisticsService->serviceRanking(),
             'payment_graph' => $payment_graph,
 
             'todays_jobs_count' => CustomerJobService::countTodaysJobs(),
