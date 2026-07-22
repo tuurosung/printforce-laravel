@@ -12,6 +12,7 @@
         "awobaz/compoships": "^2.3",
         "barryvdh/laravel-ide-helper": "^3.2",
         "josiasmontag/laravel-recaptchav3": "^1.0",
+        "laravel/fortify": "^1.37",
         "laravel/framework": "^13.0",
         "laravel/pail": "^1.1",
         "laravel/pulse": "^1.4",
