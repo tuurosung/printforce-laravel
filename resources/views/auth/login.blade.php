@@ -4,7 +4,6 @@
 
     <div class="container flex min-h-screen items-center justify-center">
 
-
         <div class="card shadow-lg border-0 rounded-2 w-[80%]! mx-auto my-auto">
             <div class="card-body">
 
@@ -48,7 +47,7 @@
                                     <div class="mb-3">
                                         <div class="flex">
                                             <label class="form-label">Password</label>
-                                            <a href="#" class="ms-auto text-muted">
+                                            <a href="{{ route('password.request') }}" class="ms-auto text-muted">
                                                 Forgot password?
                                             </a>
                                         </div>

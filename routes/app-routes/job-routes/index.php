@@ -21,12 +21,6 @@ Route::prefix('jobs')
 
         require __DIR__ . "/misc-routes.php";
 
-        Route::post("others/store/{customer}", [OtherJobController::class, "store"])->name("others.store");
-        Route::resource("others", OtherJobController::class)
-        ->except("store")
-        ->parameters([
-            "others"=> "otherJob",
-        ]);
 
 
 

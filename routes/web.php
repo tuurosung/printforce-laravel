@@ -40,9 +40,9 @@ Route::get('/', function(){
     return view('landing');
 })->name('landing');
 
-Route::get('/login', function(){
-    return view('auth.login');
-})->name('login');
+// Route::get('/login', function(){
+//     return view('auth.login');
+// })->name('login');
 
 
 require __DIR__ . "/app-routes/subscription-routes.php";
@@ -71,8 +71,5 @@ Route::middleware(['auth'])
     require __DIR__ . "/app-routes/service-routes.php";
     require __DIR__ . "/app-routes/user-routes.php";
     require __DIR__ . "/app-routes/upgrade-routes.php";
-
-    // require __DIR__ . "/app-routes/config-routes/index.php";
-
 
 });
