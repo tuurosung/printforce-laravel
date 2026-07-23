@@ -11,14 +11,18 @@
         <i class="fi fi-rr-check me-2"></i>
         Mark Complete
     </button>
+    
+    @can('administrator')
     <form class="inline" action="{{ route('print-jobs.delete', $job) }}" method="POST">
         @csrf
         @method("delete")
-        <button type="button"  class="btn bg-rose-500! hover:bg-rose-600!" id="deleteJobBtn">
+        <button type="button" class="btn bg-rose-500! hover:bg-rose-600!" id="deleteJobBtn">
             <i class="fi fi-rr-trash"></i>
             Delete Job
         </button>
     </form>
+    @endcan
+
 
 </x-headers.page-header>
 
@@ -268,7 +272,7 @@
 
 @section('js')
 <script>
-    $('#deleteJobBtn').on('click', function(){
+    $('#deleteJobBtn').on('click', function() {
         const $frm = $(this).closest('form');
         swalConfirm(() => $frm.submit(), "Are you sure you want to delete this Job?");
     })
