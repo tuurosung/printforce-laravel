@@ -1,49 +1,82 @@
-<!-- Sidebar -->
-<!-- <div class="position-fixed collapse dont-collapse-sm app-sidebar bg-white-100" id="sidebar"> -->
-<div class="app-sidebar bg-white-100" id="sidebar">
-    <div class="app-sidebar-content ps" data-scrollbar="true" data-height="100%">
-        <div class="menu mt-5">
+<aside id="application-sidebar-brand"
+    class="hs-overlay hs-overlay-open:translate-x-0 -translate-x-full xl:rtl:-translate-x-0 rtl:translate-x-full  left-0 rtl:left-auto rtl:right-0 transform hidden xl:block xl:translate-x-0 xl:end-auto xl:bottom-0 fixed top-0 with-vertical  left-sidebar transition-all duration-300 h-screen xl:z-[2] z-[60] flex-shrink-0 border-r rtl:border-l rtl:border-r-0 w-[270px] border-border dark:border-darkborder bg-white dark:bg-dark">
+    <!-- ---------------------------------- -->
+    <!-- Start Vertical Layout Sidebar -->
+    <!-- ---------------------------------- -->
+    <div class="py-5 px-5 flex justify-between">
+        <div class="brand-logo flex  items-center w-full">
+            <a href="../main/index.html" class="text-nowrap logo-img">
+                <img src="{{ asset('images/logo.png') }}" class="dark:hidden block rtl:hidden w-40!" alt="Logo-Dark">
+                <img src="{{ asset('images/logo.png') }}" class="dark:block hidden rtl:hidden rtl:dark:hidden w-fit!" alt="Logo-light">
 
-
-            <x-printforce.sidebar.single-menu-item menuText="Dashboard" :menuLink="route('dashboard')"
-                menuIcon="dashboard-panel" id="dashboard_nav" />
-
-            <div class="menu-item">
-                <a href="{{ route('jobs.largeformat.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-chart-bar menu-icon"></i>
-                    <span class="menu-text"> Large Format Jobs </span>
-                </a>
-            </div>
-
-            <div class="menu-item">
-                <a href="{{ route('jobs.embroidery.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-chart-bar menu-icon"></i>
-                    <span class="menu-text"> Embroidery Jobs </span>
-                </a>
-            </div>
-
-            <div class="menu-item">
-                <a href="{{ route('jobs.design.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-chart-bar menu-icon"></i>
-                    <span class="menu-text"> Design Jobs </span>
-                </a>
-            </div>
-
-            <div class="menu-item">
-                <a href="{{ route('jobs.press.index') }}" class="menu-link" id="accounts_li">
-                    <i class="fas fa-chart-bar menu-icon"></i>
-                    <span class="menu-text"> Press Jobs </span>
-                </a>
-            </div>
-
-
-
+                <img src="{{ asset('images/logo.png') }}"
+                    class="dark:hidden hidden rtl:block rtl:dark:hidden w-fit!" alt="Logo-Dark">
+                <img src="{{ asset('images/logo.png') }}"
+                    class="dark:hidden hidden rtl:hidden rtl:dark:block w-fit!" alt="Logo-light">
+            </a>
         </div>
 
     </div>
+    <div class="overflow-hidden">
+        <div class="scroll-sidebar simplebar-scrollable-y" data-simplebar="init">
+            <div class="simplebar-wrapper" style="margin: 0px;">
+                <div class="simplebar-height-auto-observer-wrapper">
+                    <div class="simplebar-height-auto-observer"></div>
+                </div>
+                <div class="simplebar-mask">
+                    <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                        <div class="simplebar-content-wrapper" tabindex="0" role="region"
+                            aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;">
+                            <div class="simplebar-content" style="padding: 0px;">
+                                <div class="px-6 mt-8 mini-layout" data-te-sidenav-menu-ref="">
+                                    <nav class="hs-accordion-group w-full flex flex-col">
+                                        <ul data-te-sidenav-menu-ref="" id="sidebarnav">
+                                          
+                                            <x-sidebar.sidebar-item label="Jobs" icon="briefcase" href="{{ route('jobs.today') }}" />
 
-</div>
-<!-- Sidebar -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="simplebar-placeholder" style="width: 269px; height: 3705px;"></div>
+            </div>
+            <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+            </div>
+            <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+                <div class="simplebar-scrollbar"
+                    style="height: 25px; transform: translate3d(0px, 0px, 0px); display: block;"></div>
+            </div>
+        </div>
+    </div>
 
-<!-- </header> -->
-<!--Main Navigation-->
+    <!-- Bottom User Profile -->
+    <div class="px-6 pt-6  bg-surface  dark:bg-dark-surface relative">
+        <div class="bg-lightsecondary dark:bg-darksecondary p-4 rounded-md">
+            <div class="hide-menu ">
+                <div class="flex items-center">
+                    <img src="{{ asset('images/user-1.jpg') }}" class="h-9 w-9 rounded-full object-cover"
+                        alt="profile">
+                    <div class="ml-4 rtl:mr-4 rtl:ml-0">
+                        <h5 class="text-base font-semibold text-dark dark:text-white">{{ auth()->user()->name }}</h5>
+                        <p class="text-xs font-normal text-link dark:text-darklink ">{{ auth()->user()->access_level->label() }}</p>
+                    </div>
+                    <div class="ms-auto hs-tooltip hs-tooltip-toggle">
+                        <a href="javascript:void(0)"><i class="ti ti-power text-primary me-3 text-2xl "></i>
+                            <span
+                                class="tooltip hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible"
+                                role="tooltip" style="position: fixed; left: 182.208px; top: 180.85px;">
+                                Logout
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </aside> -->
+
+</aside>

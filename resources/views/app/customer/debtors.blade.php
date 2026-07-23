@@ -91,7 +91,7 @@
                             <tr class="bg-neutral-primary-soft text-dark border-b border-default hover:bg-neutral-secondary-medium">
                                     <td scope="row">{{ $loop->iteration }}</td>
                                     <td>
-                                        <a href="{{ route('customers.customer.info', $debtor->customer_id) }}">
+                                        <a href="{{ route('customers.customer.info', $debtor->customer_id) }}" class="underline">
                                             {{ $debtor->name }}
                                         </a>
                                     </td>
@@ -103,15 +103,7 @@
 
 
                     </tbody>
-                    <tfoot class="">
-                        <tr>
-                            <td class="px-6 py-4 font-medium text-dark whitespace-nowrap">#</td>
-                            <td>Customer</td>
-                            <td class="text-end">Debit</td>
-                            <td class="text-end">Credit</td>
-                            <td class="text-end">{{ $debtors->sum('balance') }}</td>
-                        </tr>
-                    </tfoot>
+
                 </table>
             </div>
         </div>

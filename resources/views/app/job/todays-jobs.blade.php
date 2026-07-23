@@ -8,9 +8,6 @@
 <livewire:jobs.view-jobs />
 
 
-
-
-
 @endsection
 
 @section('js')

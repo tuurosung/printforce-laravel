@@ -54,7 +54,7 @@ new class extends Component
             'todays_jobs_total' => $this->jobs->filter(fn($job) => $job->created_at?->isToday())->count(),
         ];
     }
-    
+
 
     public function updated(): void
     {
@@ -67,12 +67,7 @@ new class extends Component
 <!-- View Job Component -->
 <div wire:ignore.self>
     <div class="grid grid-cols-12 gap-6 mb-8">
-        <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
-            <x-printforce.cards.colour-card
-                title="Total Jobs"
-                bgColour="primary"
-                :value="$this->statistics['total']" />
-        </div>
+
 
         <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
             <x-printforce.cards.colour-card
@@ -80,6 +75,16 @@ new class extends Component
                 bgColour="warning"
                 :value="$this->statistics['todays_jobs_total']" />
         </div>
+
+        @can('administrator')
+        <div class="lg:col-span-3 md:col-span-3 sm:col-span-12 col-span-12">
+            <x-printforce.cards.colour-card
+                title="Total Jobs"
+                bgColour="primary"
+                :value="$this->statistics['total']" />
+        </div>
+        @endcan
+
     </div>
 
 

@@ -30,6 +30,7 @@
             </div>
         </div>
 
+        @can('administrator')
         <div class="grid grid-cols-6 gap-6 mb-6">
             <div class="col">
                 <x-cards.dashboard-card bgColour="primary" title="Payments" icon="sack-dollar" :value="$payment_statistics->monthsTotalPayment" valueType="money" />
@@ -50,8 +51,10 @@
                 <x-cards.dashboard-card bgColour="primary" title="Debt" icon="file-invoice-dollar" value="0" valueType="number" />
             </div>
         </div>
+        @endcan
 
 
+        @can('administrator')
         <div class="grid grid-cols-12 gap-6 mb-6">
             <div class="col-span-6">
                 <div class="card">
@@ -83,7 +86,10 @@
             </div>
             <div class="col-span-6"></div>
         </div>
+        @endcan
 
+
+        @can('administrator')
         <div class="row gap-6">
             <div class="col-md-6 px-0!">
                 <div class="card border-0 h-100 rounded-1">
@@ -109,6 +115,8 @@
                 </div>
             </div>
         </div>
+        @endcan
+
         <div class="grid grid-cols-12 gap-6">
             @include('app.dashboard.new-partials.tabbed-data')
         </div>
