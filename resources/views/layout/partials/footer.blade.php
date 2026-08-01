@@ -9,6 +9,18 @@
         })
     }
 
+    function successAlertWithCallback(message, callback) {
+        Swal.fire({
+            title: "Success!",
+            text:message,
+            icon: 'success',
+            confirmButtonText: 'Okay'
+        })
+        .then(()=>{
+            callback()
+        })
+    }
+
     function swalConfirm(callback, message, options= {}) {
         Swal.fire({
                 title: options.title ?? 'Confirm?',

@@ -8,7 +8,6 @@ use DateTimeInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Accounting\FundTransfer;
-use App\Models\Accounting\OperatingAccount;
 use App\Http\Controllers\OperatingAccountController;
 use App\Http\Requests\Transfers\StoreNewTransferRequest;
 use App\Services\Accounting\AccountService;
@@ -101,7 +100,7 @@ class FundTransferController extends Controller
 
     public function filterTransfers(Request $request)
     {
-        
+
     }
 
 

@@ -1,35 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Accounting;
+declare(strict_types=1);
 
+namespace App\Domain\Expenditure\Http\Controllers;
 
+use App\Domain\Expenditure\Http\Requests\StoreNewExpenditureRequest;
+use App\Domain\Expenditure\Models\Expenditure;
+use App\Domain\Expenditure\Services\ExpenditureService;
+use App\Http\Controllers\Controller;
+use App\Models\Accounting\ExpenditureHeader;
 use App\Services\Accounting\AccountService;
 use App\Traits\HandleResourceActions;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Expenditure\StoreNewExpenditureRequest;
-use App\Services\ExpenditureService;
-use App\Models\Accounting\Expenditure;
-use App\Models\Accounting\OperatingAccount;
-use App\Models\Accounting\ExpenditureHeader;
 
 class ExpenditureController extends Controller
 {
-    use HandleResourceActions;
 
     /**
      * Create a new class instance.
      */
     public function __construct(
-        protected $modelName = "Expenditure",
-        private $model = new Expenditure(),
-        private $expenditureService = new ExpenditureService(),
-        private $operatingAccountService = new AccountService()
-    )
-    {
-    }
+        private AccountService $accountService,
+        private readonly ExpenditureService $expenditureService
+    ){}
 
 
     /**
@@ -37,25 +32,25 @@ class ExpenditureController extends Controller
      */
     public function index()
     {
-        $all_accounts = $this->operatingAccountService->getAssetAccounts();
-        $expenditure_headers = $this->expenditureService->getHeadersArray();
+        // $all_accounts = $this->operatingAccountService->getAssetAccounts();
+        // $expenditure_headers = $this->expenditureService->getHeadersArray();
 
-        $expenditure_statistics = $this->expenditureService->statistics;
+        // $expenditure_statistics = $this->expenditureService->statistics;
 
 
-        $total_expenditure = $expenditure_statistics['total_expenditure'];
-        $monthly_expenditure = $expenditure_statistics['monthly_expenditure'];
-        $yearly_expenditure = $expenditure_statistics['yearly_expenditure'];
+        // $total_expenditure = $expenditure_statistics['total_expenditure'];
+        // $monthly_expenditure = $expenditure_statistics['monthly_expenditure'];
+        // $yearly_expenditure = $expenditure_statistics['yearly_expenditure'];
 
-        $all_expenses = Expenditure::with(['header', 'account'])->orderBy('sn', 'desc')->get();
+        // $all_expenses = Expenditure::with(['header', 'account'])->orderBy('sn', 'desc')->get();
 
         return view('app.expenditure.expenses', [
-            'all_accounts' => $all_accounts,
-            'expenditure_headers' => $expenditure_headers,
-            'total_expenditure' => $total_expenditure,
-            'monthly_expenditure' => $monthly_expenditure,
-            'yearly_expenditure' => $yearly_expenditure,
-            'all_expenses' => $all_expenses
+            'all_accounts' => [],
+            'expenditure_headers' => [],
+            'total_expenditure' => 0,
+            'monthly_expenditure' => 0,
+            'yearly_expenditure' => 0,
+            'all_expenses' => $this->expenditureService->getExpenses()
         ]);
     }
 
@@ -72,7 +67,9 @@ class ExpenditureController extends Controller
      */
     public function store(StoreNewExpenditureRequest $request)
     {
-        return $this->handleStore($request->validated());
+        // dd($request->toData());
+        $this->expenditureService->createExpenditure($request->toData());
+        return redirect()->back()->with("success", "Expenditure recorded successfully");
     }
 
     /**
@@ -88,13 +85,13 @@ class ExpenditureController extends Controller
      */
     public function edit(Expenditure $expenditure)
     {
-        $all_accounts = $this->operatingAccountService->getAssetAccounts();
-        $expenditure_headers = $this->expenditureService->getHeadersArray();
+        // $all_accounts = $this->operatingAccountService->getAssetAccounts();
+        // $expenditure_headers = $this->expenditureService->getHeadersArray();
 
         return view('app.expenditure.modals.edit-expense-modal', [
             'expenditure' => $expenditure,
-            'expenditure_headers' => $expenditure_headers,
-            'all_accounts' => $all_accounts
+            'expenditure_headers' => [],
+            'all_accounts' => []
         ]);
     }
 
