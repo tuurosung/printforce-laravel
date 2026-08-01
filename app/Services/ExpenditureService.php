@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Accounting\Expenditure;
+use App\Domain\Expenditure\Models\Expenditure;
 use App\Models\Accounting\ExpenditureHeader;
 use App\Traits\Cacheable;
 

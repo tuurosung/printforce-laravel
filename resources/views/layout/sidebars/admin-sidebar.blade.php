@@ -63,7 +63,7 @@
                                                 </a>
                                             </li>
 
-                                            <x-sidebar.sidebar-item label="Expenses" icon="chart-histogram" href="{{ route('accounting.expenditure.index') }}" class="mt-5" />
+                                            <x-sidebar.sidebar-item label="Expenses" icon="chart-histogram" href="{{ route('expenditure.index') }}" class="mt-5" />
 
 
                                             <li class="sidebar-item">

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Purchases\Models;
 
+use App\Domain\Accounts\Models\OperatingAccount;
 use App\Domain\Suppliers\Models\Supplier;
-use App\Models\Accounting\OperatingAccount;
 use App\Models\Scopes\SubscriberScope;
 use App\Observers\Purchases\PurchasePaymentObserver;
 use App\Traits\ScopedActive;

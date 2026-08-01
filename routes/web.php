@@ -4,7 +4,6 @@ use App\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Middleware\CheckSubscriptionValidatity;
-use App\Models\OperatingAccount;
 use Illuminate\Support\Facades\Route;
 
 // Development helpers: serve legacy vendor JS and images from resources

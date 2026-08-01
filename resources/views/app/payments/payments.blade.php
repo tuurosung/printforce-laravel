@@ -148,6 +148,7 @@
                                             <i class="fi fi-rr-print text-lg leading-none text-primary"></i>
                                             Print
                                         </a>
+                                        @can('administrator')
                                         <a class="dropdown-item edit" href="javascript:void(0)"
                                             data-url="{{ route('payments.edit', $payment) }}">
                                             <i class="fi fi-rr-edit text-lg leading-none text-primary"></i>
@@ -162,6 +163,8 @@
                                                 Delete
                                             </a>
                                         </form>
+                                        @endcan
+
                                     </div>
                                 </div>
 

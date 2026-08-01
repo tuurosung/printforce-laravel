@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Models\Accounting;
+namespace App\Domain\Accounts\Models;
 
 use App\Domain\Payments\Models\CustomerPayment;
+use App\Enums\Accounts\AccountTypeEnum;
 use App\Models\Accounting\AddFunds;
 use App\Models\Accounting\OperatingAccountHeader;
 use App\Models\Purchases\PurchasePayment;
 use App\Models\Subscribers;
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +36,19 @@ class OperatingAccount extends Model
         // (new self)->setAccTypeAttribute();
     }
 
+    protected $table = 'all_accounts';
+    protected $primaryKey = 'account_number';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+
+    protected function casts(): array
+    {
+        return [
+            'acc_type' => AccountTypeEnum::class
+        ];
+    }
+
 
     /**
      * Updates acc_type using the type attribute from the
@@ -51,9 +67,7 @@ class OperatingAccount extends Model
 
 
 
-    protected $table = 'all_accounts';
-    protected $primaryKey = 'account_number';
-    public $incrementing = false;
+
 
     protected $fillable = [
         'subscriber_id',
@@ -63,6 +77,17 @@ class OperatingAccount extends Model
         'account_type',
         'description'
     ];
+
+
+    /**
+     * Scopes ----------------------------------------------------
+     */
+
+    #[Scope]
+    protected function inType(Builder $query, AccountTypeEnum $accountType): Builder
+    {
+        return $this->where('acc_type', $accountType->value);
+    }
 
 
 

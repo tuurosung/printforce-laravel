@@ -2,7 +2,7 @@
 
 namespace App\Services\Accounting;
 
-use App\Models\Accounting\OperatingAccount;
+use App\Domain\Accounts\Models\OperatingAccount;
 use App\Traits\Cacheable;
 
 class AccountService

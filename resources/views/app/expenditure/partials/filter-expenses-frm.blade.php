@@ -1,18 +1,28 @@
 <form class="mb-5" id="filterExpenditureFrm">
 
-    <div class="d-flex gap-3">
+    <div class="grid grid-cols-12 gap-6 mb-6">
 
-        <x-printforce.inputs.date-input name="start_date" id="start_date" label="Start Date" value="" />
+        <div class="col-span-2">
+            <x-printforce.inputs.date-input name="start_date" id="start_date" label="Start Date" value="" />
+        </div>
 
-        <x-printforce.inputs.date-input name="end_date" id="end_date" label="End Date" value="{{ now()->format('Y-m-d') }}" />
+        <div class="col-span-2">
+            <x-printforce.inputs.date-input name="end_date" id="end_date" label="End Date" value="{{ now()->format('Y-m-d') }}" />
+        </div>
 
-        <div class="mb-3 w-200px me-3">
-            <x-printforce.inputs.select-input name="account_number" id="filterAccountNumber" label="Account" :options="$all_accounts" />
+        <div class="col-span-3 w-200px me-3">
+            @php
+                $expenditureAccounts = \App\Enums\Accounts\AccountTypeEnum::Expenditure->accountsArray();
+            @endphp
+            <x-printforce.inputs.select-input name="account_number" id="filterAccountNumber" label="Account" :options="$expenditureAccounts" />
 
         </div>
 
-        <div class="" style="padding-top:27px">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-search me-3" aria-hidden="true"></i> Filter Expenses</button>
+        <div class="col-span-3 grid content-end mb-3">
+            <button type="submit" class="btn btn-primary py-3">
+                <i class="fi fi-rr-search me-3"></i>
+                Filter Expenses
+            </button>
         </div>
 
     </div>

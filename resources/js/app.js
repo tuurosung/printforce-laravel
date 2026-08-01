@@ -14,9 +14,23 @@ import Swal from 'sweetalert2'
 import "@preline/datepicker"
 import HSDatepicker from "@preline/datepicker"
 import HSSelect from '@preline/select';
+import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.csp.esm.js';
 // HSDatepicker.autoInit();
-
 
 
 window.Swal = Swal
 
+
+
+Livewire.on('open-overlay', ({ id }) => {
+    window.HSOverlay.open(document.querySelector('#' + id))
+})
+
+Livewire.on('close-overlay', ({ id }) => {
+    window.HSOverlay.close(document.querySelector('#' + id));
+    setTimeout(() => {
+        document.querySelectorAll('.hs-overlay-backdrop').forEach(b => b.remove());
+        document.documentElement.classList.remove('hs-overlay-body-open');
+        document.body.style.removeProperty('overflow');
+    }, 200);
+});

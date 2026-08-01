@@ -47,6 +47,7 @@ enum ServiceCategoryEnum: string
             self::EMBROIDERY   => "Materials {$context->material_unit_cost} x ({$context->quantity} {$context->qty} pcs)",
             self::DESIGN,
             self::PRESS,
+            self::PHOTOGRAPHY,
             self::OTHERS       => "{$context->quantity} {$context->qty} pcs",
         };
 

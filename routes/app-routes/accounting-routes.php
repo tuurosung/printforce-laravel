@@ -1,10 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Accounting\ExpenditureController;
+use App\Domain\Expenditure\Http\Controllers\ExpenditureController;
 use App\Http\Controllers\Accounting\FilterFundTransferController;
 use App\Http\Controllers\Accounting\FundTransferController;
 use App\Http\Controllers\Accounting\OperatingAccountController;
+use Illuminate\Support\Facades\Route;
+
+Route::resource('expenditure', ExpenditureController::class);
 
 Route::prefix('accounting')
     ->name('accounting.')
@@ -27,21 +29,6 @@ Route::prefix('accounting')
 
             });
 
-
-        // Expenditure routes
-        Route::prefix('expenditure')
-            ->name('expenditure.')
-            ->controller(ExpenditureController::class)
-            ->group(function () {
-
-                Route::get('/', 'index')->name('index');
-                Route::get('/edit/{expenditure}', 'edit')->name('edit');
-                Route::post('/update/{expenditure}', 'update')->name('update');
-                Route::post('/store', 'store')->name('store');
-                Route::post('/delete/{expenditure}', 'destroy')->name('delete');
-                Route::post('/filter', 'filterExpenditure')->name('filter');
-
-            });
 
         // Fund Transfer routes
         Route::prefix('transfers')
