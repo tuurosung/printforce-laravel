@@ -21,7 +21,7 @@
                         <div class="app-full-height">
                             <div class="login-content py-5 px-sm-5">
                                 @include('layout.errors')
-                                <form action="{{ route('user-login')  }}" method="POST" name="login_form" class="px-7">
+                                <form action="{{ route('login')  }}" method="POST" name="login_form" class="px-7">
                                     @csrf
 
                                     <img src="{{ asset('images/logo.png') }}"
