@@ -39,17 +39,12 @@ Route::get('/', function(){
     return view('landing');
 })->name('landing');
 
-// Route::get('/login', function(){
-//     return view('auth.login');
-// })->name('login');
 
 
 require __DIR__ . "/app-routes/subscription-routes.php";
 
 
 
-Route::post('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
-Route::post('/user-login', [App\Http\Controllers\LoginController::class, 'authenticate'])->name('user-login');
 
 
 Route::middleware(['auth'])
