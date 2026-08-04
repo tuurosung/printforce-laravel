@@ -6,17 +6,40 @@ namespace App\Enums\Accounts;
 
 use App\Domain\Accounts\Models\OperatingAccount;
 use App\Traits\Cacheable;
-use Illuminate\Support\Collection;
+use App\Traits\System\EnumTrait;
 
 enum AccountTypeEnum: string
 {
     use Cacheable;
+    use EnumTrait;
 
     case Asset = '1';
     case Equity = '2';
     case Liability = '3';
     case Income = '4';
     case Expenditure = '5';
+
+
+
+    public function slug()
+    {
+        return match ($this) {
+            self::Asset => 'asset',
+            self::Equity => 'equity',
+            self::Liability => 'liability',
+            self::Income => 'income',
+            self::Expenditure => 'expense'
+        };
+    }
+
+
+    public function isDebitNormal():bool
+    {
+        return match ($this) {
+            self::Asset, self::Expenditure => true,
+            self::Income, self::Liability => false
+        };
+    }
 
 
     public function accounts()
@@ -27,7 +50,6 @@ enum AccountTypeEnum: string
                 return OperatingAccount::inType($this)->get();
             }
         );
-
     }
 
 
