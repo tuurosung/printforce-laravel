@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Accounting;
+declare(strict_types=1);
+
+namespace App\Domain\Accounts\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Services\Accounting\FundTransferService;

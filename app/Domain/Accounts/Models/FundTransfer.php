@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models\Accounting;
+declare(strict_types = 1);
+
+namespace App\Domain\Accounts\Models;
 
 use App\Traits\ScopedActive;
 use App\Traits\ScopedToSubscriber;

@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Accounting;
+declare(strict_types=1);
+
+namespace App\Domain\Accounts\Http\Controllers;
 
 use App\Domain\Accounts\Models\OperatingAccount;
 use App\Domain\Payments\Models\CustomerPayment;
+use App\Enums\Accounts\AccountTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Accounting\OperatingAccountHeader;
 use App\Models\Accounting\OperatingAccountTypes;
@@ -23,23 +26,11 @@ class OperatingAccountController extends Controller
      */
     public function index(Subscribers $subscriber)
     {
-        $account_types = OperatingAccountTypes::getAccountTypes();
+        $account_types = AccountTypeEnum::cases();
 
-        $account_types = OperatingAccountTypes::with([
-            'headers.accounts' => function ($query) {
-                $query->with([
-                    'payments',
-                    'expenditure',
-                    'receivedFunds',
-                    'transferredFunds',
-                    'purchasePayments'
-
-                ]);
-            }
-        ])->get();
-        // dd($account_headers);
-
-        return view('app.accounts.accounts', compact('account_types', 'account_types'));
+        return view('app.accounts.chart-of-accounts', [
+            'account_types' => $account_types,
+        ]);
     }
 
     /**

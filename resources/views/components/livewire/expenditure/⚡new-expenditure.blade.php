@@ -228,9 +228,11 @@ new class extends Component
     @script
     <script>
 
+
         $wire.on('open-overlay', ({
             id
         }) => window.HSOverlay.open(document.querySelector('#' + id)));
+
 
         $wire.on('close-overlay', ({
             id
@@ -243,10 +245,12 @@ new class extends Component
             }, 200);
         });
 
+
         Livewire.on('notify', ({
             message,
             type = 'success'
         }) => swalAlert(message, type));
+
 
         // Reload only AFTER the user dismisses the success alert.
         Livewire.on('save-successful', ({
@@ -255,9 +259,11 @@ new class extends Component
             successAlertWithCallback(message, () => window.location.reload());
         });
 
+
         Livewire.on('delete-successful', () => {
             successAlertWithCallback('Delete Successful', () => window.location.reload());
         });
+
 
         window.confirmDelete = (expenditure) => {
             const callback = () => Livewire.dispatch('delete-expenditure', {
@@ -265,6 +271,7 @@ new class extends Component
             });
             swalConfirm(callback, 'Do you want to delete this expenditure?');
         };
+
     </script>
     @endscript
 

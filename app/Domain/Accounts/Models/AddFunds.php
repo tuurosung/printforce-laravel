@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models\Accounting;
+declare(strict_types = 1);
+
+namespace App\Domain\Accounts\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Domain\Accounts\Http\Controllers;
 
-use App\Models\OperatingAccountTypes;
+use App\Http\Controllers\Controller;
+use App\Models\AddFunds;
 use Illuminate\Http\Request;
 
-class OperatingAccountTypesController extends Controller
+class AddFundsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +36,7 @@ class OperatingAccountTypesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OperatingAccountTypes $operatingAccountTypes)
+    public function show(AddFunds $addFunds)
     {
         //
     }
@@ -42,7 +44,7 @@ class OperatingAccountTypesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(OperatingAccountTypes $operatingAccountTypes)
+    public function edit(AddFunds $addFunds)
     {
         //
     }
@@ -50,7 +52,7 @@ class OperatingAccountTypesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, OperatingAccountTypes $operatingAccountTypes)
+    public function update(Request $request, AddFunds $addFunds)
     {
         //
     }
@@ -58,13 +60,8 @@ class OperatingAccountTypesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OperatingAccountTypes $operatingAccountTypes)
+    public function destroy(AddFunds $addFunds)
     {
         //
-    }
-
-    public function accountTypes()
-    {
-        return OperatingAccountTypes::all();
     }
 }
