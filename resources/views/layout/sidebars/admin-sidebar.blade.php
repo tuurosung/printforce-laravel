@@ -67,7 +67,7 @@
 
 
                                             <li class="sidebar-item">
-                                                <a class="sidebar-link dark-sidebar-link flex align-middle" href="{{ route('dashboard') }}">
+                                                <a class="sidebar-link dark-sidebar-link flex align-middle" href="{{ route('operating-accounts.index') }}">
                                                     <i class="fi fi-rr-member-list shrink-0"></i>
                                                     <span class="hide-menu shrink-0 my-0">Chart Of Accounts</span>
                                                 </a>

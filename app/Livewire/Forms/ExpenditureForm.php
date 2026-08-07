@@ -28,14 +28,14 @@ final class ExpenditureForm extends Form
     protected function rules(): array
     {
         return [
-            'payment_method'         => ['required', Rule::enum(PaymentMethodsEnum::class)],
-            'date'                   => ['required', 'date'],
-            'source_account_id'      => ['required', 'string'],
+            'payment_method' => ['required', Rule::enum(PaymentMethodsEnum::class)],
+            'date' => ['required', 'date'],
+            'source_account_id' => ['required', 'string'],
             'destination_account_id' => ['required', 'string', 'different:source_account_id'],
-            'amount'                 => ['required', 'numeric', 'min:0.01'],
-            'drawee'                 => ['nullable', 'string'],
-            'reference'              => ['nullable', 'string'],
-            'narration'              => ['required', 'string'], // blade marks it required
+            'amount' => ['required', 'numeric', 'min:0.01'],
+            'drawee' => ['nullable', 'string'],
+            'reference' => ['nullable', 'string'],
+            'narration' => ['required', 'string'], // blade marks it required
         ];
     }
 

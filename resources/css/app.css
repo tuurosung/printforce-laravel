@@ -94,7 +94,7 @@
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],
@@ -125,7 +125,7 @@ select:focus[data-flux-control] {
 
 /* Bootstrap row equivalent */
 .row {
-    @apply flex
+    @apply flex mb-5
 }
 
 .col-md-6 {
@@ -133,6 +133,13 @@ select:focus[data-flux-control] {
     width: 50%;
     padding-right: 15px;
     padding-left: 15px;
+}
+
+.col-md-12 {
+    position: relative;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 
@@ -194,33 +201,36 @@ span[class*="fi-br-"]::before {
 
 
 .datepicker-picker {
-    background-color: #fff !important;;
+    background-color: #fff !important;
+    ;
 }
 
 .datepicker .selected {
     background-color: var(--color-primary);
 }
 
+@layer components {
 
-.tables {
-    @apply w-full text-sm text-left table
-}
+    .table {
+        @apply w-full! text-left text-sm;
+    }
 
-.table thead {
-    @apply text-sm text-white bg-gray-700 border-b border-t
-}
+    .table thead {
+        @apply border-y bg-gray-700 text-white;
+    }
 
-.table tr {
-    @apply border-b
-}
+    .table tbody tr {
+        @apply border-b;
+    }
 
-.table tr td {
-    @apply text-dark
-}
+    .table th,
+    .table td {
+        @apply px-4 py-2 text-[13px];
+    }
 
-.table thead th,
-.table tbody td {
-    @apply py-2 px-4 text-[13px]
+    .table td {
+        @apply text-dark;
+    }
 }
 
 /* .modal-close-btn {
@@ -242,9 +252,7 @@ span[class*="fi-br-"]::before {
 
 @layer utilities {
     .dropdown-item {
-        @apply flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100
-            focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700
-            dark:hover:text-gray-300 dark:focus:bg-gray-700
+        @apply flex items-center gap-x-3.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300 dark:focus:bg-gray-700
     }
 
 
