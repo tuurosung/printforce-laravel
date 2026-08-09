@@ -6,6 +6,22 @@
 
     <div class="container full-container py-5">
 
+        <div class="bg-gray-50 border border-gray-200 text-sm text-gray-600 rounded-md p-4 dark:bg-white/[.05] dark:border-white/10 dark:text-gray-400 mb-5" role="alert">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <i class="ti ti-alert-circle text-lg leading-tight font-medium"></i>
+                </div>
+                <div class="flex-1 md:flex md:justify-between ms-2">
+                    <p class="text-sm leading-tight">
+                        Custom SMS Sender Names is coming to Printforce. 
+                    </p>
+                    <p class="text-sm mt-3 md:mt-0 md:ms-6">
+                        <a class="text-gray-800 hover:text-gray-500 font-medium whitespace-nowrap dark:text-gray-200 dark:hover:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" href="#">Details</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-12 gap-6 mb-6">
             <div class="lg:col-span-8 md:col-span-8 sm:col-span-12 col-span-12">
                 @include('app.dashboard.new-partials.welcome-row')
