@@ -52,7 +52,7 @@ Route::middleware(['auth'])
     ->group(function () {
     require __DIR__ . "/app-routes/dashboard-routes.php";
 
-    require __DIR__ . "/app-routes/customer-routes/index.php";
+    require __DIR__ . "/app-routes/customer-routes.php";
     require __DIR__ . "/app-routes/job-routes/index.php";
     require __DIR__ . "/app-routes/payment-routes.php";
     require __DIR__ . "/app-routes/invoice-routes/index.php";

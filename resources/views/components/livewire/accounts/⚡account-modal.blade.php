@@ -159,6 +159,7 @@ new class extends Component
 
     @script
     <script>
+        
         Livewire.on('notify', ({
             message,
             type = 'success'

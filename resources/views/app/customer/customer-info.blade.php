@@ -138,13 +138,13 @@
                 <x-printforce.cards.colour-card title="Jobs" />
             </div>
             <div class="col-span-3">
-                <x-printforce.cards.colour-card bgColour="danger" title="Debit" :value="$customer->debit" />
+                <x-printforce.cards.colour-card bgColour="danger" title="Debit" :value="$customer->ledger->debit" />
             </div>
             <div class="col-span-3">
-                <x-printforce.cards.colour-card bgColour="warning" title="Credit" :value="$customer->credit" />
+                <x-printforce.cards.colour-card bgColour="warning" title="Credit" :value="$customer->ledger->credit" />
             </div>
             <div class="col-span-3">
-                <x-printforce.cards.colour-card bgColour="success" title="Balance" :value="$customer->balance" />
+                <x-printforce.cards.colour-card bgColour="success" title="Balance" :value="$customer->ledger->balance" />
             </div>
         </div>
 
@@ -159,43 +159,45 @@
 
                 <x-tabs.tab-content :active="true" id="jobs-content">
 
-                    <table class="table w-full text-sm text-left rtl:text-right text-body">
-                        <thead
-                            class="text-sm text-dark bg-neutral-secondary-medium border-b border-t border-default-medium">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <th scope="col" class="p-4">
+                                <th scope="col" class="px-4">
                                     #
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="">
                                     Date
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="">
                                     Service Name
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="">
                                     Details
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="">
                                     Total
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium">
+                                <th scope="col" class="">
                                     Status
                                 </th>
-                                <th scope="col" class="px-6 py-3 font-medium text-end">
+                                <th scope="col" class="text-end">
                                     Action
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                            $jobsTotal = 0;
+                            @endphp
                             @foreach ($customer->printforceJobs as $job)
                             <tr class="">
-                                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                                <td  class="">
                                     {{ $loop->iteration }}
                                 </td>
-                                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                                <td >
                                     {{ $job->created_at }}
                                 </td>
-                                <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
+                                <td >
                                     {{ $job->service?->service_name }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
@@ -211,16 +213,27 @@
                                     <a href="{{ route('jobs.view-job', $job) }}" class="underline text-blue-600">View</a>
                                 </td>
                             </tr>
+                            @php
+                            $jobsTotal += $job->total;
+                            @endphp
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-end">{{ number_format($jobsTotal, 2) }}</td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                 </x-tabs.tab-content>
                 <x-tabs.tab-content id="invoices-content">
 
-                    <table class="table w-full text-sm text-left rtl:text-right text-body">
-                        <thead
-                            class="text-sm text-dark bg-neutral-secondary-medium border-b border-t border-default-medium">
+                    <table class="table">
+                        <thead>
                             <tr>
                                 <th scope="col" class="p-4">
                                     #
@@ -246,7 +259,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($customer->invoices as $customerInvoice)
+                            @php
+                            $invoiceTotal = 0;
+                            @endphp
+                            @foreach ($customer->activeInvoices as $customerInvoice)
                             <tr>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
                                     {{ $loop->iteration }}
@@ -261,7 +277,7 @@
                                     {{ $customerInvoice->customer->name }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap">
-                                    {{ $customerInvoice->sub_total_value }}
+                                    {{ $customerInvoice->sub_total }}
                                 </td>
                                 <td scope="row" class="px-6 py-4 font-medium text-dark whitespace-nowrap text-end">
                                     {{ number_format($customerInvoice->vat_amount + $customerInvoice->nhil_amount + $customerInvoice->getfund_amount, 2) }}
@@ -272,9 +288,21 @@
 
                             </tr>
 
+                            @php
+                            $invoiceTotal += $customerInvoice->total_value;
+                            @endphp
+
                             @endforeach
 
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{ number_format($invoiceTotal, 2) }}</td>
+                            </tr>
+                        </tfoot>
                     </table>
 
                 </x-tabs.tab-content>
@@ -364,12 +392,6 @@
 
 
 
-
-
-
-
-
-
 <!-- Include new service request and payment modals -->
 <livewire:jobs.new-job :customer="$customer" />
 
@@ -378,10 +400,3 @@
 
 @endsection
 
-@push('stacked-scripts')
-
-@endpush
-
-@section('js')
-
-@endsection

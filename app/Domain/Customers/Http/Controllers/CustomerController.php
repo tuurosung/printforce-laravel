@@ -2,6 +2,7 @@
 
 namespace App\Domain\Customers\Http\Controllers;
 
+use App\Domain\Customers\Contracts\CustomerRepositoryInterface;
 use App\Domain\Customers\Models\Customer;
 use App\Domain\Customers\Services\CustomerService;
 use App\Http\Controllers\Controller;
@@ -17,6 +18,7 @@ class CustomerController extends Controller
 
     public function __construct(
         private readonly CustomerService $customerService,
+        private readonly CustomerRepositoryInterface $customers,
     ) {}
 
 
@@ -45,8 +47,8 @@ class CustomerController extends Controller
     {
         $data = $request->toData();
 
-        $customer = $this->customerService->createCustomer($data);
-        return redirect()->route('customers.customer.info', $customer);
+        $customer = $this->customers->create($data);
+        return redirect()->route('customers.show', $customer);
     }
 
 
@@ -55,6 +57,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        // dd($customer->hasBalance());
         return view(
             'app.customer.customer-info',
             $this->customerService->getShowData($customer)
@@ -67,7 +70,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return view('app.customer.modals.edit-customer', compact('customer'));
+        // return view('app.customer.modals.edit-customer', compact('customer'));
     }
 
 
@@ -77,7 +80,7 @@ class CustomerController extends Controller
     public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
         $data = $request->toData();
-        $this->customerService->updateCustomer($customer, $data);
+        $this->customers->update($customer, $data);
         return redirect()->back()->with('success', 'Customer updated successfully');
     }
 
@@ -87,7 +90,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer): RedirectResponse
     {
-        $this->customerService->deleteCustomer($customer);
+        $this->customers->delete($customer);
         return redirect()->back()->with('success', 'Customer deleted successfully');
     }
 }

@@ -54,6 +54,4 @@ class InvoiceService
         return $subTotal;
     }
 
-
-
 }

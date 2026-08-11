@@ -4,8 +4,10 @@ namespace App\Domain\Customers\Models;
 
 use App\Casts\MoneyFormat;
 use App\Domain\Customers\Models\CustomerCategory;
+use App\Domain\Customers\Models\CustomerLedger;
 use App\Domain\Payments\Models\CustomerPayment;
 use App\Domain\PrintJobs\Models\PrintforceJob;
+use App\DTOs\Customers\CustomerLedgerData;
 use App\Enums\Customers\CustomerCategoryEnum;
 use App\Enums\Invoices\InvoiceStatusEnum;
 use App\Models\Invoices\CustomerInvoice;
@@ -19,8 +21,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Scout\Searchable;
 
 
 #[ObservedBy([CustomerObserver::class])]
@@ -29,9 +31,6 @@ use Laravel\Scout\Searchable;
 class Customer extends Model
 {
     use SoftDeletes;
-
-    use Searchable;
-
     use HasFactory;
 
 
@@ -80,64 +79,32 @@ class Customer extends Model
         return $this->invoices()->where('status', InvoiceStatusEnum::ACTIVE);
     }
 
+
+    public function ledger(): HasOne
+    {
+        return $this->hasOne(CustomerLedger::class, 'customer_id', 'customer_id');
+    }
+
     // ---------- Aggregates ----------
 
-    protected function totalPaid(): Attribute
+    protected function ledgerData(): Attribute
     {
         return Attribute::make(
-            get: fn(): float => (float) ($this->payments_sum_amount_paid
-                ?? $this->payments->sum('amount_paid')),
+            get: fn($value) => new CustomerLedgerData(
+                totalPaid: $this->payments_sum_amount_paid ?? $this->payments->sum('amount_paid'),
+                jobsTotal: $this->printforce_jobs_sum_total ?? $this->printforceJobs->sum('total'),
+                invoiceTotal: $this->active_invoices_sum_total ?? $this->activeInvoices->sum('total_value'),
+                jobsCount: $this->printforce_jobs_count_total ?? $this->printforceJobs->count(),
+                invoiceCount: $this->active_invoices_count ?? $this->activeInvoices->count()
+            )
         )->shouldCache();
     }
 
-    protected function jobsTotal(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): float => (float) ($this->printforce_jobs_sum_total
-                ?? $this->printforceJobs->sum('total')),
-        )->shouldCache();
-    }
 
-    protected function invoiceTotal(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): float => (float) ($this->active_invoices_sum_total
-                ?? $this->activeInvoices->sum('total_value')),
-        )->shouldCache();
-    }
-
-    protected function invoiceCount(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): int => (int) ($this->active_invoices_count
-                ?? $this->activeInvoices->count()),
-        )->shouldCache();
-    }
-
-    protected function debit(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): float => $this->jobs_total + $this->invoice_total,
-        )->shouldCache();
-    }
-
-    protected function credit(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): float => $this->total_paid,
-        )->shouldCache();
-    }
-
-    protected function balance(): Attribute
-    {
-        return Attribute::make(
-            get: fn(): float => $this->debit - $this->credit,
-        )->shouldCache();
-    }
 
     public function hasBalance(): bool
     {
-        return $this->balance > 0;
+        return abs($this->ledger->balance) > 0;
     }
 
 }
