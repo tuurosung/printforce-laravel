@@ -20,7 +20,15 @@ import { Livewire } from '../../vendor/livewire/livewire/dist/livewire.csp.esm.j
 
 window.Swal = Swal
 
-
+Livewire.on(
+    'notify',
+    (
+        {
+            message,
+            type
+        }
+    ) => swalAlert(message, type)
+);
 
 Livewire.on('open-overlay', ({ id }) => {
     window.HSOverlay.open(document.querySelector('#' + id))
@@ -34,3 +42,18 @@ Livewire.on('close-overlay', ({ id }) => {
         document.body.style.removeProperty('overflow');
     }, 200);
 });
+
+
+function swalAlert(message, type) {
+    Swal.fire({
+        title: type === 'success' ? 'Success!' : "Error",
+        text: message,
+        icon: type,
+        confirmButtonText: 'Okay'
+    })
+    .then(() => {
+        if (type === 'success') {
+            window.location.reload()
+        }
+    })
+}

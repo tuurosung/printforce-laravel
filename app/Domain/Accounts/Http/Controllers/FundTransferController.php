@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domain\Accounts\Http\Controllers;
 
+use App\Domain\Accounts\Models\FundTransfer;
+use App\Http\Controllers\OperatingAccountController;
+use App\Http\Requests\Transfers\StoreNewTransferRequest;
+use App\Services\Accounting\AccountService;
+use App\Services\Accounting\FundTransferService;
 use App\Traits\HandleResourceActions;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\Accounting\FundTransfer;
-use App\Http\Controllers\OperatingAccountController;
-use App\Http\Requests\Transfers\StoreNewTransferRequest;
-use App\Services\Accounting\AccountService;
-use App\Services\Accounting\FundTransferService;
 
 class FundTransferController extends Controller
 {

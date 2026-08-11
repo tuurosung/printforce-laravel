@@ -7,8 +7,10 @@ namespace App\Domain\Customers\Services;
 use App\Domain\Customers\Contracts\CustomerStatisticsInterface;
 use App\Domain\Customers\Models\Customer;
 use App\DTOs\Customers\CustomerStatisticsData;
+use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\Cache;
 
 final class CustomerStatistics implements CustomerStatisticsInterface
 {
@@ -32,18 +34,27 @@ final class CustomerStatistics implements CustomerStatisticsInterface
 
     public function statistics(int $newWithinDays = 30): CustomerStatisticsData
     {
-        $cutOff = now()->subDays($newWithinDays);
+        $tenantId = Auth::user()->subscriber_id;
+        $cacheKey ="customer_statistics_{$tenantId}";
 
-        $row = Customer::query()
-            ->selectRaw('
+        return Cache::store('file')->remember($cacheKey, now()->addMinutes(10), function() use ($newWithinDays):
+            CustomerStatisticsData
+            {
+                $cutOff = now()->subDays($newWithinDays);
+
+                $row = Customer::query()
+                    ->selectRaw('
                     COUNT(*) as total_customers,
                     COUNT(CASE WHEN created_at >= ? THEN 1 END) as new_customers
                 ', [$cutOff])
-            ->first();
+                    ->first();
 
-        return new CustomerStatisticsData(
-            totalCustomers: $row->total_customers,
-            newCustomers: $row->new_customers,
+                return new CustomerStatisticsData(
+                    totalCustomers: $row->total_customers,
+                    newCustomers: $row->new_customers,
+                );
+            }
         );
+
     }
 }

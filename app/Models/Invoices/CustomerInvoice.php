@@ -34,7 +34,6 @@ class CustomerInvoice extends Model
         static::creating(function ($model) {
             $model->subscriber_id = Auth::user()->subscriber_id;
             $model->invoice_id = generatedNumericId(10);
-
         });
     }
 
@@ -61,7 +60,7 @@ class CustomerInvoice extends Model
     #[Scope]
     protected function activeInvoices(Builder $query): void
     {
-        $query->where('status', 'active');
+        $query->where('status', InvoiceStatusEnum::ACTIVE);
     }
 
 
@@ -83,7 +82,8 @@ class CustomerInvoice extends Model
     public function totalValue(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->invoiceItems->sum('total')
+            get: fn () => $this->calcTotal()
+            // get: fn () => $this->invoiceItems->sum('total')
         );
     }
 
@@ -118,6 +118,17 @@ class CustomerInvoice extends Model
     public function isDraft(): bool
     {
         return $this->status == InvoiceStatusEnum::DRAFT;
+    }
+
+
+    private function calcTotal()
+    {
+        $invTotal = $this->invoiceItems->sum('total');
+
+        // $this->sub_total = $invTotal;
+        // $this->save();
+
+        return $invTotal;
     }
 
 }

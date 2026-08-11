@@ -1,7 +1,8 @@
 @props([
-    'modalId' => '',
-    'icon' => 'check',
-    'btnLabel' => 'Submit'
+'modalId' => '',
+'icon' => 'check',
+'btnLabel' => 'Submit',
+'attributes' => ''
 ])
 <div class="flex justify-end items-center gap-x-2 py-3 px-6 border-t border-border dark:border-gray-700">
     <button type="button"
@@ -10,6 +11,7 @@
         Close
     </button>
     <button type="submit"
+        {{ $attributes->merge(['class' => 'btn-md text-sm font-semibold rounded-md border border-transparent bg-primary text-white hover:bg-primaryemphasis disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 cursor-pointer']) }}
         class="btn-md text-sm font-semibold rounded-md border border-transparent bg-primary text-white hover:bg-primaryemphasis disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 cursor-pointer">
         <i class="fi fi-rr-{{ $icon }} me-3"></i>
         {{ $btnLabel }}

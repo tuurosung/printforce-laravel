@@ -106,10 +106,7 @@ new class extends Component {
                     <x-dropdowns.dropdown-with-search label="Service" name="service_id" id="service_id" :options="$this->printServices" wire:model.live="serviceId" wire:ignore.self />
                 </div>
                 <div class="col-md-6">
-                    <div class="">
-                        <label for="cost" class="form-label">Unit Cost</label>
-                        <input type="text" class="form-control st" name="unit_cost" id="unit_cost" value="{{ $unitCost }}" wire:model.live="unitCost" readonly required />
-                    </div>
+                    <x-printforce.inputs.text-input name="unit_cost" label="Unit Cost" value="{{ $this->unitCost }}"  readonly required />
                 </div>
             </div>
 

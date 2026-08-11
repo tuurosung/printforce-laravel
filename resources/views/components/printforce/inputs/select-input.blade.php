@@ -2,7 +2,7 @@
 'attributes' => ''
 ])
 <div class="mb-3">
-    <label for="" class="form-label">{{ $label }}</label>
+    <label for="" class="form-label text-black text-sm">{{ $label }}</label>
     <select class="form-control"
         name="{{ $name }}"
         id="{{ $id }}" {{ $attributes }}>

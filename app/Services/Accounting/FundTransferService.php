@@ -2,7 +2,7 @@
 
 namespace App\Services\Accounting;
 
-use App\Models\Accounting\FundTransfer;
+use App\Domain\Accounts\Models\FundTransfer;
 
 class FundTransferService
 {
