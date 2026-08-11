@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Accounts\Http\Controllers;
 
+use App\Domain\Accounts\Models\FundTransfer;
 use App\Domain\Accounts\Models\OperatingAccount;
 use App\Domain\Payments\Models\CustomerPayment;
 use App\Enums\Accounts\AccountTypeEnum;
@@ -12,7 +13,6 @@ use App\Models\Accounting\OperatingAccountHeader;
 use App\Models\Accounting\OperatingAccountTypes;
 use App\Models\AddFunds;
 use App\Models\Expenditure;
-use App\Models\FundTransfer;
 use App\Models\PurchasePayment;
 use App\Models\Subscribers;
 use Illuminate\Http\Request;
