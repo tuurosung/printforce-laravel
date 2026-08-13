@@ -4,9 +4,7 @@ namespace App\Providers;
 
 
 use App\Domain\Invoices\Contracts\InvoiceItemRepositoryInterface;
-use App\Domain\Invoices\Contracts\InvoiceRepositoryInterface;
 use App\Domain\Invoices\Repositories\InvoiceItemRepository;
-use App\Domain\Invoices\Repositories\InvoiceRepository;
 use App\Domain\Payments\Contracts\PaymentAlertInterface;
 use App\Domain\Payments\Contracts\PaymentRepositoryInterface;
 use App\Domain\Payments\Repositories\PaymentRepository;
@@ -24,7 +22,6 @@ use Illuminate\Support\ServiceProvider;
 class BindContractServiceProvider extends ServiceProvider
 {
     public array $bindings = [
-        InvoiceRepositoryInterface::class => InvoiceRepository::class,
         InvoiceItemRepositoryInterface::class => InvoiceItemRepository::class,
         PaymentRepositoryInterface::class => PaymentRepository::class,
         PaymentAlertInterface::class => PaymentAlertService::class,
