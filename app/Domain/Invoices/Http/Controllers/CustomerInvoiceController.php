@@ -4,10 +4,10 @@ namespace App\Domain\Invoices\Http\Controllers;
 
 
 use App\Domain\Customers\Services\CustomerService;
+use App\Domain\Invoices\Models\CustomerInvoice;
 use App\Domain\Invoices\Services\InvoiceService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Invoices\StoreCustomerInvoiceRequest;
-use App\Models\Invoices\CustomerInvoice;
 use Illuminate\Http\Request;
 
 class CustomerInvoiceController extends Controller
@@ -45,18 +45,8 @@ class CustomerInvoiceController extends Controller
      */
     public function store(StoreCustomerInvoiceRequest $request)
     {
-        try {
-
-            $invoice = $this->invoiceService->createInvoice(
-                $request->validated()
-            );
-
-            return to_route('invoices.prepare-customer-invoice', $invoice);
-
-        } catch (\DomainException $e) {
-            \Illuminate\Support\Facades\Log::error($e->getMessage());
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $invoice = $this->invoiceService->createInvoice($request->toData());
+        return to_route('invoices.prepare-customer-invoice', $invoice);
     }
 
     /**
