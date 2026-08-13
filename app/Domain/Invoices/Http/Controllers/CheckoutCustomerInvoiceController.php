@@ -2,24 +2,26 @@
 
 namespace App\Domain\Invoices\Http\Controllers;
 
-use App\Domain\Invoices\Contracts\InvoiceRepositoryInterface;
+
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\Domain\Invoices\Services\ActiveInvoiceSession;
+use App\Domain\Invoices\Services\InvoiceFlow;
 use App\Http\Controllers\Controller;
-use App\Models\Invoices\CustomerInvoice;
 
 class CheckoutCustomerInvoiceController extends Controller
 {
     public function __construct(
-        private readonly InvoiceRepositoryInterface $invoiceService
+        private readonly InvoiceFlow $invoiceFlow,
     ) {}
 
-    
+
     /**
      * Handle the incoming request.
      */
     public function __invoke(CustomerInvoice $customerInvoice)
     {
-        $this->invoiceService->checkout($customerInvoice);
-        $this->invoiceService->clearActiveInvoiceSession();
+        $this->invoiceFlow->checkout($customerInvoice);
+        ActiveInvoiceSession::clear();
         return redirect()->route('invoices.index')->with('success', 'Invoice checked out successfully.');
     }
 }
