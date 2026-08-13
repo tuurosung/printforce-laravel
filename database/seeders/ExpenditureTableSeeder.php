@@ -39,14 +39,17 @@ class ExpenditureTableSeeder extends Seeder
                 $table->renameColumn('header_id', 'source_account_id');
             }
 
+
             // rename account_number to destination_account_id
             if (Schema::hasColumn('expenditure', 'account_number')) {
                 $table->renameColumn('account_number', 'destination_account_id')->after('source_account_id');
             }
 
+
             if (Schema::hasColumn('expenditure', 'description')) {
                 $table->renameColumn('description', 'narration');
             }
+
 
             // add reference column
             if (! Schema::hasColumn('expenditure', 'reference')) {
@@ -55,29 +58,35 @@ class ExpenditureTableSeeder extends Seeder
                 $table->string('reference')->nullable()->after('date')->change();
             }
 
+
             // add drawee column
             if (! Schema::hasColumn('expenditure', 'drawee')) {
                 $table->string('drawee')->nullable()->after('reference');
             }
+
 
             // add idempotency key column
             if (! Schema::hasColumn('expenditure', 'idempotency_key')) {
                 $table->string('idempotency_key', 36)->nullable()->after('reference');
             }
 
+
             // enable soft deletes
             if (! Schema::hasColumn('expenditure', 'deleted_at')) {
                 $table->softDeletes();
             }
+
 
             // drop timestamps column
             if (Schema::hasColumn('expenditure', 'timestamp')) {
                 $table->dropColumn('timestamp');
             }
 
+
             if (Schema::hasColumn('expenditure', 'datetime')) {
                 $table->dropColumn('datetime');
             }
+            
 
             // drop datetime
 
@@ -93,10 +102,10 @@ class ExpenditureTableSeeder extends Seeder
                 ]);
 
 
-            DB::table('expenditure')->where('payment_method', '')
-                ->update([
-                    'payment_method' => PaymentMethodsEnum::CASH
-                ]);
+            // DB::table('expenditure')->where('payment_method', '')
+            //     ->update([
+            //         'payment_method' => PaymentMethodsEnum::CASH
+            //     ]);
 
         });
     }

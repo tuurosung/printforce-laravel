@@ -45,7 +45,7 @@
 
                                             <x-sidebar.sidebar-item label="Jobs" icon="briefcase" href="{{ route('jobs.today') }}" />
 
-                                            <x-sidebar.sidebar-item label="Debtors" icon="sack-dollar" href="" />
+                                            <x-sidebar.sidebar-item label="Debtors" icon="sack-dollar" href="{{ route('debtors') }}" />
 
                                             <x-sidebar.sidebar-item label="Payments" icon="payroll-check" href="{{ route('payments.index') }}" />
                                             <x-sidebar.sidebar-item label="Invoices" icon="file-invoice-dollar" href="{{ route('invoices.index') }}" />

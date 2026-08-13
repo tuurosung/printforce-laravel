@@ -14,7 +14,7 @@ class ViewDebtorsController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $debtors = Debtor::orderBy('balance')->get();
+        $debtors = Debtor::owing()->get();
 
         return view('app.customer.debtors', compact('debtors'));
     }

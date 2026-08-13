@@ -48,6 +48,21 @@
 @endsection
 
 @section('js')
-
-
+<script>
+    new DataTable('#datatable', {
+        layout: {
+            topStart: {
+                buttons: [{
+                    extend: 'excelHtml5',
+                    autoFilter: true,
+                    sheetName: 'Customers List',
+                    title: "Printforce Customers List",
+                    text: "Export to Excel"
+                }]
+            }
+        },
+        paging: false,
+        sort:false
+    });
+</script>
 @endsection

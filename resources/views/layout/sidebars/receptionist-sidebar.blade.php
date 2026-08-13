@@ -40,17 +40,17 @@
                                                     <span class="hide-menu shrink-0 my-0">Dashboard</span>
                                                 </a>
                                             </li>
-                                            <x-sidebar.sidebar-item label="Customers" icon="users" href="{{ route('customers.customer.index') }}" />
+                                            <x-sidebar.sidebar-item label="Customers" icon="users" href="{{ route('customers.index') }}" />
 
 
                                             <x-sidebar.sidebar-item label="Jobs" icon="briefcase" href="{{ route('jobs.today') }}" />
 
-                                            <x-sidebar.sidebar-item label="Debtors" icon="sack-dollar" href="{{ route('customers.debtors.view') }}" />
+                                            <x-sidebar.sidebar-item label="Debtors" icon="sack-dollar" href="{{ route('debtors') }}" />
 
                                             <x-sidebar.sidebar-item label="Payments" icon="payroll-check" href="{{ route('payments.index') }}" />
                                             <x-sidebar.sidebar-item label="Invoices" icon="file-invoice-dollar" href="{{ route('invoices.index') }}" />
 
-                                          
+
 
                                         </ul>
                                     </nav>

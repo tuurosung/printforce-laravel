@@ -51,7 +51,7 @@ class CreateCustomersView extends Command
 
             LEFT JOIN (
                 SELECT subscriber_id, customer_id, SUM(invoice_total) AS total
-                FROM invoices WHERE deleted_at IS NULL AND status = 'active'
+                FROM invoices WHERE deleted_at IS NULL 
                 GROUP BY subscriber_id, customer_id
             ) inv ON c.customer_id = inv.customer_id AND inv.subscriber_id = c.subscriber_id
 
