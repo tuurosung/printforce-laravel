@@ -3,8 +3,8 @@
 namespace Database\Factories\Invoices;
 
 use App\Domain\Customers\Models\Customer;
+use App\Domain\Invoices\Models\CustomerInvoice;
 use App\Enums\Invoices\InvoiceTypeEnum;
-use App\Models\Invoices\CustomerInvoice;
 use App\Models\Subscribers;
 use App\Services\Invoices\CustomerInvoiceService;
 use App\Traits\Testing\DefaultValuesTrait;

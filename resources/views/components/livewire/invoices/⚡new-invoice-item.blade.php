@@ -1,10 +1,10 @@
 <?php
 
 use App\Domain\Customers\Models\Customer;
+use App\Domain\Invoices\Models\CustomerInvoice;
 use App\Domain\PrintServices\Models\PrintService;
 use App\Domain\PrintServices\Services\ServiceHandler;
 use App\Enums\Services\ServiceCategoryEnum;
-use App\Models\Invoices\CustomerInvoice;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -41,6 +41,7 @@ new class extends Component {
         return ($this->materialUnitCost ?? 0) * ($this->quantity ?? 0);
     }
 
+
     #[Computed]
     public function subTotal(): float
     {
@@ -50,11 +51,13 @@ new class extends Component {
         return (int) round($convertedArea * ($this->unitCost ?? 0) * ($this->quantity ?? 0));
     }
 
+
     #[Computed]
     public function total(): float
     {
         return $this->subTotal + $this->materialTotalCost;
     }
+
 
     public function updatedServiceId(string $value): void
     {
@@ -76,6 +79,7 @@ new class extends Component {
 
         $this->unitCost = $this->serviceHandler->getServiceCost($customer, $this->serviceId);
     }
+
 
     private function convertArea(float $area, string $measuringUnit): float
     {
@@ -109,21 +113,21 @@ new class extends Component {
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
                         <label for="cost" class="form-label">Unit Cost</label>
-                        <input type="text" class="form-control st" name="unit_cost" id="unitCost" value="{{ $unitCost }}" wire:model.live="unitCost" readonly required />
+                        <input type="text" class="form-control st" name="unit_cost" id="unitCost" value="{{ $unitCost }}" readonly required />
                     </div>
                 </div>
 
                 <div class="lg:col-span-3 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
                         <label for="" class="form-label">Width</label>
-                        <input type="number" step="any" class="form-control" name="width" id="width" value="{{ $width }}" wire:model.live.blur="width" required />
+                        <input type="number" step="any" class="form-control" name="width" id="width" value="{{ $width }}" wire:model.live.debounce.300ms="width" required />
                     </div>
                 </div>
 
                 <div class="lg:col-span-3 md:col-span-6 sm:col-span-12 col-span-12">
                     <div class="">
                         <label for="" class="form-label">Height</label>
-                        <input type="number" step="any" class="form-control " name="height" id="height" value="{{ $height }}" wire:model.live.blur="height" required />
+                        <input type="number" step="any" class="form-control " name="height" id="height" value="{{ $height }}" wire:model.live.debounce.300ms="height" required />
                     </div>
                 </div>
                 <div class="lg:col-span-6 md:col-span-6 sm:col-span-12 col-span-12">

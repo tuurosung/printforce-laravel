@@ -2,7 +2,7 @@
 
 namespace App\Observers\Invoices;
 
-use App\Models\Invoices\CustomerInvoiceItem;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 
 class CustomerInvoiceObserver
 {

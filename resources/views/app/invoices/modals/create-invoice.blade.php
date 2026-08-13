@@ -19,13 +19,6 @@
                                 $customersArray = $customers->mapWithKeys(fn ($customer) => [ $customer->customer_id => $customer->name])->toArray();
                             }
 
-                            // if (isset($customers)) {
-                            // $customersArray = $customers->mapWithKeys(fn ($customer) => [ $customer->customer_id => $customer->name])->toArray();
-                            // } else {
-                            // $customersArray = [
-                            // $customer->customer_id => $customer->name
-                            // ];
-                            // }
 
                             @endphp
                             <x-dropdowns.dropdown-with-search name="customer_id" label="Customer" :options="$customersArray" selected="{{ isset($customer) ? $customer->customer_id : '' }}" />
@@ -67,6 +60,7 @@
 
             </div>
         </div>
+        
         <x-modals.modal-footer btnLabel="Add Invoice Items" modalId="new-invoice-modal" />
 
     </form>

@@ -2,8 +2,8 @@
 
 namespace App\Domain\Invoices\Contracts;
 
-use App\Models\Invoices\CustomerInvoice;
-use App\Models\Invoices\CustomerInvoiceItem;
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 
 interface InvoiceItemRepositoryInterface
 {

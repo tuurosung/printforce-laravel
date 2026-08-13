@@ -3,12 +3,12 @@
 namespace App\Domain\Invoices\Http\Controllers;
 
 
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 use App\Domain\Invoices\Services\InvoiceItemService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Invoices\InvoiceItems\StoreCustomerInvoiceItemRequest;
 use App\Http\Requests\Invoices\InvoiceItems\UpdateCustomerInvoiceItemRequest;
-use App\Models\Invoices\CustomerInvoice;
-use App\Models\Invoices\CustomerInvoiceItem;
 use Illuminate\Support\Facades\Log;
 
 class CustomerInvoiceItemController extends Controller

@@ -3,8 +3,8 @@
 namespace App\Domain\Invoices\Repositories;
 
 use App\Domain\Invoices\Contracts\InvoiceItemRepositoryInterface;
-use App\Models\Invoices\CustomerInvoice;
-use App\Models\Invoices\CustomerInvoiceItem;
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 
 class InvoiceItemRepository implements InvoiceItemRepositoryInterface
 {
@@ -14,16 +14,15 @@ class InvoiceItemRepository implements InvoiceItemRepositoryInterface
     ){}
 
 
+    public function addItem(CustomerInvoice $customerInvoice, array $data): CustomerInvoiceItem
+    {
+        return $customerInvoice->invoiceItems()->create($data);
+    }
 
 
     public function delete(CustomerInvoiceItem $customerInvoiceItem): bool
     {
         return $customerInvoiceItem->delete();
-    }
-
-    public function addItem(CustomerInvoice $customerInvoice, array $data): CustomerInvoiceItem
-    {
-        return $customerInvoice->invoiceItems()->create($data);
     }
 
 

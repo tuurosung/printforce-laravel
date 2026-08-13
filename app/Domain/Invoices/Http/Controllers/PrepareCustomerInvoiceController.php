@@ -3,9 +3,9 @@
 namespace App\Domain\Invoices\Http\Controllers;
 
 
+use App\Domain\Invoices\Models\CustomerInvoice;
 use App\Facades\PrintServices;
 use App\Http\Controllers\Controller;
-use App\Models\Invoices\CustomerInvoice;
 
 class PrepareCustomerInvoiceController extends Controller
 {

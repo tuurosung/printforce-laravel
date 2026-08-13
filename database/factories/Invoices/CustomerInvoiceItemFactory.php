@@ -2,7 +2,7 @@
 
 namespace Database\Factories\Invoices;
 
-use App\Models\Invoices\CustomerInvoiceItem;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 use App\Models\Services\PrintService;
 use App\Traits\Testing\DefaultValuesTrait;
 use Illuminate\Database\Eloquent\Factories\Factory;
