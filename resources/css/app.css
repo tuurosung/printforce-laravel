@@ -264,3 +264,14 @@ span[class*="fi-br-"]::before {
         background-color: var(--color-white);
     }
 }
+
+
+@layer components {
+    .dt-input {
+        min-width: 70px;
+    }
+
+    .buttons-excel {
+        @apply bg-green-600! text-white! border-0!
+    }
+}

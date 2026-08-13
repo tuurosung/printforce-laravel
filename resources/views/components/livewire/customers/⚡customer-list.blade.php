@@ -57,14 +57,14 @@ new class extends Component
         </div>
     </div>
 
-    <table class="table">
+    <table class="table" id="datatable">
         <thead
             class="">
             <tr>
-                <th scope="col" class="">
+                <th scope="col" class="text-start!">
                     #
                 </th>
-                <th scope="col" class="">
+                <th scope="col" class="text-start!">
                     Date Created
                 </th>
                 <th scope="col" class="">
@@ -93,10 +93,10 @@ new class extends Component
         <tbody>
             @foreach ($this->customers as $customer)
             <tr class="">
-                <td >
+                <td class="text-start!">
                     {{ $loop->iteration }}
                 </td>
-                <td>
+                <td class="text-start!">
                     {{ $customer->created_at?->format('Y-m-d') }}
                 </td>
                 <td>
@@ -111,13 +111,13 @@ new class extends Component
                     {{ $customer->phone }}
                 </td>
                 <td class="text-end">
-                    {{ $customer->ledger->debit }}
+                    {{ number_format($customer->ledger->debit, 2) }}
                 </td>
                 <td class="text-end">
-                    {{ $customer->ledger->credit }}
+                    {{ number_format($customer->ledger->credit, 2) }}
                 </td>
                 <td class="text-end">
-                    {{ $customer->ledger->balance < 0 ? "(". (abs($customer->ledger->balance)) . ")" : $customer->ledger->balance }}
+                    {{ $customer->ledger->balance < 0 ? "(". (abs($customer->ledger->balance)) . ")" : number_format($customer->ledger->balance, 2) }}
                 </td>
                 <td class="text-end">
                     <a
