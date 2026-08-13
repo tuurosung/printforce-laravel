@@ -3,8 +3,8 @@
 namespace App\Domain\Invoices\Services;
 
 use App\Domain\Invoices\Contracts\InvoiceItemRepositoryInterface;
-use App\Models\Invoices\CustomerInvoice;
-use App\Models\Invoices\CustomerInvoiceItem;
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\Domain\Invoices\Models\CustomerInvoiceItem;
 use Illuminate\Support\Facades\Log;
 
 class InvoiceItemService
@@ -26,7 +26,6 @@ class InvoiceItemService
         }
 
         return $customerInvoiceItem;
-
     }
 
 

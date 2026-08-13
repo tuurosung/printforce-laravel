@@ -2,9 +2,9 @@
 
 namespace App\Domain\Invoices\Services;
 
-use App\Domain\Invoices\Contracts\InvoiceRepositoryInterface;
-use App\Models\Invoices\CustomerInvoice;
-use DomainException;
+
+use App\Domain\Invoices\Models\CustomerInvoice;
+use App\DTOs\Invoices\CustomerInvoiceData;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -12,27 +12,22 @@ class InvoiceService
 {
 
     public function __construct(
-        private readonly InvoiceRepositoryInterface $invoiceRepository,
         private readonly CustomerInvoice $model
     ){}
 
 
-    public function getInvoices(): Collection
+    public function createInvoice(CustomerInvoiceData $data): CustomerInvoice
     {
-        return $this->invoiceRepository->allInvoices();
+        $invoice = $this->model->create($data->toArray());
+        ActiveInvoiceSession::set($invoice);
+        return $invoice;
     }
 
 
-    public function createInvoice(array $data)
+    public function updateInvoice(CustomerInvoice $customerInvoice, CustomerInvoiceData $data): CustomerInvoice
     {
-        $newInvoice =  $this->model->create($data);
-
-        if (!$newInvoice) {
-            throw new DomainException("Invoice not created");
-        }
-
-        $this->invoiceRepository->setActiveInvoiceSession($newInvoice);
-        return $newInvoice;
+        $customerInvoice->update($data->toArray());
+        return $customerInvoice;
     }
 
 
@@ -49,8 +44,28 @@ class InvoiceService
     }
 
 
-    protected function applyCharges(int $subTotal, CustomerInvoice $invoice): int
+    public function getInvoices(array $filters = []): Collection
     {
+        return $this->model->orderBy('created_at', 'desc')->get();
+    }
+
+
+    public function recalculateTotals(CustomerInvoice $invoice): void
+    {
+        $subTotal = $invoice->invoiceItems()
+            ->sum('total');
+
+        $invoice->update([
+            'sub_total' => $subTotal,
+            // 'total' => $this->applyCharges($subTotal, $invoice),
+        ]);
+    }
+
+
+    protected function applyCharges(
+        int $subTotal,
+        CustomerInvoice $invoice
+    ): int {
         return $subTotal;
     }
 
