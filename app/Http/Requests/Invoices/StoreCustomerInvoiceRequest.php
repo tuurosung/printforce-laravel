@@ -2,6 +2,11 @@
 
 namespace App\Http\Requests\Invoices;
 
+use App\DTOs\Invoices\CustomerInvoiceData;
+use App\Enums\Invoices\InvoiceStatusEnum;
+use App\Enums\Invoices\InvoiceTypeEnum;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCustomerInvoiceRequest extends FormRequest
@@ -29,5 +34,17 @@ class StoreCustomerInvoiceRequest extends FormRequest
             'invoice_date' => ['required', 'date'],
             'due_date' => ['required', 'date', 'after_or_equal:invoice_date'],
         ];
+    }
+
+
+    public function toData(): CustomerInvoiceData
+    {
+        return new CustomerInvoiceData(
+            customerId: $this->string('customer_id'),
+            invoiceType: InvoiceTypeEnum::from($this->string('invoice_type')->value()),
+            invoiceDate: $this->string('invoice_date'),
+            dueDate: $this->filled('due_date') ? CarbonImmutable::parse($this->string('due_date')->value()) : null,
+            invoiceStatus: InvoiceStatusEnum::PENDING
+        );
     }
 }
