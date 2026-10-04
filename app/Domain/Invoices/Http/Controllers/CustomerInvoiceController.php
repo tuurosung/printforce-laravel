@@ -25,7 +25,7 @@ class CustomerInvoiceController extends Controller
     public function index()
     {
         return view('app.invoices.invoices', [
-            'customerInvoices' => $this->invoiceService->getInvoices(),
+            // 'customerInvoices' => $this->invoiceService->getInvoices(),
             'customers' => $this->customerService->getAll(),
         ]);
     }
