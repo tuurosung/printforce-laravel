@@ -5,8 +5,12 @@ namespace App\Domain\Invoices\Services;
 
 use App\Domain\Invoices\Models\CustomerInvoice;
 use App\DTOs\Invoices\CustomerInvoiceData;
+use App\DTOs\Invoices\FilterInvoiceData;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class InvoiceService
 {
@@ -44,9 +48,18 @@ class InvoiceService
     }
 
 
-    public function getInvoices(array $filters = []): Collection
+    public function getInvoices(FilterInvoiceData $data): Collection
     {
-        return $this->model->orderBy('created_at', 'desc')->get();
+        return CustomerInvoice::query()
+            ->whereBetween('created_at', [$data->from, $data->to])
+            ->when(
+                $data->customerId,
+                fn (Builder $query, string $customerId) => $query->whereHas(
+                    'customer',
+                    fn (Builder $query) => $query->where('customer_id', $customerId)
+                ),
+            )->orderBy('created_at', 'desc')
+            ->get();
     }
 
 
