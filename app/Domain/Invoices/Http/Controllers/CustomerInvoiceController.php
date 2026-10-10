@@ -83,7 +83,7 @@ class CustomerInvoiceController extends Controller
         try {
 
             $this->invoiceService->deleteInvoice($customerInvoice);
-            return redirect()->back()->with('success','Invoice Deleted Successfully');
+            return redirect()->to_route('invoices.index')->with('success','Invoice Deleted Successfully');
 
         } catch (\Exception $e) {
 
