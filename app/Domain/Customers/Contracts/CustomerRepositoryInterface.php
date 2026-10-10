@@ -17,6 +17,6 @@ interface CustomerRepositoryInterface
 
 
     public function filterCustomers(string $searchTerm): Collection;
-    public function filterByCategory(CustomerCategoryEnum $category): Collection;
+    public function filterByCategory(?CustomerCategoryEnum $category): Collection;
     public function getLatestCustomers(): Collection;
 }

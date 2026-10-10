@@ -76,7 +76,7 @@ final class CustomerRepository implements CustomerRepositoryInterface
 
 
     #[Override]
-    public function filterByCategory(CustomerCategoryEnum $category): Collection
+    public function filterByCategory(?CustomerCategoryEnum $category): Collection
     {
         return Customer::query()
             ->where('category', $category->value)
