@@ -8,7 +8,7 @@ use App\Domain\Payments\Contracts\PaymentStatisticsInterface;
 use App\Domain\Payments\Models\CustomerPayment;
 use App\DTOs\Payments\PaymentStatisticsData;
 use Carbon\Carbon;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -68,7 +68,6 @@ final class PaymentStatistics implements PaymentStatisticsInterface
     public function getByDateRange(string $startDate, string $endDate, ?string $customerId = null): Collection
     {
         return $this->dateRangeQuery($startDate, $endDate, $customerId)
-            ->with(['customer', 'account'])
             ->orderBy('payment_date', 'asc')
             ->get();
     }
