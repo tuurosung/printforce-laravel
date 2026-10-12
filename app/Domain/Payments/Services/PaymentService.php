@@ -43,8 +43,6 @@ class PaymentService extends BaseService
     }
 
 
-
-
     public function getAllTimePaymentTotal(): float
     {
         return $this->payments->getStatistics()['all_time_payment_total'];
@@ -64,10 +62,10 @@ class PaymentService extends BaseService
 
     public function getFilteredPayments(
         string $startDate,
-        string $endDate,
+        ?string $endDate,
         ?string $customerId = null
     ): Collection {
-        return $this->payments->getByDateRange($startDate, $endDate, $customerId);
+        return $this->paymentStatistics->getByDateRange($startDate, $endDate, $customerId);
     }
 
 
@@ -108,9 +106,6 @@ class PaymentService extends BaseService
     public function indexData(): array
     {
         return [
-            'total' => 0,
-            'customers' => $this->customerService->optionsForSelect(),
-            'payments' => $this->getLatestPayments(),
             'statistics' => $this->paymentStatistics->getStatistics(),
             'payment_accounts' => $this->accountService->getAssetAccounts()
         ];
