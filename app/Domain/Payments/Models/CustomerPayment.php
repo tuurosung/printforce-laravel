@@ -31,6 +31,8 @@ class CustomerPayment extends Model
     protected $primaryKey = 'payment_id';
     public $incrementing = false;
 
+    protected $with = ['customer', 'account'];
+
 
     public function customer(): BelongsTo
     {
